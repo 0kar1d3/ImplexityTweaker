@@ -1,0 +1,58 @@
+<Page x:Class="ImplexityTweaker.Pages.SystemRecoveryPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      Title="SystemRecovery"
+      Foreground="{DynamicResource App.Text}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="20">
+            <TextBlock Text="Система и восстановление" FontSize="32" FontWeight="Bold" />
+            <TextBlock Text="Точки восстановления, сжатие системы и подробные параметры телеметрии."
+                       Foreground="{DynamicResource App.TextMuted}"
+                       TextWrapping="Wrap"
+                       Margin="0,8,0,16" />
+
+            <ui:Card>
+                <StackPanel Margin="16">
+                    <TextBlock Text="Восстановление" FontWeight="SemiBold" />
+                    <ui:Button Content="Открыть «Защита системы»"
+                               Margin="0,10,0,8"
+                               Appearance="Secondary"
+                               HorizontalAlignment="Left"
+                               Click="OpenSysRestore_Click" />
+                    <ui:Button Content="Создать точку восстановления"
+                               Margin="0,0,0,8"
+                               Appearance="Primary"
+                               HorizontalAlignment="Left"
+                               Click="CreateRestorePoint_Click" />
+                    <ui:Button Content="Управление дисками"
+                               Appearance="Transparent"
+                               HorizontalAlignment="Left"
+                               Click="DiskMgmt_Click" />
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Margin="0,14,0,0">
+                <StackPanel Margin="16">
+                    <TextBlock Text="Сжатие и обслуживание" FontWeight="SemiBold" />
+                    <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource App.TextMuted}" Margin="0,6,0,10"
+                               Text="CompactOS уменьшает занимаемое место на системном разделе (может занять время)." />
+                    <ui:Button Content="Включить сжатие системы (CompactOS)"
+                               Appearance="Primary"
+                               HorizontalAlignment="Left"
+                               Click="Compact_Click" />
+                </StackPanel>
+            </ui:Card>
+
+            <TextBlock Text="Телеметрия и конфиденциальность"
+                       FontSize="20"
+                       FontWeight="SemiBold"
+                       Margin="0,20,0,8" />
+            <Border Style="{StaticResource FluentBlockBorder}" Padding="0">
+                <Frame x:Name="TelemetryFrame"
+                       NavigationUIVisibility="Hidden" />
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

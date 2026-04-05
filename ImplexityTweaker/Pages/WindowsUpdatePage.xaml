@@ -1,0 +1,49 @@
+<Page x:Class="ImplexityTweaker.Pages.WindowsUpdatePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      Title="WindowsUpdate"
+      Foreground="{DynamicResource App.Text}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="20">
+            <TextBlock Text="Windows Update" FontSize="32" FontWeight="Bold" />
+            <TextBlock Text="Управление службой центра обновления. Требуются права администратора."
+                       Foreground="{DynamicResource App.TextMuted}"
+                       TextWrapping="Wrap"
+                       Margin="0,8,0,16" />
+
+            <ui:Card>
+                <StackPanel Margin="16">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <TextBlock Text="Режим запуска службы:" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <ComboBox x:Name="StartupModeBox" Width="190">
+                            <ComboBoxItem Content="Disabled" />
+                            <ComboBoxItem Content="Manual (Demand)" />
+                            <ComboBoxItem Content="Automatic" />
+                        </ComboBox>
+                    </StackPanel>
+                    <ui:Button Content="Приостановить службу Windows Update"
+                               Appearance="Secondary"
+                               Click="Pause_Click"
+                               HorizontalAlignment="Left"
+                               Margin="0,0,0,8" />
+                    <ui:Button Content="Включить службу Windows Update (ручной запуск)"
+                               Appearance="Primary"
+                               Click="Resume_Click"
+                               HorizontalAlignment="Left"
+                               Margin="0,0,0,8" />
+                    <ui:Button Content="Применить выбранный режим запуска"
+                               Appearance="Transparent"
+                               HorizontalAlignment="Left"
+                               Margin="0,0,0,8"
+                               Click="ApplyMode_Click" />
+                    <ui:Button Content="Открыть параметры Windows Update"
+                               Appearance="Transparent"
+                               HorizontalAlignment="Left"
+                               Click="OpenSettings_Click" />
+                </StackPanel>
+            </ui:Card>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

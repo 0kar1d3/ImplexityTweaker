@@ -1,0 +1,67 @@
+<Page x:Class="ImplexityTweaker.Pages.TelemetryPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      Title="Telemetry"
+      Foreground="{DynamicResource App.Text}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="8">
+            <TextBlock Text="Телеметрия и конфиденциальность"
+                       FontSize="28"
+                       FontWeight="SemiBold" />
+            <TextBlock Text="Отметьте параметры, которые нужно ограничить. Часть действий требует прав администратора (службы, политики в HKLM, планировщик)."
+                       Foreground="{DynamicResource App.TextMuted}"
+                       TextWrapping="Wrap"
+                       Margin="0,8,0,0" />
+
+            <ui:Card Margin="0,16,0,0">
+                <StackPanel Margin="16">
+                    <TextBlock Text="Диагностика и телеметрия Windows" FontWeight="SemiBold" />
+                    <TextBlock TextWrapping="Wrap" Opacity="0.85" Margin="0,4,0,12"
+                               Text="Групповые политики и службы сбора диагностических данных." />
+
+                    <ui:ToggleSwitch x:Name="TogglePolicyTelemetry" Content="Политика: отключить телеметрию (AllowTelemetry = 0, HKLM)" Margin="0,0,0,14" />
+                    <ui:ToggleSwitch x:Name="ToggleDiagTrack" Content="Остановить и отключить службу Connected User Experiences and Telemetry (DiagTrack)" Margin="0,0,0,14" />
+                    <ui:ToggleSwitch x:Name="ToggleDmwappush" Content="Остановить и отключить службу WAP Push (dmwappushservice)" Margin="0,0,0,14" />
+                    <ui:ToggleSwitch x:Name="ToggleCompatAppraiser" Content="Отключить задание Microsoft Compatibility Appraiser (планировщик)" Margin="0,0,0,14" />
+                    <ui:ToggleSwitch x:Name="ToggleDeviceCensus" Content="Отключить задание Device Census (планировщик)" Margin="0,0,0,14" />
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Margin="0,12,0,0">
+                <StackPanel Margin="16">
+                    <TextBlock Text="Реклама и персонализация" FontWeight="SemiBold" />
+                    <TextBlock TextWrapping="Wrap" Opacity="0.85" Margin="0,4,0,12"
+                               Text="Параметры рекламного идентификатора и «персонализированных предложений» Microsoft." />
+
+                    <ui:ToggleSwitch x:Name="ToggleAdvertisingId" Content="Отключить рекламный идентификатор (AdvertisingInfo)" Margin="0,0,0,14" />
+                    <ui:ToggleSwitch x:Name="ToggleTailoredExperiences" Content="Отключить персонализированные предложения по диагностическим данным" Margin="0,0,0,14" />
+                    <ui:ToggleSwitch x:Name="ToggleStartSuggestions" Content="Снизить рекомендации в меню «Пуск» (Start_IrisRecommendations = 0)" Margin="0,0,0,14" />
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Margin="0,12,0,0">
+                <StackPanel Margin="16">
+                    <TextBlock Text="Отзывы и отчёты об ошибках" FontWeight="SemiBold" />
+                    <TextBlock TextWrapping="Wrap" Opacity="0.85" Margin="0,4,0,12"
+                               Text="Уменьшает назойливость запросов обратной связи и фоновую отправку отчётов (где применимо)." />
+
+                    <ui:ToggleSwitch x:Name="ToggleFeedbackFrequency" Content="Реже напоминать об отзывах Windows (PeriodicActivationEnabled = 0)" Margin="0,0,0,14" />
+                    <ui:ToggleSwitch x:Name="ToggleWerConsent" Content="Отключить отчёты об ошибках для текущего пользователя (Windows Error Reporting)" Margin="0,0,0,14" />
+                </StackPanel>
+            </ui:Card>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,8">
+                <ui:Button Content="Применить выбранное"
+                           Appearance="Primary"
+                           MinWidth="220"
+                           Margin="0,0,8,0"
+                           Click="ApplySelected_Click" />
+                <ui:Button Content="Безопасный профиль (всё из списка выше)"
+                           Appearance="Secondary"
+                           Click="ApplyAllSafe_Click" />
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

@@ -1,0 +1,89 @@
+<Application x:Class="ImplexityTweaker.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ui:ThemesDictionary Theme="Dark" />
+                <ui:ControlsDictionary />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Базовые кисти до загрузки ThemeApplier (тема Implexity); при старте подменяются из настроек -->
+            <SolidColorBrush x:Key="App.Background" Color="#050a14" />
+            <SolidColorBrush x:Key="App.Sidebar" Color="#070f1f" />
+            <SolidColorBrush x:Key="App.Surface" Color="#0c1528" />
+            <SolidColorBrush x:Key="App.SurfaceAlt" Color="#101e36" />
+            <SolidColorBrush x:Key="App.Border" Color="#1a2840" />
+            <SolidColorBrush x:Key="App.Accent" Color="#9333ea" />
+            <SolidColorBrush x:Key="App.AccentSoft" Color="#4c1d95" />
+            <SolidColorBrush x:Key="App.Text" Color="#f8fafc" />
+            <SolidColorBrush x:Key="App.TextMuted" Color="#94a3b8" />
+
+            <Style x:Key="App.SidebarBorder" TargetType="{x:Type Border}">
+                <Setter Property="Background" Value="{DynamicResource App.Sidebar}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource App.Border}" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="SnapsToDevicePixels" Value="True" />
+            </Style>
+
+            <Style x:Key="App.ContentBorder" TargetType="{x:Type Border}">
+                <Setter Property="Background" Value="{DynamicResource App.Surface}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource App.Border}" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="SnapsToDevicePixels" Value="True" />
+            </Style>
+
+            <Style x:Key="FluentBlockBorder" TargetType="{x:Type Border}">
+                <Setter Property="Background" Value="{DynamicResource App.SurfaceAlt}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource App.Border}" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="Padding" Value="16,14" />
+                <Setter Property="SnapsToDevicePixels" Value="True" />
+            </Style>
+
+            <Style x:Key="FluentSystemButton" TargetType="{x:Type Button}">
+                <Setter Property="Foreground" Value="{DynamicResource App.Text}" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderBrush" Value="{DynamicResource App.Border}" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="Padding" Value="14,8" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="SnapsToDevicePixels" Value="True" />
+                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border x:Name="Bd"
+                                    CornerRadius="8"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    SnapsToDevicePixels="True">
+                                <ContentPresenter Margin="{TemplateBinding Padding}"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="{DynamicResource App.SurfaceAlt}" />
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="Bd" Property="Opacity" Value="0.92" />
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value="0.45" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

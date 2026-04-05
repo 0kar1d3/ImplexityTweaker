@@ -1,0 +1,25 @@
+<Page x:Class="ImplexityTweaker.Pages.ActivationPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      Title="Activation"
+      Foreground="{DynamicResource App.Text}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="20">
+            <TextBlock Text="Активация Windows" FontSize="32" FontWeight="Bold" />
+            <TextBlock Text="Активация любой версии системы."
+                       Foreground="{DynamicResource App.TextMuted}"
+                       TextWrapping="Wrap"
+                       Margin="0,8,0,16" />
+
+            <ui:Card>
+                <StackPanel Margin="16">
+                    <ui:Button Content="Активировать Windows" Appearance="Primary" Click="Check_Click" HorizontalAlignment="Left" />
+                    <ui:Button Content="Проверить активацию" Margin="0,10,0,0" Appearance="Secondary" Click="Settings_Click" HorizontalAlignment="Left" />
+                    <ui:Button Content="Microsoft Store" Margin="0,10,0,0" Appearance="Transparent" Click="Store_Click" HorizontalAlignment="Left" />
+                </StackPanel>
+            </ui:Card>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

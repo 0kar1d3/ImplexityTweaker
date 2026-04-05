@@ -1,0 +1,67 @@
+<Page x:Class="ImplexityTweaker.Pages.FirstSetupPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      Title="FirstSetup"
+      Foreground="{DynamicResource App.Text}">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="0,0,0,12">
+            <TextBlock Text="Быстрая настройка Windows"
+                       FontSize="36"
+                       FontWeight="Bold" />
+            <TextBlock Text="Используйте переключатели, чтобы выбрать настройки для автоматического применения."
+                       Foreground="{DynamicResource App.TextMuted}"
+                       TextWrapping="Wrap"
+                       FontSize="15"
+                       Margin="0,10,0,0" />
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <ui:ToggleSwitch x:Name="ShowHiddenToggle" Content="Показывать скрытые файлы и папки" Margin="0,0,0,14" />
+                <ui:ToggleSwitch x:Name="ShowExtensionsToggle" Content="Показывать расширения файлов" Margin="0,0,0,14" />
+                <ui:ToggleSwitch x:Name="ThisPcToggle" Content="Открывать в проводнике «Этот ПК» вместо «Главная»" Margin="0,0,0,14" />
+                <ui:ToggleSwitch x:Name="PauseWuToggle" Content="Приостановить службу Windows Update" Margin="0,0,0,14" />
+                <ui:ToggleSwitch x:Name="ThisPcDesktopToggle" Content="Показывать значок «Этот компьютер» на рабочем столе" Margin="0,0,0,14" />
+                <ui:ToggleSwitch x:Name="NoShortcutSuffixToggle" Content="Убрать « — ярлык» в имени новых ярлыков" Margin="0,0,0,14" />
+                <ui:ToggleSwitch x:Name="HideTaskViewWidgetsToggle" Content="Скрыть кнопки «Просмотр задач» и «Виджеты»" Margin="0,0,0,14" />
+                <ui:ToggleSwitch x:Name="ReduceAdsToggle" Content="Уменьшить рекламу в меню «Пуск» и на панели задач" Margin="0,0,0,14" />
+
+                <ui:Card Margin="0,18,0,10">
+                    <StackPanel Margin="16">
+                        <TextBlock Text="Дополнительные компоненты" FontWeight="SemiBold" />
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Установить DirectPlay" VerticalAlignment="Center" />
+                            <ui:Button Content="Установить" Appearance="Secondary" Click="InstallDirectPlay_Click" Margin="14,0,0,0" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Установить .NET Framework 2.0, 3.0, 3.5" VerticalAlignment="Center" TextWrapping="Wrap" />
+                            <ui:Button Content="Установить" Appearance="Secondary" Click="InstallNetFx35_Click" Margin="14,0,0,0" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Включить старый просмотрщик фото" VerticalAlignment="Center" />
+                            <ui:Button Content="Установить" Appearance="Secondary" Click="InstallOldPhotoViewer_Click" Margin="14,0,0,0" />
+                        </StackPanel>
+                    </StackPanel>
+                </ui:Card>
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+            <ui:Button Content="Запустить быструю настройку"
+                       Appearance="Primary"
+                       MinWidth="260"
+                       Click="Run_Click" />
+        </StackPanel>
+    </Grid>
+</Page>

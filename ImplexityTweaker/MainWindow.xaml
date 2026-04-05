@@ -1,0 +1,83 @@
+<ui:UiWindow x:Class="ImplexityTweaker.MainWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             Title="Implexity Tweaker"
+             Height="720"
+             Width="1120"
+             MinHeight="560"
+             MinWidth="900"
+             WindowStartupLocation="CenterScreen"
+             ExtendsContentIntoTitleBar="True"
+             WindowBackdropType="Mica"
+             Background="{DynamicResource App.Background}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0"
+                     Title="Implexity Tweaker"
+                     Foreground="{DynamicResource App.Text}" />
+
+        <Grid Grid.Row="1" Margin="20,8,20,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="280" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Style="{StaticResource App.SidebarBorder}" Padding="14,16">
+                <DockPanel LastChildFill="True">
+                    <StackPanel DockPanel.Dock="Top" Margin="4,0,4,12">
+                        <TextBlock Text="Implexity Tweaker"
+                                   FontSize="26"
+                                   FontWeight="Bold"
+                                   Foreground="{DynamicResource App.Text}"
+                                   TextWrapping="Wrap" />
+                        <TextBlock Text="Гибкая настройка для Windows 10 / 11"
+                                   Margin="0,4,0,0"
+                                   FontSize="12"
+                                   Foreground="{DynamicResource App.TextMuted}" />
+                    </StackPanel>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel x:Name="NavButtonHost" Margin="0,0,4,0" />
+                    </ScrollViewer>
+                </DockPanel>
+            </Border>
+
+            <Border Grid.Column="2" Style="{StaticResource App.ContentBorder}" Padding="0">
+                <Frame x:Name="RootFrame"
+                       NavigationUIVisibility="Hidden"
+                       Background="Transparent" />
+            </Border>
+        </Grid>
+
+        <Border Grid.Row="2"
+                Margin="20,12,20,16"
+                Padding="14,10"
+                Background="{DynamicResource App.SurfaceAlt}"
+                BorderBrush="{DynamicResource App.Border}"
+                BorderThickness="1"
+                CornerRadius="10">
+            <Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <ui:Button Appearance="Transparent"
+                               Content="⟲  Перезапустить проводник"
+                               Foreground="{DynamicResource App.Text}"
+                               Click="RestartExplorer_Click" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <ui:Button Appearance="Transparent"
+                               Content="⚙  Настройки / О программе"
+                               Foreground="{DynamicResource App.Text}"
+                               Margin="8,0,0,0"
+                               Click="OpenSettings_Click" />
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</ui:UiWindow>

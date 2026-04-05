@@ -1,0 +1,52 @@
+<Page x:Class="ImplexityTweaker.Pages.SettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      Title="Settings"
+      Foreground="{DynamicResource App.Text}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="20" MaxWidth="560" HorizontalAlignment="Left">
+            <TextBlock Text="Настройки программы" FontSize="32" FontWeight="Bold" />
+            <TextBlock Text="Тема оформления, сохранение параметров в приложении."
+                       Foreground="{DynamicResource App.TextMuted}"
+                       TextWrapping="Wrap"
+                       Margin="0,8,0,20" />
+
+            <ui:Card>
+                <StackPanel Margin="16">
+                    <TextBlock Text="Тема приложения" FontWeight="SemiBold" />
+                    <TextBlock TextWrapping="Wrap"
+                               Foreground="{DynamicResource App.TextMuted}"
+                               Margin="0,4,0,10"
+                               Text="Внешний вид приложения." />
+                    <ComboBox x:Name="ThemeCombo"
+                              MinWidth="320"
+                              SelectionChanged="ThemeCombo_SelectionChanged" />
+                    <ui:Button Content="Сохранить и применить тему"
+                               Margin="0,14,0,0"
+                               Appearance="Primary"
+                               HorizontalAlignment="Left"
+                               Click="SaveTheme_Click" />
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Margin="0,16,0,0">
+                <StackPanel Margin="16">
+                    <TextBlock Text="О программе" FontWeight="SemiBold" />
+                    <TextBlock Margin="0,8,0,0" TextWrapping="Wrap"
+                               Text="Implexity Tweaker — набор модулей для настройки Windows 10 и 11. Официальный Telegram канал твикера  https://t.me/implexitytweaker" />
+                    <TextBlock Margin="0,8,0,0"
+                               Foreground="{DynamicResource App.TextMuted}"
+                               Text="Версия 1.0 · WPF-UI Fluent · .NET 8" />
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Button Content="Назад"
+                       Margin="0,20,0,0"
+                       Appearance="Secondary"
+                       HorizontalAlignment="Left"
+                       Click="Back_Click" />
+        </StackPanel>
+    </ScrollViewer>
+</Page>
