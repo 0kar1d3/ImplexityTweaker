@@ -2,7 +2,8 @@
 
 <p align="center">
   <img src="https://img.shields.io/github/v/release/0kar1d3/ImplexityTweaker?style=for-the-badge&color=blue&logo=windows11&logoColor=white">
-  <img src="https://img.shields.io/github/license/0kar1d3/ImplexityTweaker?style=for-the-badge&color=red">
+  <img src="https://img.shields.io/github/stars/0kar1d3/ImplexityTweaker?style=for-the-badge&color=gold">
+  <img src="https://img.shields.io/github/license/0kar1d3/ImplexityTweaker?style=for-the-badge">
 </p>
 
 **Implexity Tweaker** — это современный и интуитивно понятный инструмент для гибкой настройки и оптимизации операционных систем Windows 10 и 11. Утилита объединяет в себе десятки популярных твиков, позволяя управлять системой через чистый и удобный графический интерфейс.
