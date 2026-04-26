@@ -2,7 +2,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/github/v/release/0kar1d3/ImplexityTweaker?style=for-the-badge&color=blue&logo=windows11&logoColor=white">
-  <img src="https://img.shields.io/github/stars/0kar1d3/ImplexityTweaker?style=for-the-badge&color=gold">
+  <img src="https://img.shields.io/github/stars/0kar1d3/ImplexityTweaker?style=for-the-badge&color=gold&cache=1">
   <img src="https://img.shields.io/github/license/0kar1d3/ImplexityTweaker?style=for-the-badge">
 </p>
 
