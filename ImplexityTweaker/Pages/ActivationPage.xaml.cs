@@ -77,18 +77,7 @@ namespace ImplexityTweaker.Pages
             }
         }
 
-        // стор"
-        private void Store_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                Process.Start(new ProcessStartInfo("ms-windows-store://activation") { UseShellExecute = true });
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Не удалось открыть Store: " + ex.Message);
-            }
-        }
+      
 
         // получение издания виндовс 
         private string GetWindowsEdition()

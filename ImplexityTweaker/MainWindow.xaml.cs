@@ -1,8 +1,9 @@
+using ImplexityTweaker.Services;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using ImplexityTweaker.Services;
-using Wpf.Ui.Controls;
 using Wpf.Ui.Common;
+using Wpf.Ui.Controls;
 
 namespace ImplexityTweaker
 {
@@ -106,8 +107,21 @@ namespace ImplexityTweaker
 
         private async void RestartExplorer_Click(object sender, RoutedEventArgs e)
         {
-            await CommandRunner.RunPowerShellAsync("taskkill /f /im explorer.exe; Start-Process explorer.exe");
-            await Dialogs.ShowInfoAsync("Готово", "Проводник перезапущен.");
+            await Task.Run(() =>
+            {
+                foreach (var process in Process.GetProcessesByName("explorer"))
+                {
+                    try
+                    {
+                        process.Kill();
+                        process.WaitForExit();
+                    }
+                    catch { }
+                }
+                Process.Start("explorer.exe");
+            });
+
+            await Dialogs.ShowInfoAsync("Готово", "Проводник успешно перезапущен.");
         }
 
         private void OpenSettings_Click(object sender, RoutedEventArgs e)
