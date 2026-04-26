@@ -33,7 +33,7 @@
                                        Content=""
                                        Margin="0,0,0,12" />
 
-                    <TextBlock Text="Восстановить прежнюю версию"
+                    <TextBlock Text="Восстановить прежнюю версию "
                                FontWeight="SemiBold"
                                Margin="0,10,0,0"
                                Foreground="{DynamicResource App.Text}" />
