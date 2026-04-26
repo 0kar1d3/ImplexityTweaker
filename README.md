@@ -12,7 +12,7 @@
 ## 📸 Интерфейс программы
 
 <p align="center">
-  <img src="image123.png" alt="Implexity Tweaker Interface" width="800">
+  <img src="preview.png" alt="Implexity Tweaker Interface" width="800">
 </p>
 
 ## ✨ Ключевые модули и возможности
