@@ -71,7 +71,7 @@
 
 ## 🛠 Технические требования
 
-* **ОС:** Windows 10 / Windows 11 (x64) (может понадобится .NET 8.0 - https://dotnet.microsoft.com/download/dotnet/8.0/runtime)
+* **ОС:** Windows 10 / Windows 11 (x64)
 * **Права:** Требуются права администратора.
 
 ---
