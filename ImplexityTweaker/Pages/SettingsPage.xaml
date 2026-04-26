@@ -38,7 +38,7 @@
                                Text="Implexity Tweaker — набор модулей для настройки Windows 10 и 11. Официальный Telegram канал твикера  https://t.me/implexitytweaker" />
                     <TextBlock Margin="0,8,0,0"
                                Foreground="{DynamicResource App.TextMuted}"
-                               Text="Версия 1.0 · WPF-UI Fluent · .NET 8" />
+                               Text="Версия 1.1 · WPF-UI Fluent · .NET 8" />
                 </StackPanel>
             </ui:Card>
 

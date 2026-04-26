@@ -7,10 +7,8 @@ namespace ImplexityTweaker.Services;
 public static class ThemeApplier
 {
     public const string ThemeImplexity = "Implexity";
-    private const string LegacyStoredThemeId = "Maku";
     public const string ThemeAurora = "Aurora";
     public const string ThemeGraphite = "Graphite";
-    public const string ThemeDawn = "Dawn";
 
     public static event EventHandler? ThemeChanged;
 
@@ -21,15 +19,12 @@ public static class ThemeApplier
         (ThemeImplexity, "Implexity", "Тёмно-синий фон (#050a14) и фиолетовый акцент (#9333ea)."),
         (ThemeAurora, "Aurora", "Тёмная тема с сине-зелёным акцентом."),
         (ThemeGraphite, "Graphite", "Нейтральная тёмная палитра."),
-        (ThemeDawn, "Dawn", "Светлая мягкая тема.")
     ];
 
     
     public static string NormalizeThemeId(string? themeId)
     {
         if (string.IsNullOrWhiteSpace(themeId))
-            return ThemeImplexity;
-        if (string.Equals(themeId, LegacyStoredThemeId, StringComparison.OrdinalIgnoreCase))
             return ThemeImplexity;
         return themeId!;
     }
@@ -67,17 +62,7 @@ public static class ThemeApplier
                 text = Hex("#fafafa");
                 textMuted = Hex("#a1a1aa");
                 break;
-            case ThemeDawn:
-                bg = Hex("#f1f5f9");
-                sidebar = Hex("#e2e8f0");
-                surface = Hex("#ffffff");
-                surfaceAlt = Hex("#f8fafc");
-                border = Hex("#cbd5e1");
-                accent = Hex("#6366f1");
-                accentSoft = Hex("#e0e7ff");
-                text = Hex("#0f172a");
-                textMuted = Hex("#475569");
-                break;
+
             case ThemeImplexity:
             default:
                 bg = Hex("#050a14");
