@@ -21,6 +21,7 @@ namespace ImplexityTweaker
             ("wincomponents", "Компоненты Windows"),
             ("activation", "Активация Windows"),
             ("apps", "Установка приложений"),
+            ("optimization", "Игровая оптимизация"),
             ("firstsetup", "Быстрая настройка Windows"),
             ("processes", "Управление процессами"),
             ("pcinfo", "Информация о ПК")
@@ -80,6 +81,7 @@ namespace ImplexityTweaker
                 "processes" => new Pages.ProcessesPage(),
                 "pcinfo" => new Pages.PcInfoPage(),
                 "settings" => new Pages.SettingsPage(),
+                "optimization" => new Pages.OptimizationPage(),
                 _ => new Pages.FirstSetupPage()
             };
 
