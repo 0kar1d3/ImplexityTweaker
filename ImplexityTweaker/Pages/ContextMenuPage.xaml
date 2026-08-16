@@ -1,0 +1,146 @@
+<Page x:Class="ImplexityTweaker.Pages.ContextMenuPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      Title="ContextMenu"
+      Foreground="{DynamicResource App.Text}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="20">
+            <TextBlock Text="Контекстное меню" FontSize="32" FontWeight="Bold" />
+            <TextBlock Text="Настройка пунктов контекстного меню Windows. Некоторые изменения требуют перезапуска проводника."
+                       Foreground="{DynamicResource App.TextMuted}"
+                       TextWrapping="Wrap"
+                       Margin="0,8,0,16" />
+
+            <!-- Main settings card -->
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <StackPanel>
+                                        <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Включить классическое контекстное меню" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Возвращает привычное меню без значков-сокращений" FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="OldContextMenuToggle" Grid.Column="1" VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Убрать задержку контекстного меню" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Меню открывается мгновенно без задержки" FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="RemoveContextDelayToggle" Grid.Column="1" VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <Grid Margin="0,0,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Открыть в терминале" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Добавляет пункт для открытия в Windows Terminal" FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="OpenInTerminalToggle" Grid.Column="1" VerticalAlignment="Center"/>
+                    </Grid>
+                                </StackPanel>
+            </ui:Card>
+
+            <!-- Additional items card -->
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <StackPanel>
+                    <TextBlock Text="Дополнительно" FontWeight="Bold" FontSize="16" Margin="0,0,0,16"/>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Поделиться" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Добавляет пункт «Поделиться» в контекстное меню" FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="ShareToggle" Grid.Column="1" VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Восстановить прежнюю версию" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Добавляет пункт «Восстановить прежнюю версию»" FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="RestoreOldVersionToggle" Grid.Column="1" VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Отправить" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Добавляет пункт «Отправить» в контекстное меню" FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="SendToggle" Grid.Column="1" VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Копировать как путь" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Добавляет пункт «Копировать как путь»" FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="CopyPathToggle" Grid.Column="1" VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Закрепить на начальном экране" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Добавляет пункт для закрепления на начальном экране" FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="PinStartToggle" Grid.Column="1" VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <Grid Margin="0,0,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Закрепить на панели задач" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Добавляет пункт для закрепления на панели задач" FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="PinTaskbarToggle" Grid.Column="1" VerticalAlignment="Center"/>
+                    </Grid>
+                </StackPanel>
+            </ui:Card>
+
+            <!-- Apply button -->
+            <ui:Button Content="Применить"
+                       Appearance="Primary"
+                       HorizontalAlignment="Left"
+                       Margin="0,0,0,10"
+                       Click="Apply_Click"
+                       Padding="20,8"/>
+        </StackPanel>
+    </ScrollViewer>
+</Page>
+

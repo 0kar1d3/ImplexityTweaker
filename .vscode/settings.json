@@ -1,0 +1,17 @@
+{
+    "dotnet.defaultSolution": "ImplexityTweaker.sln",
+    "files.associations": {
+        "*.xaml": "xml"
+    },
+    "xml.format.splitAttributes": true,
+    "xml.format.joinCDATALines": false,
+    "xml.format.maxLineWidth": 120,
+    "[csharp]": {
+        "editor.defaultFormatter": "ms-dotnettools.csharp",
+        "editor.formatOnSave": true
+    },
+    "[xml]": {
+        "editor.defaultFormatter": "redhat.vscode-xml",
+        "editor.formatOnSave": true
+    }
+}

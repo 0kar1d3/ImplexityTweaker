@@ -1,0 +1,183 @@
+﻿<Page x:Class="ImplexityTweaker.Pages.TelemetryPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      Title="Telemetry"
+      Foreground="{DynamicResource App.Text}">
+
+    <StackPanel Margin="20">
+            <TextBlock Text="Телеметрия и конфиденциальность" FontSize="32" FontWeight="Bold" />
+            <TextBlock Text="Отметьте параметры, которые нужно ограничить. Часть действий требует прав администратора (службы, политики в HKLM, планировщик)."
+                       Foreground="{DynamicResource App.TextMuted}"
+                       TextWrapping="Wrap"
+                       Margin="0,8,0,16" />
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <StackPanel>
+                    <TextBlock Text="Диагностика и телеметрия Windows" FontWeight="Bold" FontSize="16" Margin="0,0,0,8" />
+                    <TextBlock Text="Групповые политики и службы сбора диагностических данных."
+                               FontSize="12"
+                               Foreground="{DynamicResource App.TextMuted}"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,16" />
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Политика AllowTelemetry (HKLM)" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Устанавливает политику AllowTelemetry = 0 в реестре HKLM — отключает телеметрию."
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="TogglePolicyTelemetry" Grid.Column="1" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Служба DiagTrack" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Останавливает и отключает службу Connected User Experiences and Telemetry (сбор диагностических данных)."
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="ToggleDiagTrack" Grid.Column="1" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Служба WAP Push (dmwappushservice)" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Останавливает и отключает службу push-уведомлений WAP."
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="ToggleDmwappush" Grid.Column="1" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Задание Compatibility Appraiser" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Отключает планируемое задание Microsoft Compatibility Appraiser."
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="ToggleCompatAppraiser" Grid.Column="1" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Задание Device Census" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Отключает планируемое задание Device Census."
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="ToggleDeviceCensus" Grid.Column="1" VerticalAlignment="Center" />
+                    </Grid>
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <StackPanel>
+                    <TextBlock Text="Реклама и персонализация" FontWeight="Bold" FontSize="16" Margin="0,0,0,8" />
+                    <TextBlock Text="Параметры рекламного идентификатора и «персонализированных предложений» Microsoft."
+                               FontSize="12"
+                               Foreground="{DynamicResource App.TextMuted}"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,16" />
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Рекламный идентификатор (AdvertisingInfo)" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Блокирует рекламный идентификатор AdvertisingInfo в реестре."
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="ToggleAdvertisingId" Grid.Column="1" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Персонализированные предложения" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Отключает персонализированные предложения, основанные на диагностических данных."
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="ToggleTailoredExperiences" Grid.Column="1" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Рекомендации в меню «Пуск»" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Снижает рекомендации в меню Пуск (Start_IrisRecommendations = 0)."
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="ToggleStartSuggestions" Grid.Column="1" VerticalAlignment="Center" />
+                    </Grid>
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <StackPanel>
+                    <TextBlock Text="Отзывы и отчёты об ошибках" FontWeight="Bold" FontSize="16" Margin="0,0,0,8" />
+                    <TextBlock Text="Уменьшает назойливость запросов обратной связи и фоновую отправку отчётов (где применимо)."
+                               FontSize="12"
+                               Foreground="{DynamicResource App.TextMuted}"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,16" />
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Запросы обратной связи" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Реже напоминает об отзывах Windows (PeriodicAutoRoot = 0)."
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="ToggleFeedbackFrequency" Grid.Column="1" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Отчёты об ошибках (WER)" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Отключает Windows Error Reporting для текущего пользователя."
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="ToggleWerConsent" Grid.Column="1" VerticalAlignment="Center" />
+                    </Grid>
+                </StackPanel>
+            </ui:Card>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+                <ui:Button Content="Применить выбранное" Appearance="Primary" Click="ApplySelected_Click" MinWidth="220" Padding="20,8" Margin="0,0,8,0" />
+                <ui:Button Content="Безопасный профиль (всё из списка выше)" Appearance="Secondary" Click="ApplyAllSafe_Click" Padding="20,8" />
+            </StackPanel>
+    </StackPanel>
+</Page>

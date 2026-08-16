@@ -1,0 +1,132 @@
+﻿<Page x:Class="ImplexityTweaker.Pages.PersonalizationPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      Title="Personalization"
+      Foreground="{DynamicResource App.Text}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="20">
+            <TextBlock Text="Персонализация" FontSize="32" FontWeight="Bold" />
+            <TextBlock Text="Эффекты интерфейса и панель задач."
+                       Foreground="{DynamicResource App.TextMuted}"
+                       TextWrapping="Wrap"
+                       Margin="0,8,0,16" />
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <StackPanel>
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Выключить прозрачность" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Отключает эффекты прозрачности, размытия и светящегося фона интерфейса Windows."
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="TransparencyToggle" Grid.Column="1" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Кнопка «Завершить задачу» на панели задач (Windows 11)" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Добавляет кнопку завершения задачи на панель задач в Windows 11."
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="EndTaskToggle" Grid.Column="1" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Включить маленькие кнопки окон" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Уменьшает кнопки управления окном для компактности панели задач."
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="SmallWindowButtonsToggle" Grid.Column="1" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Выключить размытые на экране блокировки" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Отключает эффект размытия экрана блокировки."
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="DisableLockScreenBlurToggle" Grid.Column="1" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Включить тёмную тему" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Применяет тёмную тему оформления Windows."
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="DarkThemeToggle" Grid.Column="1" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Включить суперподробные сведения о системе" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Показывает расширенные сведения о системе в окне «О программе»."
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="SuperDetailedInfoToggle" Grid.Column="1" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Выключить логотип Windows в загрузчике системы" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Скрывает логотип Windows при загрузке системы."
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="DisableBootLogoToggle" Grid.Column="1" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Выключить анимацию в загрузке системы" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Отключает анимацию при загрузке Windows."
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch Grid.Column="1"
+                                          x:Name="DisableBootAnimationToggle"
+                                          VerticalAlignment="Center" />
+                    </Grid>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                        <ui:Button Content="Применить" Appearance="Primary" Click="Apply_Click" Padding="20,8" Margin="0,0,8,0" />
+                        <ui:Button Content="Параметры панели задач" Appearance="Secondary" Click="Settings_Click" Padding="20,8" />
+                    </StackPanel>
+                </StackPanel>
+            </ui:Card>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

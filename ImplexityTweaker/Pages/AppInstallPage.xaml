@@ -1,0 +1,36 @@
+﻿<Page x:Class="ImplexityTweaker.Pages.AppInstallPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      Title="Apps"
+      Foreground="{DynamicResource App.Text}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="20">
+            <TextBlock Text="Установка приложений" FontSize="32" FontWeight="Bold" />
+            <TextBlock Text="Пакеты через winget (нужен установленный App Installer / winget)."
+                       Foreground="{DynamicResource App.TextMuted}"
+                       TextWrapping="Wrap"
+                       Margin="0,8,0,16" />
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <StackPanel>
+                    <ui:Button Content="Базовый набор: Chrome, 7-Zip, VLC, VS Code" Appearance="Primary" Click="Bundle_Click" HorizontalAlignment="Left" Padding="20,8" Margin="0,0,0,8" />
+                    <TextBlock Text="Ещё популярные приложения" FontWeight="Bold" FontSize="16" Margin="0,12,0,8" />
+                    <ui:Button Content="Установить Firefox" Appearance="Secondary" Click="Firefox_Click" HorizontalAlignment="Left" Padding="20,8" Margin="0,0,0,8" />
+                    <ui:Button Content="Установить Steam" Appearance="Secondary" Click="Steam_Click" HorizontalAlignment="Left" Padding="20,8" Margin="0,0,0,8" />
+                    <ui:Button Content="Установить Discord" Appearance="Secondary" Click="Discord_Click" HorizontalAlignment="Left" Padding="20,8" Margin="0,0,0,8" />
+                    <ui:Button Content="Установить Telegram Desktop" Appearance="Secondary" Click="Telegram_Click" HorizontalAlignment="Left" Padding="20,8" Margin="0,0,0,8" />
+                    <ui:Button Content="Открыть GitHub: zapret-discord-youtube" Appearance="Transparent" Click="OpenZapretGithub_Click" HorizontalAlignment="Left" Padding="20,8" Margin="0,10,0,0" />
+                    <TextBlock Text="Ручная установка по winget ID:" FontWeight="Bold" FontSize="16" Margin="0,12,0,4" />
+                    <TextBox x:Name="ManualWingetIdBox" MinWidth="380" Text="Microsoft.PowerToys" FontSize="13" Margin="0,0,0,10" />
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                        <ui:Button Content="Установить ID" Appearance="Secondary" Click="InstallManual_Click" Padding="20,8" Margin="0,0,8,0" />
+                        <ui:Button Content="Обновить все пакеты" Appearance="Transparent" Click="UpgradeAll_Click" Padding="20,8" Margin="8,0,0,0" />
+                    </StackPanel>
+                    <ui:Button Content="Открыть поиск winget (консоль)" Appearance="Secondary" Click="Search_Click" HorizontalAlignment="Left" Padding="20,8" Margin="0,10,0,0" />
+                </StackPanel>
+            </ui:Card>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

@@ -1,0 +1,100 @@
+<Page x:Class="ImplexityTweaker.Pages.UwpAppsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      mc:Ignorable="d"
+      Title="Uwp"
+      Foreground="{DynamicResource App.Text}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="20">
+            <!-- Header -->
+            <Grid Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Удаление UWP приложений" FontSize="32" FontWeight="Bold" />
+                    <TextBlock Text="Ниже показаны встроенные приложения Microsoft, установленные на этом ПК. Их удаление безопасно и не ломает систему."
+                               Foreground="{DynamicResource App.TextMuted}"
+                               TextWrapping="Wrap"
+                               Margin="0,8,0,0" />
+                </StackPanel>
+                <ui:Button Grid.Column="1" Content="Обновить список" Appearance="Secondary"
+                           Click="Refresh_Click" HorizontalAlignment="Right" VerticalAlignment="Center"
+                           Padding="16,8" FontSize="13" />
+            </Grid>
+
+            <!-- Индикатор загрузки -->
+            <ui:ProgressRing x:Name="LoadingIndicator" IsIndeterminate="True"
+                             Width="32" Height="32" Margin="0,0,0,15"
+                             HorizontalAlignment="Center" Visibility="Collapsed" />
+
+            <!-- Apps list card -->
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <StackPanel>
+                    <TextBlock Text="Установленные приложения" FontWeight="Bold" FontSize="16" Margin="0,0,0,4"/>
+                    <TextBlock Text="Нажмите на кнопку рядом с приложением, чтобы удалить его."
+                               FontSize="12" Foreground="{DynamicResource App.TextMuted}" Margin="0,0,0,16"/>
+
+                    <ItemsControl x:Name="AppListBox" Margin="0,0,0,10">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Name}" 
+                                                   FontSize="14" FontWeight="SemiBold" />
+                                        <TextBlock Text="{Binding Id}" 
+                                                   FontSize="12" 
+                                                   Foreground="{DynamicResource App.TextMuted}" />
+                                    </StackPanel>
+                                    <ui:Button Grid.Column="1"
+                                               Content="Удалить"
+                                               Appearance="Secondary"
+                                               Tag="{Binding Id}"
+                                               Click="RemoveApp_Click"
+                                               Padding="16,6"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ui:Card>
+
+            <!-- Manual entry card -->
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <StackPanel>
+                    <TextBlock Text="Ручной ввод ID пакета" FontWeight="Bold" FontSize="16" Margin="0,0,0,15"/>
+                    <TextBlock Text="Введите ID пакета вручную (пример: Microsoft.WindowsCamera)"
+                               Margin="0,0,0,6"
+                               Foreground="{DynamicResource App.TextMuted}"
+                               FontSize="12"/>
+
+                    <TextBox x:Name="ManualPackageBox"
+                             MinWidth="420"
+                             Margin="0,6,0,10"
+                             Height="36"
+                             FontSize="13" />
+
+                    <ui:Button Content="Удалить по ID"
+                               Appearance="Primary"
+                               HorizontalAlignment="Left"
+                               Click="RemoveManual_Click"
+                               Padding="20,8"/>
+                </StackPanel>
+            </ui:Card>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

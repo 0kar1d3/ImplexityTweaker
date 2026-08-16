@@ -1,0 +1,253 @@
+﻿<Page x:Class="ImplexityTweaker.Pages.OptimizationPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      Title="Optimization"
+      Foreground="{DynamicResource App.Text}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="20">
+            <TextBlock Text="Оптимизация для CS2" FontSize="32" FontWeight="Bold" />
+            <TextBlock Text="Оптимизация Windows для Counter-Strike 2 и других игр."
+                       Foreground="{DynamicResource App.TextMuted}"
+                       TextWrapping="Wrap"
+                       Margin="0,8,0,16" />
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <StackPanel>
+                    <TextBlock Text="Графика и GPU" FontWeight="Bold" FontSize="16" Margin="0,0,0,8" />
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Отключить Full Screen Optimizations (FSO)" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Отключает оптимизацию полного экрана, что понижает задержку в игре."
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="DisableFsoToggle" Grid.Column="1" VerticalAlignment="Center"
+                                         Checked="DisableFsoToggle_Toggled" Unchecked="DisableFsoToggle_Toggled" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Отключить Multi-Plane Overlay (MPO)" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Устраняет микро-фризы, мерцание экрана и статтеры в играх."
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="DisableMpoToggle" Grid.Column="1" VerticalAlignment="Center"
+                                         Checked="DisableMpoToggle_Toggled" Unchecked="DisableMpoToggle_Toggled" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Отключить Game DVR (Xbox Game Bar)" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Освобождает ресурсы, которые Xbox Game Bar занимает в фоне."
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="DisableGameDvrToggle" Grid.Column="1" VerticalAlignment="Center"
+                                         Checked="DisableGameDvrToggle_Toggled" Unchecked="DisableGameDvrToggle_Toggled" />
+                    </Grid>
+
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <StackPanel>
+                    <TextBlock Text="Сеть и задержка" FontWeight="Bold" FontSize="16" Margin="0,0,0,8" />
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Отключить алгоритм Nagle" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Уменьшает задержку при передаче мелких пакетов (снижает пинг)."
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="DisableNagleToggle" Grid.Column="1" VerticalAlignment="Center"
+                                         Checked="DisableNagleToggle_Toggled" Unchecked="DisableNagleToggle_Toggled" />
+                    </Grid>
+
+                                        <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Отключить TCP Auto-Tuning" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Помогает стабилизировать пинг и устранить микро-лаги в онлайн-играх."
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="DisableAutoTuningToggle" Grid.Column="1" VerticalAlignment="Center"
+                                         Checked="DisableAutoTuningToggle_Toggled" Unchecked="DisableAutoTuningToggle_Toggled" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Высокий приоритет для CS2" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Устанавливает высокий приоритет процессора для cs2.exe (включать при запущенной игре)."
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="HighPriorityToggle" Grid.Column="1" VerticalAlignment="Center"
+                                         Checked="HighPriorityToggle_Toggled" Unchecked="HighPriorityToggle_Toggled" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Приоритезация сетевого трафика (QoS)" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Снижает сетевую задержку: мгновенная отправка ACK и DSCP-метка приоритета для игрового трафика."
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="PrioritizeBurstToggle" Grid.Column="1" VerticalAlignment="Center"
+                                         Checked="PrioritizeBurstToggle_Toggled" Unchecked="PrioritizeBurstToggle_Toggled" />
+                    </Grid>
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <StackPanel>
+                    <TextBlock Text="Производительность системы" FontWeight="Bold" FontSize="16" Margin="0,0,0,8" />
+                    <TextBlock Text="Ограничьте максимальную частоту процессора, чтобы снизить тепловую нагрузку и энергопотребление. Понижение до 10% экономит потребление энергии (полезно для ноутбуков), 100% даёт полный приток мощности."
+                               FontSize="12"
+                               Foreground="{DynamicResource App.TextMuted}"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,16" />
+
+                                        <Slider x:Name="ProcessorStateSlider"
+                            Minimum="10" Maximum="100" SmallChange="10" LargeChange="10" Interval="10"
+                            IsSnapToTickEnabled="True"
+                            TickFrequency="10"
+                            ValueChanged="ProcessorStateSlider_ValueChanged"
+                            PreviewMouseLeftButtonUp="ProcessorStateSlider_PreviewMouseLeftButtonUp"
+                            Margin="0,0,0,12" />
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock x:Name="ProcessorStatePercentText" Grid.Column="0"
+                                   Text="100%"
+                                   FontSize="14" FontWeight="SemiBold"
+                                   VerticalAlignment="Center" Margin="0,0,12,0" />
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <ui:Button Content="Применить" Appearance="Primary" Click="ApplyProcessorState_Click"
+                                       Padding="20,8" Margin="0,0,12,0" VerticalAlignment="Center" />
+                        </StackPanel>
+
+                        <ui:Button Grid.Column="2" Content="Мин. производительность" Appearance="Secondary" Click="ApplyMin_Click"
+                                   Padding="20,8" VerticalAlignment="Center" />
+
+                        <ui:Button Grid.Column="3" Content="Макс. производительность" Appearance="Secondary" Click="ApplyMax_Click"
+                                   Padding="20,8" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Отключить анимацию окон Windows" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Отключает анимацию окон и переходы в интерфейсе Windows."
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="DisableWindowsAnimationToggle" Grid.Column="1" VerticalAlignment="Center"
+                                         Checked="DisableWindowsAnimationToggle_Toggled" Unchecked="DisableWindowsAnimationToggle_Toggled" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Отключить прозрачность Windows" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Отключает прозрачность панели задач и меню «Пуск» для лёгкого повышения производительности."
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="DisableVisualEffectsToggle" Grid.Column="1" VerticalAlignment="Center"
+                                         Checked="DisableVisualEffectsToggle_Toggled" Unchecked="DisableVisualEffectsToggle_Toggled" />
+                    </Grid>
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <StackPanel>
+                    <TextBlock Text="Обслуживание" FontWeight="Bold" FontSize="16" Margin="0,0,0,8" />
+
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Очистить кэш шейдеров Steam и CS2" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Помогает при микрофризах после обновлений"
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:Button Grid.Column="1" Content="Очистить" Appearance="Secondary" Click="ClearCache_Click" Padding="16,6" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Separator Margin="0,10" Background="{DynamicResource App.Border}" />
+
+                    <Grid Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Очистить временные файлы Windows" FontSize="14" FontWeight="SemiBold" />
+                            <TextBlock Text="Удаляет временные файлы, которые могут замедлить систему"
+                                       FontSize="12" Foreground="{DynamicResource App.TextMuted}" />
+                        </StackPanel>
+                        <ui:Button Grid.Column="1" Content="Очистить" Appearance="Secondary" Click="ClearTempFiles_Click" Padding="16,6" VerticalAlignment="Center" />
+                    </Grid>
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <StackPanel>
+                    <TextBlock Text="Параметры запуска CS2" FontWeight="Bold" FontSize="16" Margin="0,0,0,8" />
+                    <TextBlock Text="Параметры уже заполнены под вашу систему. Скопируйте их в свойства запуска игры в Steam"
+                               FontSize="12"
+                               Foreground="{DynamicResource App.TextMuted}"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,16" />
+                    <ui:TextBox x:Name="LaunchArgsBox" MinHeight="60" TextWrapping="Wrap" AcceptsReturn="True" IsReadOnly="True" FontSize="13" Margin="0,0,0,10" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <ui:Button Grid.Column="1" Content="Копировать" Appearance="Primary" Click="CopyLaunchArgs_Click" Padding="20,8" VerticalAlignment="Center" />
+                    </Grid>
+                </StackPanel>
+            </ui:Card>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

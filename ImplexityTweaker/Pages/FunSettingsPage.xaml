@@ -1,0 +1,55 @@
+<Page x:Class="ImplexityTweaker.Pages.FunSettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      Title="FunSettings"
+      Foreground="{DynamicResource App.Text}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="20">
+            <TextBlock Text="Фановые настройки" Style="{StaticResource PageTitleText}" />
+            <TextBlock Text="Смена названия процессора в диспетчере задач."
+                       Style="{StaticResource PageDescriptionText}"
+                       Margin="0,8,0,16" />
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <StackPanel>
+                    <TextBlock Text="Процессор (CPU)" Style="{StaticResource CardHeaderText}" Margin="0,0,0,8" />
+                    <TextBlock Text="Изменяет название процессора, отображаемое в диспетчере задач. Изменения вступают в силу сразу, но сбрасываются после перезагрузки ПК."
+                               Style="{StaticResource ItemDescriptionText}"
+                               Margin="0,0,0,12" />
+
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Название процессора" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock x:Name="CurrentCpuText"
+                                       Style="{StaticResource ItemDescriptionText}" />
+                        </StackPanel>
+                    </Grid>
+
+                    <TextBox x:Name="CpuNameBox"
+                             Margin="0,0,0,12"
+                             Padding="10,8"
+                             FontSize="13" />
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                        <ui:Button Content="Применить название CPU"
+                                   Appearance="Primary"
+                                   Click="ApplyCpu_Click"
+                                   Padding="20,8"
+                                   Margin="0,0,8,0" />
+                        <ui:Button Content="Сбросить"
+                                   Appearance="Secondary"
+                                   Click="ResetCpu_Click"
+                                   Padding="20,8" />
+                    </StackPanel>
+                </StackPanel>
+            </ui:Card>
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>
