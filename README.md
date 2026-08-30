@@ -6,11 +6,12 @@
   <img src="https://img.shields.io/github/license/0kar1d3/ImplexityTweaker?style=for-the-badge">
 </p>
 
-[**Русский**](#-russian-version) | [**English**](#-english-version)
+[**Русский**](#-русский) | [**English**](#-english)
+
 
 ---
 
-## 🇷🇺 Russian
+## Русский
 
 **Implexity Tweaker** — это современный, мощный и интуитивно понятный инструмент для гибкой настройки, оптимизации и персонализации операционных систем Windows 10 и 11. Утилита объединяет в себе десятки полезных твиков, управляет автозагрузкой, установкой софта, процессами и игровым режимом через чистый интерфейс в стиле Fluent Design.
 
@@ -109,7 +110,7 @@
 ---
 ---
 
-## 🇬🇧 English
+## English
 
 **Implexity Tweaker** is a modern, powerful, and intuitive tool designed for tweaking, optimizing, and personalizing Windows 10 and 11. It combines dozens of essential system tweaks, manages startup items, software installation, running processes, and gaming optimization inside a sleek Fluent Design interface.
 
