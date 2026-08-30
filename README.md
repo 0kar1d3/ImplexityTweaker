@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/github/license/0kar1d3/ImplexityTweaker?style=for-the-badge">
 </p>
 
-[**Русский**](#-русский) | [**English**](#-english)
+[**Русский**](#русский) | [**English**](#english)
 
 
 ---
