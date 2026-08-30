@@ -8,7 +8,6 @@
 
 [**Русский**](#русский) | [**English**](#english)
 
-
 ---
 
 ## Русский
@@ -67,8 +66,6 @@
 ---
 ### 📦 Особенности сборки (Self-Contained)
 
-Размер исполняемого файла обусловлен его полной автономностью:
-
 1. **Zero Dependencies:** Вам **не нужно** скачивать или устанавливать .NET Runtime. Все необходимые библиотеки уже вшиты в один `.exe`.
 2. **Modern UI:** Использование современной библиотеки **WPF-UI** обеспечивает нативный Fluent Design в стиле Windows 11 с поддержкой кастомных тем.
 
@@ -90,7 +87,6 @@
 ### 🛠 Технологии
 * **C# / .NET 8**
 * **[WPF-UI](https://github.com/lepoco/wpfui)**
-* **Winget CLI**
 
 ### 🛠 Технические требования
 
@@ -166,8 +162,6 @@ The utility is split into clean categories accessible via the sidebar:
 ---
 ### 📦 Build Features (Self-Contained)
 
-The standalone executable size ensures complete independence:
-
 1. **Zero Dependencies:** No need to download or install any external .NET Runtimes. Everything is embedded into a single executable.
 2. **Modern UI:** Built with **WPF-UI** to deliver native Windows 11 Fluent Design and custom themes.
 
@@ -177,7 +171,7 @@ The standalone executable size ensures complete independence:
 
 > **⚠️ IMPORTANT:** All changes to the registry and system files are made at your own risk. It is highly recommended to create a **System Restore Point** before running any tweaks.
 
-1. **Download** the latest release from [Releases](https://github.0kar1d3/ImplexityTweaker/releases) or [implexity.fun](https://implexity.fun).
+1. **Download** the latest release from [Releases](https://github.com/0kar1d3/ImplexityTweaker/releases) or [implexity.fun](https://implexity.fun).
 2. Run the application **as Administrator**.
 3. Select your desired category (e.g., **"Quick Windows Setup"** or **"Game Optimization"**).
 4. Toggle your preferred settings.
@@ -189,7 +183,6 @@ The standalone executable size ensures complete independence:
 ### 🛠 Built With
 * **C# / .NET 8**
 * **[WPF-UI](https://github.com/lepoco/wpfui)**
-* **Winget CLI**
 
 ### 🛠 System Requirements
 
