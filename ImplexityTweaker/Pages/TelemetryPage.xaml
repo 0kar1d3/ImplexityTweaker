@@ -1,0 +1,224 @@
+﻿<Page x:Class="ImplexityTweaker.Pages.TelemetryPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:loc="clr-namespace:ImplexityTweaker.Localization"
+      Title="Telemetry"
+      Foreground="{DynamicResource App.Text}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="20">
+            <TextBlock Text="{loc:Loc 'Телеметрия и конфиденциальность'}" Style="{StaticResource PageTitleText}" />
+            <TextBlock Text="{loc:Loc 'Отметьте параметры, которые нужно ограничить. Часть действий требует прав администратора (службы, политики в HKLM, планировщик).'}"
+                       Style="{StaticResource PageDescriptionText}"
+                       Margin="0,8,0,16" />
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <StackPanel>
+                    <TextBlock Text="{loc:Loc 'Диагностика и телеметрия Windows'}" Style="{StaticResource CardHeaderText}" Margin="0,0,0,8" />
+                    <TextBlock Text="{loc:Loc 'Групповые политики и службы сбора диагностических данных.'}"
+                               Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,0,0,16" />
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="ShieldKeyhole24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Политика AllowTelemetry (HKLM)'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Устанавливает политику AllowTelemetry = 0 в реестре HKLM — отключает телеметрию.'}"
+                                       Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="TogglePolicyTelemetry" Grid.Column="2" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="EyeOff24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Служба DiagTrack'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Останавливает и отключает службу Connected User Experiences and Telemetry (сбор диагностических данных).'}"
+                                       Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="ToggleDiagTrack" Grid.Column="2" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="CloudOff24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Служба WAP Push (dmwappushservice)'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Останавливает и отключает службу push-уведомлений WAP.'}"
+                                       Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="ToggleDmwappush" Grid.Column="2" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="TaskListLtr24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Задание Compatibility Appraiser'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Отключает планируемое задание Microsoft Compatibility Appraiser.'}"
+                                       Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="ToggleCompatAppraiser" Grid.Column="2" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="HardDrive20" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Задание Device Census'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Отключает планируемое задание Device Census.'}"
+                                       Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="ToggleDeviceCensus" Grid.Column="2" VerticalAlignment="Center" />
+                    </Grid>
+                </StackPanel>
+            </ui:Card>            <ui:Card Padding="20" Margin="0,0,0,15">
+                <StackPanel>
+                    <TextBlock Text="{loc:Loc 'Реклама и персонализация'}" Style="{StaticResource CardHeaderText}" Margin="0,0,0,8" />
+                    <TextBlock Text="{loc:Loc 'Параметры рекламного идентификатора и «персонализированных предложений» Microsoft.'}"
+                               Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,0,0,16" />
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Lightbulb24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Рекламный идентификатор (AdvertisingInfo)'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Блокирует рекламный идентификатор AdvertisingInfo в реестре.'}"
+                                       Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="ToggleAdvertisingId" Grid.Column="2" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="PersonLightbulb24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Персонализированные предложения'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Отключает персонализированные предложения, основанные на диагностических данных.'}"
+                                       Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="ToggleTailoredExperiences" Grid.Column="2" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Rocket24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Рекомендации в меню «Пуск»'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Снижает рекомендации в меню Пуск (Start_IrisRecommendations = 0).'}"
+                                       Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="ToggleStartSuggestions" Grid.Column="2" VerticalAlignment="Center" />
+                    </Grid>
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <StackPanel>
+                    <TextBlock Text="{loc:Loc 'Отзывы и отчёты об ошибках'}" Style="{StaticResource CardHeaderText}" Margin="0,0,0,8" />
+                    <TextBlock Text="{loc:Loc 'Уменьшает назойливость запросов обратной связи и фоновую отправку отчётов (где применимо).'}"
+                               Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,0,0,16" />
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="ChatSettings20" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Запросы обратной связи'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Реже напоминает об отзывах Windows (PeriodicAutoRoot = 0).'}"
+                                       Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="ToggleFeedbackFrequency" Grid.Column="2" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="ShieldError20" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Отчёты об ошибках (WER)'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Отключает Windows Error Reporting для текущего пользователя.'}"
+                                       Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="ToggleWerConsent" Grid.Column="2" VerticalAlignment="Center" />
+                    </Grid>
+                </StackPanel>
+            </ui:Card>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+                <ui:Button Content="{loc:Loc 'Применить выбранное'}" Appearance="Primary" Click="ApplySelected_Click" MinWidth="220" Padding="20,8" Margin="0,0,8,0" />
+                <ui:Button Content="{loc:Loc 'Безопасный профиль (всё из списка выше)'}" Appearance="Secondary" Click="ApplyAllSafe_Click" Padding="20,8" />
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

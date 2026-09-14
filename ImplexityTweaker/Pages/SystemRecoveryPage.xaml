@@ -1,0 +1,232 @@
+﻿<Page x:Class="ImplexityTweaker.Pages.SystemRecoveryPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:loc="clr-namespace:ImplexityTweaker.Localization"
+      Title="SystemRecovery"
+      Foreground="{DynamicResource App.Text}">
+
+    <ScrollViewer x:Name="RootScroll" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="20">
+            <TextBlock Text="{loc:Loc 'Система и восстановление'}" Style="{StaticResource PageTitleText}" />
+            <TextBlock Text="{loc:Loc 'Точки восстановления, сжатие системы и параметры телеметрии.'}"
+                       Style="{StaticResource PageDescriptionText}"
+                       Margin="0,8,0,16" />
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Background="{DynamicResource App.SurfaceAlt}"
+                            BorderBrush="{DynamicResource App.Border}"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            Width="44" Height="44"
+                            VerticalAlignment="Top">
+                        <ui:SymbolIcon Symbol="ArrowSyncCheckmark24" FontSize="22" Foreground="{DynamicResource App.IconAccent}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                    <StackPanel Grid.Column="1" Margin="14,0,0,0">
+                        <TextBlock Text="{loc:Loc 'Снимок перед изменениями'}" Style="{StaticResource ItemTitleText}" />
+                        <TextBlock Text="{loc:Loc 'Сохраняет реестр, службы, задачи планировщика, hosts, схему питания, загрузчик и настройки приложения. Если что-то сломается — одна кнопка вернёт всё как было.'}"
+                                   Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,4,0,14" />
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                            <ui:Button Content="{loc:Loc 'Создать снимок'}" Appearance="Primary" Click="TweakSnapshot_Click" Padding="20,8" Margin="0,0,8,0" />
+                            <ui:Button Content="{loc:Loc 'Обновить список'}" Appearance="Secondary" Click="TweakSnapshotRefresh_Click" Padding="20,8" />
+                        </StackPanel>
+                        <TextBlock Text="{loc:Loc 'Хранятся последние 10 снимков, самые старые удаляются автоматически.'}"
+                                   Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,0,0,10" />
+                        <StackPanel x:Name="BackupHost" />
+                    </StackPanel>
+                </Grid>
+            </ui:Card>
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Background="{DynamicResource App.SurfaceAlt}"
+                            BorderBrush="{DynamicResource App.Border}"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            Width="44" Height="44"
+                            VerticalAlignment="Top">
+                        <ui:SymbolIcon Symbol="Storage24" FontSize="22" Foreground="{DynamicResource App.IconAccent}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                    <StackPanel Grid.Column="1" Margin="14,0,0,0">
+                        <TextBlock Text="{loc:Loc 'Сжатие и обслуживание'}" Style="{StaticResource ItemTitleText}" />
+                        <TextBlock Text="{loc:Loc 'CompactOS уменьшает занимаемое место на системном разделе (может занять время).'}"
+                                   Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,4,0,14" />
+                        <ui:Button Content="{loc:Loc 'Включить сжатие системы (CompactOS)'}" Appearance="Primary" Click="Compact_Click" HorizontalAlignment="Left" Padding="20,8" />
+                    </StackPanel>
+                </Grid>
+            </ui:Card>
+
+            <TextBlock Text="{loc:Loc 'Телеметрия и конфиденциальность'}" Style="{StaticResource CardHeaderText}" Margin="0,0,0,10" />
+            <Border Style="{StaticResource FluentBlockBorder}" Padding="0">
+                <Frame x:Name="TelemetryFrame" NavigationUIVisibility="Hidden" PreviewMouseWheel="TelemetryFrame_PreviewMouseWheel" />
+            </Border>
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Background="{DynamicResource App.SurfaceAlt}"
+                            BorderBrush="{DynamicResource App.Border}"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            Width="44" Height="44"
+                            VerticalAlignment="Top">
+                        <ui:SymbolIcon Symbol="ArrowTrendingSettings24" FontSize="22" Foreground="{DynamicResource App.IconAccent}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                    <StackPanel Grid.Column="1" Margin="14,0,0,0">
+                        <TextBlock Text="{loc:Loc 'Диагностика в один клик'}" Style="{StaticResource ItemTitleText}" />
+                        <TextBlock Text="{loc:Loc 'Последовательно проверит образ системы, диск, целостность файлов и загрузчик. Может занять несколько минут.'}"
+                                   Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,4,0,14" />
+                        <ui:Button Content="{loc:Loc 'Запустить диагностику'}" Appearance="Primary" Click="RunDiagnostics_Click"
+                                   HorizontalAlignment="Left" Padding="20,8" />
+                    </StackPanel>
+                </Grid>
+            </ui:Card>
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Background="{DynamicResource App.SurfaceAlt}"
+                            BorderBrush="{DynamicResource App.Border}"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            Width="44" Height="44"
+                            VerticalAlignment="Top">
+                        <ui:SymbolIcon Symbol="HardDrive20" FontSize="22" Foreground="{DynamicResource App.IconAccent}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                    <StackPanel Grid.Column="1" Margin="14,0,0,0">
+                        <TextBlock Text="{loc:Loc 'Состояние накопителей (SMART)'}" Style="{StaticResource ItemTitleText}" />
+                        <TextBlock Text="{loc:Loc 'Открывает отдельное окно с оценкой здоровья накопителей, температурой и износом (SMART).'}"
+                                   Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,4,0,14" />
+                        <ui:Button Content="{loc:Loc 'Открыть состояние дисков'}" Appearance="Secondary" Click="SmartDisks_Click"
+                                   HorizontalAlignment="Left" Padding="20,8" />
+                    </StackPanel>
+                </Grid>
+            </ui:Card>
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Background="{DynamicResource App.SurfaceAlt}"
+                            BorderBrush="{DynamicResource App.Border}"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            Width="44" Height="44"
+                            VerticalAlignment="Top">
+                        <ui:SymbolIcon Symbol="ArrowTrendingWrench24" FontSize="22" Foreground="{DynamicResource App.IconAccent}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                    <StackPanel Grid.Column="1" Margin="14,0,0,0">
+                        <TextBlock Text="{loc:Loc 'Драйверы'}" Style="{StaticResource ItemTitleText}" />
+                        <TextBlock Text="{loc:Loc 'Проверяет проблемные устройства и показывает версии видеодрайверов.'}"
+                                   Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,4,0,14" />
+                        <ui:Button Content="{loc:Loc 'Проверить драйверы'}" Appearance="Secondary" Click="Drivers_Click"
+                                   HorizontalAlignment="Left" Padding="20,8" />
+                        <StackPanel x:Name="DriversHost" Margin="0,10,0,0" />
+                    </StackPanel>
+                </Grid>
+            </ui:Card>
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Background="{DynamicResource App.SurfaceAlt}"
+                            BorderBrush="{DynamicResource App.Border}"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            Width="44" Height="44"
+                            VerticalAlignment="Top">
+                        <ui:SymbolIcon Symbol="BoxSearch24" FontSize="22" Foreground="{DynamicResource App.IconAccent}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                    <StackPanel Grid.Column="1" Margin="14,0,0,0">
+                        <TextBlock Text="{loc:Loc 'Анализ места на диске'}" Style="{StaticResource ItemTitleText}" />
+                        <TextBlock Text="{loc:Loc 'Считает размеры папок и крупных файлов, чтобы найти, что занимает место.'}"
+                                   Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,4,0,14" />
+                        <ui:TextBox x:Name="AnalyzePathBox" FontSize="13" Margin="0,0,0,12" />
+                        <StackPanel Orientation="Horizontal">
+                            <ui:Button Content="{loc:Loc 'Анализировать'}" Appearance="Primary" Click="Analyze_Click" Padding="20,8" Margin="0,0,8,0" />
+                            <ui:Button Content="{loc:Loc 'Отмена'}" Appearance="Secondary" Click="CancelAnalyze_Click" Padding="20,8" />
+                        </StackPanel>
+                        <StackPanel x:Name="DiskAnalysisHost" Margin="0,10,0,0" />
+                    </StackPanel>
+                </Grid>
+            </ui:Card>
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Background="{DynamicResource App.SurfaceAlt}"
+                            BorderBrush="{DynamicResource App.Border}"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            Width="44" Height="44"
+                            VerticalAlignment="Top">
+                        <ui:SymbolIcon Symbol="ArrowClockwise28" FontSize="22" Foreground="{DynamicResource App.IconAccent}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                    <StackPanel Grid.Column="1" Margin="14,0,0,0">
+                        <TextBlock Text="{loc:Loc 'Точки восстановления Windows'}" Style="{StaticResource ItemTitleText}" />
+                        <TextBlock Text="{loc:Loc 'Дополнительная страховка на случай проблем с самой Windows: драйверы, системные файлы, загрузка. Откат вернёт всю систему к выбранной точке и потребует перезагрузку.'}"
+                                   Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,4,0,12" />
+
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                            <ui:Button Content="{loc:Loc 'Создать точку восстановления'}" Appearance="Primary" Click="CreateRestorePoint_Click" Padding="20,8" Margin="0,0,8,8" />
+                            <ui:Button Content="{loc:Loc 'Обновить список'}" Appearance="Secondary" Click="RestorePointList_Click" Padding="20,8" Margin="0,0,8,8" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                            <ui:Button Content="{loc:Loc 'Включить защиту системы'}" Appearance="Secondary" Click="EnableProtection_Click" Padding="20,8" Margin="0,0,8,8" />
+                            <ui:Button Content="{loc:Loc 'Открыть «Защита системы»'}" Appearance="Transparent" Click="OpenSysRestore_Click" Padding="20,8" Margin="0,0,0,8" />
+                        </StackPanel>
+
+                        <TextBlock x:Name="RestoreStatusText" Text="{loc:Loc 'Чтение точек восстановления…'}"
+                                   Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,6,0,0" />
+                        <StackPanel x:Name="RestoreListHost" Margin="0,6,0,0" />
+                    </StackPanel>
+                </Grid>
+            </ui:Card>
+
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>

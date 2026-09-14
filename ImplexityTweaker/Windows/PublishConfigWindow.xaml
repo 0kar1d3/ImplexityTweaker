@@ -1,0 +1,58 @@
+<Window x:Class="ImplexityTweaker.Windows.PublishConfigWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        xmlns:loc="clr-namespace:ImplexityTweaker.Localization"
+        Title="{loc:Loc 'Публикация конфига'}"
+        Icon="/icon_rounded.png"
+        Width="420"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="{DynamicResource App.Surface}"
+        Foreground="{DynamicResource App.Text}"
+        FontFamily="Segoe UI Variable, Segoe UI">
+
+    <StackPanel Margin="24">
+        <!-- Шапка -->
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+            <Border Width="44" Height="44" CornerRadius="10"
+                    Background="{DynamicResource App.SurfaceAlt}" BorderBrush="{DynamicResource App.Border}" BorderThickness="1">
+                <ui:SymbolIcon Symbol="Share24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                <TextBlock Text="{loc:Loc 'Публикация конфига'}" FontSize="18" FontWeight="Bold" />
+                <TextBlock x:Name="ConfigNameText" FontSize="12" Foreground="{DynamicResource App.TextMuted}"
+                           Margin="0,2,0,0" TextTrimming="CharacterEllipsis" />
+            </StackPanel>
+        </StackPanel>
+
+        <TextBlock Text="{loc:Loc 'Выберите видимость конфига на сайте:'}"
+                   FontSize="12" Foreground="{DynamicResource App.TextMuted}" TextWrapping="Wrap" Margin="0,0,0,14" />
+
+        <!-- Публично -->
+        <ui:Button x:Name="PublicBtn" Appearance="Primary" Click="Public_Click"
+                   HorizontalAlignment="Stretch" Padding="0,10" Margin="0,0,0,8">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <ui:SymbolIcon Symbol="Globe24" FontSize="16" Foreground="White" VerticalAlignment="Center" />
+                <TextBlock Text="{loc:Loc 'Опубликовать публично'}" FontSize="13" FontWeight="SemiBold"
+                           Margin="8,0,0,0" VerticalAlignment="Center" />
+            </StackPanel>
+        </ui:Button>
+
+        <!-- Приватно -->
+        <ui:Button x:Name="PrivateBtn" Appearance="Secondary" Click="Private_Click"
+                   HorizontalAlignment="Stretch" Padding="0,10" Margin="0,0,0,8">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <ui:SymbolIcon Symbol="LockClosed24" FontSize="16" Foreground="{DynamicResource App.IconAccent}" VerticalAlignment="Center" />
+                <TextBlock Text="{loc:Loc 'Опубликовать приватно'}" FontSize="13" FontWeight="SemiBold"
+                           Margin="8,0,0,0" VerticalAlignment="Center" />
+            </StackPanel>
+        </ui:Button>
+
+        <!-- Отмена -->
+        <ui:Button x:Name="CancelBtn" Appearance="Secondary" Click="Cancel_Click"
+                   HorizontalAlignment="Stretch" Padding="0,8" Content="{loc:Loc 'Отмена'}" />
+    </StackPanel>
+</Window>

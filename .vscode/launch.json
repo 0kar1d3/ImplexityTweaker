@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch ImplexityTweaker",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/ImplexityTweaker/bin/Debug/net8.0-windows10.0.19041.0/ImplexityTweaker.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}/ImplexityTweaker",
+            "stopAtEntry": false,
+            "console": "internalConsole"
+        },
+        {
+            "name": ".NET Attach",
+            "type": "coreclr",
+            "request": "attach"
+        }
+    ]
+}

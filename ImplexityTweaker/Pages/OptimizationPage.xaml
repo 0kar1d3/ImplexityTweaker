@@ -1,0 +1,534 @@
+﻿<Page x:Class="ImplexityTweaker.Pages.OptimizationPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:loc="clr-namespace:ImplexityTweaker.Localization"
+      Title="Optimization"
+      Foreground="{DynamicResource App.Text}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="20">
+            <TextBlock Text="{loc:Loc 'Оптимизация для CS2'}" Style="{StaticResource PageTitleText}" />
+            <TextBlock Text="{loc:Loc 'Оптимизация Windows для Counter-Strike 2 и других игр.'}"
+                       Style="{StaticResource PageDescriptionText}"
+                       Margin="0,8,0,16" />
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <StackPanel>
+                    <TextBlock Text="{loc:Loc 'Графика и GPU'}" Style="{StaticResource CardHeaderText}" Margin="0,0,0,8" />
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="ArrowMaximize48" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Отключить Full Screen Optimizations (FSO)'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Отключает оптимизацию полного экрана, что понижает задержку в игре.'}"
+                                       Style="{StaticResource ItemDescriptionText}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="DisableFsoToggle" Grid.Column="2" VerticalAlignment="Center"
+                                         Checked="DisableFsoToggle_Toggled" Unchecked="DisableFsoToggle_Toggled" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Layer24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Отключить Multi-Plane Overlay (MPO)'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Устраняет микро-фризы, мерцание экрана и статтеры в играх.'}"
+                                       Style="{StaticResource ItemDescriptionText}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="DisableMpoToggle" Grid.Column="2" VerticalAlignment="Center"
+                                         Checked="DisableMpoToggle_Toggled" Unchecked="DisableMpoToggle_Toggled" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="XboxConsole24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Отключить Game DVR (Xbox Game Bar)'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Освобождает ресурсы, которые Xbox Game Bar занимает в фоне.'}"
+                                       Style="{StaticResource ItemDescriptionText}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="DisableGameDvrToggle" Grid.Column="2" VerticalAlignment="Center"
+                                         Checked="DisableGameDvrToggle_Toggled" Unchecked="DisableGameDvrToggle_Toggled" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Games24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Приоритет GPU для игр'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Повышает приоритет обработки графики для игровых задач Windows — меньше фризов и задержек в играх.'}"
+                                       Style="{StaticResource ItemDescriptionText}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="GpuPriorityToggle" Grid.Column="2" VerticalAlignment="Center"
+                                         Checked="GpuPriorityToggle_Toggled" Unchecked="GpuPriorityToggle_Toggled" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="System24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Аппаратное планирование GPU (HAGS)'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Снижает задержку вывода кадра. Изменение применится после перезагрузки.'}"
+                                       Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="HagsToggle" Grid.Column="2" VerticalAlignment="Center"
+                                         Checked="HagsToggle_Toggled" Unchecked="HagsToggle_Toggled" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="ArrowTrendingWrench24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Высокий приоритет процесса'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Windows всегда даёт выбранному процессу высокий приоритет процессора.'}"
+                                       Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ComboBox x:Name="HighPriorityProcessCombo" Grid.Column="2" Width="170" IsEditable="True"
+                                  FontSize="13" Margin="0,0,12,0" VerticalAlignment="Center"
+                                  ToolTip="{loc:Loc 'Имя процесса, например cs2.exe'}" />
+                        <ui:ToggleSwitch x:Name="HighPriorityToggle" Grid.Column="3" VerticalAlignment="Center"
+                                         Checked="HighPriorityToggle_Toggled" Unchecked="HighPriorityToggle_Toggled" />
+                    </Grid>
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Layer24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Только физические ядра'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Выбранный процесс использует физические ядра, без Hyper-Threading — меньше фризов.'}"
+                                       Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ComboBox x:Name="AffinityProcessCombo" Grid.Column="2" Width="170" IsEditable="True"
+                                  FontSize="13" Margin="0,0,12,0" VerticalAlignment="Center"
+                                  ToolTip="{loc:Loc 'Имя процесса, например cs2.exe'}" />
+                        <ui:ToggleSwitch x:Name="AffinityToggle" Grid.Column="3" VerticalAlignment="Center"
+                                         Checked="AffinityToggle_Toggled" Unchecked="AffinityToggle_Toggled" />
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="ArrowSyncCheckmark24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Авто-приоритет при запуске'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Твикер следит за запуском процесса и сам поднимает ему приоритет.'}"
+                                       Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ComboBox x:Name="AutoPriorityProcessCombo" Grid.Column="2" Width="170" IsEditable="True"
+                                  FontSize="13" Margin="0,0,12,0" VerticalAlignment="Center"
+                                  ToolTip="{loc:Loc 'Имя процесса, например cs2.exe'}" />
+                        <ui:ToggleSwitch x:Name="AutoPriorityToggle" Grid.Column="3" VerticalAlignment="Center"
+                                         Checked="AutoPriorityToggle_Toggled" Unchecked="AutoPriorityToggle_Toggled" />
+                    </Grid>
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <StackPanel>
+                    <TextBlock Text="{loc:Loc 'Сеть и задержка'}" Style="{StaticResource CardHeaderText}" Margin="0,0,0,8" />
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Wifi124" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Отключить алгоритм Nagle'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Уменьшает задержку при передаче мелких пакетов (снижает пинг).'}"
+                                       Style="{StaticResource ItemDescriptionText}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="DisableNagleToggle" Grid.Column="2" VerticalAlignment="Center"
+                                         Checked="DisableNagleToggle_Toggled" Unchecked="DisableNagleToggle_Toggled" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="ArrowAutofitContent24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Отключить TCP Auto-Tuning'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Помогает стабилизировать пинг и устранить микро-лаги в онлайн-играх.'}"
+                                       Style="{StaticResource ItemDescriptionText}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="DisableAutoTuningToggle" Grid.Column="2" VerticalAlignment="Center"
+                                         Checked="DisableAutoTuningToggle_Toggled" Unchecked="DisableAutoTuningToggle_Toggled" />
+                    </Grid>
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="ArrowTrendingSettings24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Приоритезация сетевого трафика (QoS)'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Снижает сетевую задержку: мгновенная отправка ACK и DSCP-метка приоритета для игрового трафика.'}"
+                                       Style="{StaticResource ItemDescriptionText}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="PrioritizeBurstToggle" Grid.Column="2" VerticalAlignment="Center"
+                                         Checked="PrioritizeBurstToggle_Toggled" Unchecked="PrioritizeBurstToggle_Toggled" />
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="ArrowSyncCheckmark24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Мгновенная отправка ACK-пакетов'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Подтверждения TCP отправляются сразу, без накопления — снижает пинг в онлайн-играх.'}"
+                                       Style="{StaticResource ItemDescriptionText}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="TcpAckFrequencyToggle" Grid.Column="2" VerticalAlignment="Center"
+                                         Checked="TcpAckFrequencyToggle_Toggled" Unchecked="TcpAckFrequencyToggle_Toggled" />
+                    </Grid>
+
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <StackPanel>
+                    <TextBlock Text="{loc:Loc 'Производительность системы'}" Style="{StaticResource CardHeaderText}" Margin="0,0,0,8" />
+                    <TextBlock Text="{loc:Loc 'Ограничьте максимальную частоту процессора, чтобы снизить тепловую нагрузку и энергопотребление. Понижение до 10% экономит потребление энергии (полезно для ноутбуков), 100% даёт полный приток мощности.'}"
+                               Style="{StaticResource ItemDescriptionText}"
+                               Margin="0,0,0,16" />
+
+                                        <Slider x:Name="ProcessorStateSlider"
+                            Minimum="10" Maximum="100" SmallChange="10" LargeChange="10" Interval="10"
+                            IsSnapToTickEnabled="True"
+                            TickFrequency="10"
+                            ValueChanged="ProcessorStateSlider_ValueChanged"
+                            PreviewMouseLeftButtonUp="ProcessorStateSlider_PreviewMouseLeftButtonUp"
+                            Margin="0,0,0,16" />
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock x:Name="ProcessorStatePercentText" Grid.Column="0"
+                                   Text="100%"
+                                   Style="{StaticResource ItemTitleText}"
+                                   VerticalAlignment="Center" Margin="0,0,12,0" />
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <ui:Button Content="{loc:Loc 'Применить'}" Appearance="Primary" Click="ApplyProcessorState_Click"
+                                       Padding="20,8" Margin="0,0,12,0" VerticalAlignment="Center" />
+                        </StackPanel>
+
+                        <ui:Button Grid.Column="2" Content="{loc:Loc 'Мин. производительность'}" Appearance="Secondary" Click="ApplyMin_Click"
+                                   Padding="20,8" VerticalAlignment="Center" />
+
+                        <ui:Button Grid.Column="3" Content="{loc:Loc 'Макс. производительность'}" Appearance="Secondary" Click="ApplyMax_Click"
+                                   Padding="20,8" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Rocket24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Ультрапроизводительность (Ultimate Performance)'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Активирует скрытую схему электропитания с максимальной производительностью CPU.'}"
+                                       Style="{StaticResource ItemDescriptionText}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="UltimatePerformanceToggle" Grid.Column="2" VerticalAlignment="Center"
+                                         Checked="UltimatePerformanceToggle_Toggled" Unchecked="UltimatePerformanceToggle_Toggled" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="ClockToolbox20" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Снизить системную задержку'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Отключает искусственную задержку планировщика Windows, отдавая процессор играм и активным приложениям.'}"
+                                       Style="{StaticResource ItemDescriptionText}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="SystemResponsivenessToggle" Grid.Column="2" VerticalAlignment="Center"
+                                         Checked="SystemResponsivenessToggle_Toggled" Unchecked="SystemResponsivenessToggle_Toggled" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Play24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Отключить анимацию окон Windows'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Отключает анимацию окон и переходы в интерфейсе Windows.'}"
+                                       Style="{StaticResource ItemDescriptionText}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="DisableWindowsAnimationToggle" Grid.Column="2" VerticalAlignment="Center"
+                                         Checked="DisableWindowsAnimationToggle_Toggled" Unchecked="DisableWindowsAnimationToggle_Toggled" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Color16" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Отключить прозрачность Windows'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Отключает прозрачность панели задач и меню «Пуск» для лёгкого повышения производительности.'}"
+                                       Style="{StaticResource ItemDescriptionText}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="DisableVisualEffectsToggle" Grid.Column="2" VerticalAlignment="Center"
+                                         Checked="DisableVisualEffectsToggle_Toggled" Unchecked="DisableVisualEffectsToggle_Toggled" />
+                    </Grid>
+
+                    <Separator Margin="0,16" Background="{DynamicResource App.Border}" />
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Games24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Игровой режим Windows'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Windows выделяет ресурсы активной игре.'}"
+                                       Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="GameModeToggle" Grid.Column="2" VerticalAlignment="Center"
+                                         Checked="GameModeToggle_Toggled" Unchecked="GameModeToggle_Toggled" />
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="ClockToolbox20" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Отключить парковку ядер'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Держит все ядра процессора активными — меньше микрофризов в играх.'}"
+                                       Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="CoreParkingToggle" Grid.Column="2" VerticalAlignment="Center"
+                                         Checked="CoreParkingToggle_Toggled" Unchecked="CoreParkingToggle_Toggled" />
+                    </Grid>
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <StackPanel>
+                    <TextBlock Text="{loc:Loc 'Обслуживание'}" Style="{StaticResource CardHeaderText}" Margin="0,0,0,8" />
+
+                    <Grid Margin="0,0,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Очистить кэш шейдеров Steam и CS2'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Помогает при микрофризах после обновлений'}"
+                                       Style="{StaticResource ItemDescriptionText}" />
+                        </StackPanel>
+                        <ui:Button Grid.Column="1" Content="{loc:Loc 'Очистить'}" Appearance="Secondary" Click="ClearCache_Click" Padding="16,6" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Separator Margin="0,10" Background="{DynamicResource App.Border}" />
+
+                    <Grid Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Очистить временные файлы Windows'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Удаляет временные файлы, которые могут замедлить систему'}"
+                                       Style="{StaticResource ItemDescriptionText}" />
+                        </StackPanel>
+                        <ui:Button Grid.Column="1" Content="{loc:Loc 'Очистить'}" Appearance="Secondary" Click="ClearTempFiles_Click" Padding="16,6" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Separator Margin="0,10" Background="{DynamicResource App.Border}" />
+
+                    <Grid Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Очистить оперативную память'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Сбрасывает рабочие наборы всех процессов, освобождая занятую память (аналог Mem Reduct).'}"
+                                       Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ui:Button Grid.Column="1" Content="{loc:Loc 'Очистить'}" Appearance="Secondary" Click="CleanRam_Click" Padding="16,6" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Separator Margin="0,10" Background="{DynamicResource App.Border}" />
+
+                    <Grid Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Очистить кэш шейдеров GPU (NVIDIA / AMD / DirectX)'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Удаляет DXCache, GLCache, AMD DxCache и D3DSCache. Заблокированные файлы пропускаются.'}"
+                                       Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ui:Button Grid.Column="1" Content="{loc:Loc 'Очистить'}" Appearance="Secondary" Click="ClearShaderCache_Click" Padding="16,6" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Separator Margin="0,10" Background="{DynamicResource App.Border}" />
+
+                    <Grid Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Очистить DNS кэш'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Сбрасывает закешированные DNS-записи — помогает при проблемах с подключением к серверам игр.'}"
+                                       Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ui:Button Grid.Column="1" Content="{loc:Loc 'Очистить'}" Appearance="Secondary" Click="ClearDnsCache_Click" Padding="16,6" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Separator Margin="0,10" Background="{DynamicResource App.Border}" />
+
+                    <Grid Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Очистить кэш миниатюр'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Удаляет закешированные миниатюры папок и файлов (thumbcache), освобождая место и устраняя битые иконки.'}"
+                                       Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ui:Button Grid.Column="1" Content="{loc:Loc 'Очистить'}" Appearance="Secondary" Click="ClearThumbnailCache_Click" Padding="16,6" VerticalAlignment="Center" />
+                    </Grid>
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <StackPanel>
+                    <TextBlock Text="{loc:Loc 'Параметры запуска CS2'}" Style="{StaticResource CardHeaderText}" Margin="0,0,0,8" />
+                    <TextBlock Text="{loc:Loc 'Параметры уже заполнены под вашу систему. Скопируйте их в свойства запуска игры в Steam.'}"
+                               Style="{StaticResource ItemDescriptionText}" Margin="0,0,0,16" />
+                    <ui:TextBox x:Name="GameArgsBox" MinHeight="60" TextWrapping="Wrap" AcceptsReturn="True" FontSize="13" Margin="0,0,0,12" />
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                        <ui:Button Content="{loc:Loc 'Копировать'}" Appearance="Primary" Click="CopyLaunchArgs_Click" Padding="20,8" Margin="0,0,8,0" />
+                        <ui:Button Content="{loc:Loc 'Сохранить'}" Appearance="Secondary" Click="SaveGameProfile_Click" Padding="20,8" />
+                    </StackPanel>
+                </StackPanel>
+            </ui:Card>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

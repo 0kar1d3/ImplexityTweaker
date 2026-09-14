@@ -1,0 +1,143 @@
+﻿<Page x:Class="ImplexityTweaker.Pages.SecurityPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:loc="clr-namespace:ImplexityTweaker.Localization"
+      Title="Security"
+      Foreground="{DynamicResource App.Text}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="20">
+            <TextBlock Text="{loc:Loc 'Безопасность'}" Style="{StaticResource PageTitleText}" />
+            <TextBlock Text="{loc:Loc 'Отключение системной защиты Windows: Защитник, SmartScreen, брандмауэр и контроль учётных записей. Все действия требуют прав администратора.'}"
+                       Style="{StaticResource PageDescriptionText}"
+                       Margin="0,8,0,16" />
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Background="{DynamicResource App.SurfaceAlt}"
+                            CornerRadius="10"
+                            Width="44" Height="44"
+                            VerticalAlignment="Top">
+                        <ui:SymbolIcon Symbol="ShieldKeyhole24" FontSize="22" Foreground="{DynamicResource App.IconAccent}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                    <StackPanel Grid.Column="1" Margin="14,0,0,0">
+                        <TextBlock Text="{loc:Loc 'Защитник Windows'}" Style="{StaticResource ItemTitleText}" />
+                        <TextBlock Text="{loc:Loc 'Полностью отключает антивирус: политики, службы, а также удаляет приложение «Безопасность Windows» и службы статуса. Включение обратно пытается всё восстановить.'}"
+                                   Style="{StaticResource ItemDescriptionText}" Margin="0,4,0,14" />
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Loc 'Отключить Windows Defender'}" Style="{StaticResource ItemTitleText}" />
+                                <TextBlock Text="{loc:Loc 'Убирает антивирус, окно «Безопасность Windows» и индикацию статуса защиты.'}"
+                                           Style="{StaticResource ItemDescriptionText}" />
+                            </StackPanel>
+                            <ui:ToggleSwitch x:Name="DefenderToggle" Grid.Column="1" VerticalAlignment="Center"
+                                             Checked="DefenderToggle_Toggled" Unchecked="DefenderToggle_Toggled" />
+                        </Grid>
+
+                        <ui:Button Content="{loc:Loc 'Открыть Центр безопасности Windows'}" Appearance="Secondary"
+                                   Click="OpenSecurityCenter_Click" HorizontalAlignment="Left" Padding="16,7" Margin="0,14,0,0" />
+                    </StackPanel>
+                </Grid>
+            </ui:Card>
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <StackPanel>
+                    <TextBlock Text="{loc:Loc 'Системная безопасность'}" Style="{StaticResource CardHeaderText}" Margin="0,0,0,8" />
+                    <TextBlock Text="{loc:Loc 'Дополнительные механизмы защиты, которые можно отключить по отдельности.'}"
+                               Style="{StaticResource ItemDescriptionText}" Margin="0,0,0,16" />
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="ShieldDismiss24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Отключить SmartScreen'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Убирает проверку приложений и файлов из интернета (может снизить безопасность).'}"
+                                       Style="{StaticResource ItemDescriptionText}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="SmartScreenToggle" Grid.Column="2" VerticalAlignment="Center"
+                                         Checked="SmartScreenToggle_Toggled" Unchecked="SmartScreenToggle_Toggled" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="ShieldProhibited20" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Отключить брандмауэр Windows'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Полностью отключает фильтрацию сетевого трафика для всех профилей.'}"
+                                       Style="{StaticResource ItemDescriptionText}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="FirewallToggle" Grid.Column="2" VerticalAlignment="Center"
+                                         Checked="FirewallToggle_Toggled" Unchecked="FirewallToggle_Toggled" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="LockShield24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Отключить контроль учётных записей (UAC)'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Отключает запросы подтверждения при запуске программ от имени администратора.'}"
+                                       Style="{StaticResource ItemDescriptionText}" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="UacToggle" Grid.Column="2" VerticalAlignment="Center"
+                                         Checked="UacToggle_Toggled" Unchecked="UacToggle_Toggled" />
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="ShieldKeyhole24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Целостность памяти (Memory Integrity)'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Защита ядра Windows от вредоносных драйверов.'}"
+                                       Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="MemoryIntegrityToggle" Grid.Column="2" VerticalAlignment="Center"
+                                         Loaded="MemoryIntegrityToggle_Loaded"
+                                         Checked="MemoryIntegrityToggle_Toggled" Unchecked="MemoryIntegrityToggle_Toggled" />
+                    </Grid>
+                </StackPanel>
+            </ui:Card>
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>

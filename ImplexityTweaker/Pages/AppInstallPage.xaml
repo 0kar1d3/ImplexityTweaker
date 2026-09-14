@@ -1,0 +1,88 @@
+﻿<Page x:Class="ImplexityTweaker.Pages.AppInstallPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:loc="clr-namespace:ImplexityTweaker.Localization"
+      Title="Apps"
+      Foreground="{DynamicResource App.Text}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="20">
+            <TextBlock Text="{loc:Loc 'Установка приложений'}" Style="{StaticResource PageTitleText}" />
+            <TextBlock Text="{loc:Loc 'Пакеты через winget (нужен установленный App Installer / winget).'}"
+                       Style="{StaticResource PageDescriptionText}"
+                       Margin="0,8,0,16" />
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Background="{DynamicResource App.SurfaceAlt}"
+                            BorderBrush="{DynamicResource App.Border}"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            Width="44" Height="44"
+                            VerticalAlignment="Top">
+                        <ui:SymbolIcon Symbol="AppFolder32" FontSize="22" Foreground="{DynamicResource App.IconAccent}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                    <StackPanel Grid.Column="1" Margin="14,0,0,0">
+                        <TextBlock Text="{loc:Loc 'Быстрая установка'}" Style="{StaticResource ItemTitleText}" />
+                        <TextBlock Text="{loc:Loc 'Популярные приложения — одним кликом через winget.'}"
+                                   Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,4,0,12" />
+
+                        <WrapPanel>
+                            <ui:Button Content="{loc:Loc 'Установить Chrome'}" Click="Chrome_Click" Width="190" HorizontalAlignment="Left" Padding="0,8" Margin="0,0,8,8" />
+                            <ui:Button Content="{loc:Loc 'Установить 7-Zip'}" Click="SevenZip_Click" Width="190" HorizontalAlignment="Left" Padding="0,8" Margin="0,0,8,8" />
+                            <ui:Button Content="{loc:Loc 'Установить VLC'}" Click="Vlc_Click" Width="190" HorizontalAlignment="Left" Padding="0,8" Margin="0,0,8,8" />
+                            <ui:Button Content="{loc:Loc 'Установить VS Code'}" Click="VsCode_Click" Width="190" HorizontalAlignment="Left" Padding="0,8" Margin="0,0,8,8" />
+                            <ui:Button Content="{loc:Loc 'Установить Firefox'}" Click="Firefox_Click" Width="190" HorizontalAlignment="Left" Padding="0,8" Margin="0,0,8,8" />
+                            <ui:Button Content="{loc:Loc 'Установить Steam'}" Click="Steam_Click" Width="190" HorizontalAlignment="Left" Padding="0,8" Margin="0,0,8,8" />
+                            <ui:Button Content="{loc:Loc 'Установить Discord'}" Click="Discord_Click" Width="190" HorizontalAlignment="Left" Padding="0,8" Margin="0,0,8,8" />
+                            <ui:Button Content="{loc:Loc 'Установить Telegram Desktop'}" Click="Telegram_Click" Width="190" HorizontalAlignment="Left" Padding="0,8" Margin="0,0,8,8" />
+                            <ui:Button Content="{loc:Loc 'Установить Spotify'}" Click="Spotify_Click" Width="190" HorizontalAlignment="Left" Padding="0,8" Margin="0,0,8,8" />
+                        </WrapPanel>
+
+                        <ui:Button Content="{loc:Loc 'Открыть GitHub: zapret-discord-youtube'}" Appearance="Transparent" Click="OpenZapretGithub_Click" HorizontalAlignment="Left" Padding="14,6" Margin="0,4,0,0" FontSize="12" />
+                    </StackPanel>
+                </Grid>
+            </ui:Card>
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Background="{DynamicResource App.SurfaceAlt}"
+                            BorderBrush="{DynamicResource App.Border}"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            Width="44" Height="44"
+                            VerticalAlignment="Top">
+                        <ui:SymbolIcon Symbol="BoxSearch24" FontSize="22" Foreground="{DynamicResource App.IconAccent}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                    <StackPanel Grid.Column="1" Margin="14,0,0,0">
+                        <TextBlock Text="{loc:Loc 'Ручная установка'}" Style="{StaticResource ItemTitleText}" />
+                        <TextBlock Text="{loc:Loc 'Установка приложения по его winget ID и обновление всех пакетов.'}"
+                                   Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,4,0,14" />
+
+                        <TextBox x:Name="ManualWingetIdBox" MinWidth="380" Text="Microsoft.PowerToys" FontSize="13" Margin="0,0,0,10" />
+                        <StackPanel Orientation="Horizontal">
+                            <ui:Button Content="{loc:Loc 'Установить ID'}" Appearance="Secondary" Click="InstallManual_Click" Padding="20,8" Margin="0,0,8,0" />
+                            <ui:Button Content="{loc:Loc 'Обновить все пакеты'}" Appearance="Transparent" Click="UpgradeAll_Click" Padding="20,8" Margin="8,0,0,0" />
+                        </StackPanel>
+                        <ui:Button Content="{loc:Loc 'Открыть поиск winget (консоль)'}" Appearance="Secondary" Click="Search_Click" HorizontalAlignment="Left" Padding="20,8" Margin="0,10,0,0" />
+                    </StackPanel>
+                </Grid>
+            </ui:Card>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

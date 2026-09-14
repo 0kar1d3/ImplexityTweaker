@@ -1,0 +1,337 @@
+﻿<Page x:Class="ImplexityTweaker.Pages.SettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:loc="clr-namespace:ImplexityTweaker.Localization"
+      Title="Settings"
+      Foreground="{DynamicResource App.Text}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="20" MaxWidth="560" HorizontalAlignment="Left">
+            <TextBlock Text="{loc:Loc 'Настройки программы'}" Style="{StaticResource PageTitleText}" />
+            <TextBlock Text="{loc:Loc 'Тема оформления, сохранение параметров в приложении.'}"
+                       Style="{StaticResource PageDescriptionText}"
+                       Margin="0,8,0,16" />
+
+            <!-- ===== Обновления ===== -->
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Background="{DynamicResource App.SurfaceAlt}"
+                            CornerRadius="10"
+                            Width="44" Height="44"
+                            VerticalAlignment="Top">
+                        <ui:SymbolIcon Symbol="ClockArrowDownload24" FontSize="22" Foreground="{DynamicResource App.IconAccent}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                    <StackPanel Grid.Column="1" Margin="14,0,0,0">
+                        <TextBlock Text="{loc:Loc 'Обновления твикера'}" Style="{StaticResource ItemTitleText}" />
+                        <TextBlock x:Name="VersionText" Style="{StaticResource ItemDescriptionText}" Margin="0,4,0,14" />
+                        <ui:Button Content="{loc:Loc 'Проверить обновления'}" Appearance="Primary" Click="CheckUpdates_Click"
+                                   HorizontalAlignment="Left" Padding="20,8" />
+                    </StackPanel>
+                </Grid>
+            </ui:Card>
+
+            <!-- ===== Аккаунт ===== -->
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Background="{DynamicResource App.SurfaceAlt}"
+                            BorderBrush="{DynamicResource App.Border}"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            Width="44" Height="44"
+                            VerticalAlignment="Top">
+                        <ui:SymbolIcon Symbol="PersonCircle24" FontSize="22" Foreground="{DynamicResource App.IconAccent}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                    <StackPanel Grid.Column="1" Margin="14,0,0,0">
+                        <TextBlock Text="{loc:Loc 'Аккаунт'}" Style="{StaticResource ItemTitleText}" />
+
+                        <!-- Авторизован -->
+                        <StackPanel x:Name="AccLoggedIn" Orientation="Horizontal" Margin="0,10,0,0" Visibility="Collapsed">
+                            <Grid Width="46" Height="46" VerticalAlignment="Top">
+                                <Border Background="{DynamicResource App.SurfaceAlt}" BorderBrush="{DynamicResource App.Border}"
+                                        BorderThickness="1" CornerRadius="23">
+                                    <ui:SymbolIcon Symbol="Person24" FontSize="22" Foreground="{DynamicResource App.IconAccent}"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                                <Ellipse>
+                                    <Ellipse.Fill>
+                                        <ImageBrush x:Name="AccAvatarBrush" Stretch="UniformToFill"
+                                                    RenderOptions.BitmapScalingMode="HighQuality" />
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                            </Grid>
+                            <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                    <Border x:Name="AccPrefixBadge" CornerRadius="5" Padding="5,1.5" Margin="0,0,6,0"
+                                            VerticalAlignment="Center" Visibility="Collapsed">
+                                        <TextBlock x:Name="AccPrefix" FontSize="10" FontWeight="Bold" Text="⚡ " />
+                                    </Border>
+                                    <TextBlock x:Name="AccName" FontWeight="SemiBold" FontSize="14"
+                                               TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                                </StackPanel>
+                                <TextBlock x:Name="AccNumber" FontSize="11" Foreground="{DynamicResource App.TextMuted}" />
+                                <TextBlock x:Name="AccEmail" FontSize="11" Foreground="{DynamicResource App.TextMuted}" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Не авторизован -->
+                        <TextBlock x:Name="AccLoggedOut"
+                                   Text="{loc:Loc 'Войдите в аккаунт Implexity, чтобы публиковать конфиги и открывать профиль.'}"
+                                   Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,8,0,0"
+                                   Visibility="Collapsed" />
+
+                        <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                            <ui:Button x:Name="AccOpenProfileBtn" Content="{loc:Loc 'Открыть профиль на сайте'}" Appearance="Secondary"
+                                       Click="AccOpenProfile_Click" Padding="18,8" Margin="0,0,10,0" Visibility="Collapsed" />
+                            <ui:Button x:Name="AccLogoutBtn" Content="{loc:Loc 'Выйти из аккаунта'}" Appearance="Secondary"
+                                       Click="AccLogout_Click" Padding="18,8" Margin="0,0,10,0" Visibility="Collapsed" />
+                            <ui:Button x:Name="AccLoginBtn" Content="{loc:Loc 'Войти'}" Appearance="Primary"
+                                       Click="AccLogin_Click" Padding="24,8" Visibility="Collapsed" />
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </ui:Card>
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Background="{DynamicResource App.SurfaceAlt}"
+                            BorderBrush="{DynamicResource App.Border}"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            Width="44" Height="44"
+                            VerticalAlignment="Top">
+                        <ui:SymbolIcon Symbol="Color16" FontSize="22" Foreground="{DynamicResource App.IconAccent}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                    <StackPanel Grid.Column="1" Margin="14,0,0,0">
+                        <TextBlock Text="{loc:Loc 'Тема приложения'}" Style="{StaticResource ItemTitleText}" />
+                        <TextBlock Text="{loc:Loc 'Внешний вид приложения.'}"
+                                   Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,4,0,14" />
+                        <ComboBox x:Name="ThemeCombo" MinWidth="320" SelectionChanged="ThemeCombo_SelectionChanged" />
+                        <ui:Button Content="{loc:Loc 'Сохранить и применить тему'}" Appearance="Primary" Click="SaveTheme_Click" HorizontalAlignment="Left" Padding="20,8" Margin="0,14,0,0" />
+                    </StackPanel>
+                </Grid>
+            </ui:Card>
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Background="{DynamicResource App.SurfaceAlt}"
+                            BorderBrush="{DynamicResource App.Border}"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            Width="44" Height="44"
+                            VerticalAlignment="Top">
+                        <ui:SymbolIcon Symbol="Globe24" FontSize="22" Foreground="{DynamicResource App.IconAccent}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                    <StackPanel Grid.Column="1" Margin="14,0,0,0">
+                        <TextBlock Text="{loc:Loc 'Язык интерфейса'}" Style="{StaticResource ItemTitleText}" />
+                        <TextBlock Text="{loc:Loc 'Выберите язык приложения — изменения применяются сразу.'}"
+                                   Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,4,0,14" />
+                        <ComboBox x:Name="LanguageCombo" MinWidth="320" SelectionChanged="LanguageCombo_SelectionChanged" />
+                    </StackPanel>
+                </Grid>
+            </ui:Card>
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Background="{DynamicResource App.SurfaceAlt}"
+                            BorderBrush="{DynamicResource App.Border}"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            Width="44" Height="44"
+                            VerticalAlignment="Top">
+                        <ui:SymbolIcon Symbol="Folder24" FontSize="22" Foreground="{DynamicResource App.IconAccent}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                    <StackPanel Grid.Column="1" Margin="14,0,0,0">
+                        <TextBlock Text="{loc:Loc 'Конфиги'}" Style="{StaticResource ItemTitleText}" />
+                        <TextBlock x:Name="ConfigsFolderText" Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,4,0,4" />
+                        <TextBlock Text="{loc:Loc 'Положите файлы .implexity в эту папку — они появятся в списке'}"
+                                   Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,0,0,12" />
+
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                            <ui:Button Content="{loc:Loc 'Открыть папку'}" Appearance="Primary" Click="OpenConfigsFolder_Click" Padding="18,8" Margin="0,0,8,0" />
+                            <ui:Button Content="{loc:Loc 'Обновить'}" Appearance="Secondary" Click="RefreshConfigs_Click" Padding="18,8" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,0,8,0">
+                            <ui:Button Content="{loc:Loc 'Создать конфиг'}" Appearance="Secondary" Click="CreateConfig_Click"
+                                       Padding="14,7" FontSize="12" Margin="0,0,8,0" />
+                            <ui:Button Content="{loc:Loc 'Сохранить конфиг'}" Appearance="Secondary" Click="SaveConfig_Click"
+                                       Padding="14,7" FontSize="12" Margin="0,0,8,0" />
+                            <ui:Button Content="{loc:Loc 'Загрузить конфиг'}" Appearance="Secondary" Click="LoadConfig_Click"
+                                       Padding="14,7" FontSize="12" />
+                        </StackPanel>
+                        <TextBlock Text="{loc:Loc 'Выберите конфиг в списке, чтобы перезаписать его текущими настройками.'}"
+                                   Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,0,0,10" />
+
+                        <TextBlock x:Name="ConfigsEmptyText" Text="{loc:Loc 'Конфигов пока нет'}" Style="{StaticResource ItemDescriptionText}" Margin="0,0,0,6" />
+                        <ItemsControl x:Name="ConfigsList">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Cursor="Hand" MouseLeftButtonUp="ConfigItem_Click" Tag="{Binding Path}" Margin="0,0,0,6">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Background" Value="{DynamicResource App.SurfaceAlt}" />
+                                                <Setter Property="BorderBrush" Value="{DynamicResource App.Border}" />
+                                                <Setter Property="BorderThickness" Value="1" />
+                                                <Setter Property="CornerRadius" Value="8" />
+                                                <Setter Property="Padding" Value="12,8" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource App.AccentSoft}" />
+                                                        <Setter Property="BorderBrush" Value="{DynamicResource App.Accent}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel VerticalAlignment="Center" Margin="0,0,10,0">
+                                                <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="13" TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Text="{Binding Meta}" FontSize="11" Foreground="{DynamicResource App.TextMuted}" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                                <ui:Button Content="{loc:Loc 'Применить'}" Appearance="Primary" Padding="12,6" FontSize="12"
+                                                           Margin="0,0,6,0" Click="ApplyConfig_Click" Tag="{Binding Path}" />
+                                                <ui:Button Content="{loc:Loc 'На сайт'}" Appearance="Secondary" Padding="12,6" FontSize="12"
+                                                           Margin="0,0,6,0" Click="PublishConfig_Click" Tag="{Binding Path}" />
+                                                <ui:Button Content="{loc:Loc 'Удалить'}" Appearance="Secondary" Padding="12,6" FontSize="12"
+                                                           Click="DeleteConfig_Click" Tag="{Binding Path}" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Grid>
+            </ui:Card>
+
+            <!-- ===== Соцсети ===== -->
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Background="{DynamicResource App.SurfaceAlt}"
+                            BorderBrush="{DynamicResource App.Border}"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            Width="44" Height="44"
+                            VerticalAlignment="Top">
+                        <ui:SymbolIcon Symbol="Heart24" FontSize="22" Foreground="{DynamicResource App.IconAccent}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                    <StackPanel Grid.Column="1" Margin="14,0,0,0">
+                        <TextBlock Text="{loc:Loc 'Мы в соцсетях'}" Style="{StaticResource ItemTitleText}" />
+                        <TextBlock Text="{loc:Loc 'Подписывайтесь на обновления и новости Implexity Tweaker.'}"
+                                   Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,4,0,12" />
+
+                        <StackPanel Orientation="Horizontal">
+                            <ui:Button Tag="https://t.me/implexityfun" Click="Social_Click" Appearance="Secondary"
+                                       Padding="14,7" Margin="0,0,8,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"
+                                          Width="15" Height="15" Stretch="Uniform" Fill="#26A5E4" VerticalAlignment="Center" />
+                                    <TextBlock Text="Telegram" FontSize="12" Margin="8,0,0,0" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </ui:Button>
+                            <ui:Button Tag="https://discord.gg/HScjt5S9ys" Click="Social_Click" Appearance="Secondary"
+                                       Padding="14,7" Margin="0,0,8,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M20.317 4.3698a19.7913 19.7913 0 0 0-4.8851-1.5152.0741.0741 0 0 0-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 0 0-.0785-.037 19.7363 19.7363 0 0 0-4.8852 1.515.0699.0699 0 0 0-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 0 0 .0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 0 0 .0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 0 0-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 0 1-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 0 1 .0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 0 1 .0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 0 1-.0066.1276 12.2986 12.2986 0 0 1-1.873.8914.0766.0766 0 0 0-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 0 0 .0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 0 0 .0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 0 0-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0957 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0957 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"
+                                          Width="15" Height="15" Stretch="Uniform" Fill="#5865F2" VerticalAlignment="Center" />
+                                    <TextBlock Text="Discord" FontSize="12" Margin="8,0,0,0" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </ui:Button>
+                            <ui:Button Tag="https://www.youtube.com/@implexityfun" Click="Social_Click" Appearance="Secondary"
+                                       Padding="14,7">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"
+                                          Width="15" Height="15" Stretch="Uniform" Fill="#FF0000" VerticalAlignment="Center" />
+                                    <TextBlock Text="YouTube" FontSize="12" Margin="8,0,0,0" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </ui:Button>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </ui:Card>
+
+            <ui:Card Padding="20" Margin="0,0,0,15">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Image Source="/icon_rounded.png" Width="56" Height="56" Stretch="UniformToFill"
+                           RenderOptions.BitmapScalingMode="HighQuality" VerticalAlignment="Top" />
+
+                    <StackPanel Grid.Column="1" Margin="14,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="Implexity Tweaker" Style="{StaticResource ItemTitleText}" FontSize="16" />
+                        <TextBlock x:Name="AboutVersionText" Style="{StaticResource ItemDescriptionText}" Margin="0,2,0,0" />
+                        <TextBlock Text="{loc:Loc 'Открытый инструмент для настройки и оптимизации Windows 10 / 11.'}"
+                                   Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,6,0,10" />
+                        <StackPanel Orientation="Horizontal">
+                            <ui:Button Tag="https://implexity.fun" Click="Social_Click" Appearance="Secondary" Padding="14,6" Margin="0,0,8,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="Globe24" FontSize="14" Foreground="{DynamicResource App.IconAccent}" VerticalAlignment="Center" />
+                                    <TextBlock Text="{loc:Loc 'Сайт'}" FontSize="12" Margin="7,0,0,0" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </ui:Button>
+                            <ui:Button Tag="https://github.com/0kar1d3/ImplexityTweaker" Click="Social_Click" Appearance="Secondary" Padding="14,6" Margin="0,0,8,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+                                          Width="14" Height="14" Stretch="Uniform" Fill="{DynamicResource App.Text}" VerticalAlignment="Center" />
+                                    <TextBlock Text="GitHub" FontSize="12" Margin="7,0,0,0" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </ui:Button>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </ui:Card>
+
+            <ui:Button Content="{loc:Loc 'Назад'}" Appearance="Secondary" Click="Back_Click" HorizontalAlignment="Left" Padding="20,8" Margin="0,20,0,0" />
+        </StackPanel>
+    </ScrollViewer>
+</Page>
