@@ -13,7 +13,7 @@
 ## 📸 Интерфейс программы
 
 <p align="center">
-  <img src="previe.png" alt="Implexity Tweaker Interface" width="800">
+  <img src="preview.png" alt="Implexity Tweaker Interface" width="800">
 </p>
 
 ---
