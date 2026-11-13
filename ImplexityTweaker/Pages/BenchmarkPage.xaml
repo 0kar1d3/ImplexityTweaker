@@ -1,0 +1,186 @@
+﻿<Page x:Class="ImplexityTweaker.Pages.BenchmarkPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:loc="clr-namespace:ImplexityTweaker.Localization"
+      Title="Benchmark"
+      Foreground="{DynamicResource App.Text}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="28,22,28,28" MaxWidth="980">
+            <TextBlock Text="{loc:Loc 'Бенчмарк'}" Style="{StaticResource PageTitleText}" />
+            <TextBlock x:Name="HeaderText" Style="{StaticResource PageDescriptionText}" Margin="0,6,0,18" />
+
+            <!-- ===== Запуск теста ===== -->
+            <ui:Card>
+                <StackPanel>
+                    <TextBlock Text="{loc:Loc 'Замер производительности'}" Style="{StaticResource CardHeaderText}" />
+                    <TextBlock x:Name="RunHintText" Style="{StaticResource ItemDescriptionText}" Margin="0,6,0,0" />
+
+                    <ProgressBar x:Name="RunProgress"
+                                 Height="8"
+                                 Margin="0,14,0,0"
+                                 Minimum="0"
+                                 Maximum="100"
+                                 BorderThickness="0"
+                                 Background="{DynamicResource App.Border}"
+                                 Foreground="{DynamicResource App.IconAccent}"
+                                 Visibility="Collapsed" />
+
+                    <TextBlock x:Name="RunText"
+                               Style="{StaticResource ItemDescriptionText}"
+                               Margin="0,8,0,0"
+                               Visibility="Collapsed" />
+
+                    <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
+                        <ui:Button x:Name="RunButton"
+                                   Content="{loc:Loc 'Запустить тест'}"
+                                   Appearance="Primary"
+                                   Padding="20,8"
+                                   Click="RunBenchmark_Click" />
+                        <ui:Button Content="{loc:Loc 'Открыть папку результатов'}"
+                                   Appearance="Secondary"
+                                   Padding="16,8"
+                                   Margin="10,0,0,0"
+                                   Click="OpenFolder_Click" />
+                        <ui:Button Content="{loc:Loc 'Поделиться результатом'}"
+                                   Appearance="Secondary"
+                                   Padding="16,8"
+                                   Margin="10,0,0,0"
+                                   Click="ShareResult_Click" />
+                    </StackPanel>
+                </StackPanel>
+            </ui:Card>
+
+            <!-- ===== Последний прогон ===== -->
+            <ui:Card>
+                <StackPanel>
+                    <TextBlock Text="{loc:Loc 'Последний прогон'}" Style="{StaticResource CardHeaderText}" />
+
+                    <TextBlock x:Name="NoLastText"
+                               Text="{loc:Loc 'Прогонов пока нет — запустите первый тест, и здесь появится сравнение с прошлым замером.'}"
+                               Style="{StaticResource ItemDescriptionText}"
+                               Margin="0,8,0,0"
+                               Visibility="Collapsed" />
+
+                    <StackPanel x:Name="LastPanel" Visibility="Collapsed">
+                        <TextBlock x:Name="LastMetaText" Style="{StaticResource ItemDescriptionText}" Margin="0,6,0,0" />
+
+                        <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
+                            <TextBlock x:Name="LastIndexText"
+                                       FontSize="30"
+                                       FontWeight="Bold"
+                                       Foreground="{DynamicResource App.IconAccent}"
+                                       VerticalAlignment="Center" />
+                            <StackPanel Margin="14,0,0,0" VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Loc 'Индекс Implexity'}" Style="{StaticResource ItemTitleText}" />
+                                <TextBlock x:Name="LastDeltaText" Style="{StaticResource ItemDescriptionText}" Margin="0,2,0,0" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <ItemsControl x:Name="MetricList" Margin="0,10,0,0">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,5,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding Label}"
+                                                   FontSize="13"
+                                                   TextWrapping="Wrap"
+                                                   VerticalAlignment="Center" />
+                                        <TextBlock Grid.Column="1"
+                                                   Text="{Binding ValueText}"
+                                                   FontSize="13"
+                                                   FontWeight="SemiBold"
+                                                   Margin="12,0,0,0"
+                                                   VerticalAlignment="Center" />
+                                        <TextBlock Grid.Column="2"
+                                                   Text="{Binding DeltaText}"
+                                                   FontSize="11"
+                                                   Foreground="{Binding DeltaForeground}"
+                                                   Margin="10,0,0,0"
+                                                   VerticalAlignment="Center"
+                                                   Visibility="{Binding DeltaVisibility}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </StackPanel>
+            </ui:Card>
+
+            <!-- ===== История прогонов ===== -->
+            <ui:Card>
+                <StackPanel>
+                    <TextBlock Text="{loc:Loc 'История прогонов'}" Style="{StaticResource CardHeaderText}" />
+
+                    <TextBlock x:Name="NoHistoryText"
+                               Text="{loc:Loc 'История пуста.'}"
+                               Style="{StaticResource ItemDescriptionText}"
+                               Margin="0,8,0,0"
+                               Visibility="Collapsed" />
+
+                    <ItemsControl x:Name="HistoryList" Margin="0,4,0,0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,6,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding When}" FontSize="13" FontWeight="SemiBold" />
+                                        <TextBlock Text="{Binding Summary}" Style="{StaticResource ItemDescriptionText}" Margin="0,2,0,0" />
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding IndexText}"
+                                               FontSize="14"
+                                               FontWeight="SemiBold"
+                                               Foreground="{DynamicResource App.IconAccent}"
+                                               Margin="12,0,0,0"
+                                               VerticalAlignment="Center" />
+
+                                    <Border Grid.Column="2"
+                                            Background="{DynamicResource App.AccentSoft}"
+                                            CornerRadius="8"
+                                            Padding="8,3"
+                                            Margin="10,0,0,0"
+                                            VerticalAlignment="Center"
+                                            Visibility="{Binding LatestVisibility}">
+                                        <TextBlock Text="{loc:Loc 'последний'}" FontSize="11" />
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
+                        <ui:Button Content="{loc:Loc 'Обновить историю'}"
+                                   Appearance="Secondary"
+                                   Padding="16,8"
+                                   Click="Refresh_Click" />
+                        <ui:Button Content="{loc:Loc 'Открыть папку результатов'}"
+                                   Appearance="Secondary"
+                                   Padding="16,8"
+                                   Margin="10,0,0,0"
+                                   Click="OpenFolder_Click" />
+                        <ui:Button Content="{loc:Loc 'Поделиться результатом'}"
+                                   Appearance="Secondary"
+                                   Padding="16,8"
+                                   Margin="10,0,0,0"
+                                   Click="ShareResult_Click" />
+                    </StackPanel>
+                </StackPanel>
+            </ui:Card>
+
+
+            <TextBlock x:Name="FooterText" Style="{StaticResource ItemDescriptionText}" Margin="0,4,0,0" />
+        </StackPanel>
+    </ScrollViewer>
+</Page>

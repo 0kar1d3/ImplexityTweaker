@@ -21,9 +21,21 @@ namespace ImplexityTweaker
             var settings = AppSettings.Load();
             LocalizationService.Initialize(settings.Language);
             ThemeApplier.Apply(settings.ThemeId);
+            ThemeApplier.ApplyUiStyle(settings.UiStyle);
 
-            // Наблюдатель твиков процессов: авто-приоритет и «только физические ядра».
+            // Пользовательский выключатель анимаций (null = включены).
+            UiAnimation.Enabled = settings.EnableAnimations ?? true;
+
+            // Наблюдатель твиков процессов, игровой оверлей и точный таймер 0.5 мс.
             ProcessPriorityWatcher.Refresh();
+            MouseTweaksService.InitializeTimerResolutionAtStartup(settings.HighPrecisionTimer);
+            OverlayService.InitializeAtStartup();
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            MouseTweaksService.ReleaseTimerResolution();
+            base.OnExit(e);
         }
 
         /// <summary>Показывает понятную ошибку вместо аварийного завершения приложения.</summary>
@@ -51,6 +63,8 @@ namespace ImplexityTweaker
         {
             if (ex == null)
                 return;
+
+            AppLogger.Error("Crash", "Unhandled exception", ex);
 
             try
             {

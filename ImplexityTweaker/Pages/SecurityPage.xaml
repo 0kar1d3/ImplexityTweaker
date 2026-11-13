@@ -7,13 +7,13 @@
       Foreground="{DynamicResource App.Text}">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Margin="20">
+        <StackPanel Margin="28,22,28,28" MaxWidth="980">
             <TextBlock Text="{loc:Loc 'Безопасность'}" Style="{StaticResource PageTitleText}" />
             <TextBlock Text="{loc:Loc 'Отключение системной защиты Windows: Защитник, SmartScreen, брандмауэр и контроль учётных записей. Все действия требуют прав администратора.'}"
                        Style="{StaticResource PageDescriptionText}"
-                       Margin="0,8,0,16" />
+                       Margin="0,6,0,18" />
 
-            <ui:Card Padding="20" Margin="0,0,0,15">
+            <ui:Card>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -53,7 +53,7 @@
                 </Grid>
             </ui:Card>
 
-            <ui:Card Padding="20" Margin="0,0,0,15">
+            <ui:Card>
                 <StackPanel>
                     <TextBlock Text="{loc:Loc 'Системная безопасность'}" Style="{StaticResource CardHeaderText}" Margin="0,0,0,8" />
                     <TextBlock Text="{loc:Loc 'Дополнительные механизмы защиты, которые можно отключить по отдельности.'}"
@@ -65,7 +65,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                        <Border Style="{StaticResource SettingIconBox}">
                             <ui:SymbolIcon Symbol="ShieldDismiss24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
@@ -84,7 +84,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                        <Border Style="{StaticResource SettingIconBox}">
                             <ui:SymbolIcon Symbol="ShieldProhibited20" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
@@ -103,7 +103,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                        <Border Style="{StaticResource SettingIconBox}">
                             <ui:SymbolIcon Symbol="LockShield24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
@@ -122,7 +122,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                        <Border Style="{StaticResource SettingIconBox}">
                             <ui:SymbolIcon Symbol="ShieldKeyhole24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Management;
@@ -29,6 +29,8 @@ public partial class OptimizationPage : Page
         LoadCurrentSettings();
         _ = LoadPowerSchemeStateAsync();
         InitializeProcessTweaks();
+        InitializeMouseAndInputTweaks();
+        _ = LoadMsiDevicesAsync();
         // Параметры запуска CS2 считаются под конкретную систему — заполняем после настроек.
         GenerateLaunchArguments();
         Unloaded += OptimizationPage_Unloaded;
@@ -696,6 +698,23 @@ public partial class OptimizationPage : Page
             HighPriorityToggle.IsChecked = tweaks.HighPriorityEnabled;
             AffinityToggle.IsChecked = tweaks.AffinityEnabled;
             AutoPriorityToggle.IsChecked = tweaks.AutoPriorityEnabled;
+
+            AutoRamThresholdCombo.Items.Clear();
+            int[] thresholds = [70, 75, 80, 85, 90];
+            foreach (var th in thresholds)
+                AutoRamThresholdCombo.Items.Add(new ThresholdItem(th));
+
+            var currentTh = tweaks.AutoRamThresholdPercent is >= 70 and <= 95 ? tweaks.AutoRamThresholdPercent : 80;
+            AutoRamThresholdCombo.SelectedItem = AutoRamThresholdCombo.Items.Cast<ThresholdItem>()
+                .FirstOrDefault(x => x.Percent == currentTh) ?? AutoRamThresholdCombo.Items[2];
+
+            AutoRamThresholdToggle.IsChecked = tweaks.AutoRamThresholdEnabled;
+            AutoRamGameLaunchToggle.IsChecked = tweaks.AutoRamOnGameLaunchEnabled;
+            AutoRamWhitelistBox.Text = string.IsNullOrWhiteSpace(tweaks.AutoRamGameWhitelist)
+                ? "cs2.exe, dota2.exe, valorant.exe, r5apex.exe"
+                : tweaks.AutoRamGameWhitelist;
+
+            TrayAutostartToggle.IsChecked = TrayService.GetAutostartEnabled();
         }
         finally
         {
@@ -703,6 +722,7 @@ public partial class OptimizationPage : Page
         }
 
         ProcessPriorityWatcher.Refresh();
+        RefreshTrayStatusBanner();
         _ = LoadGameGlobalsAsync();
     }
 
@@ -748,6 +768,10 @@ public partial class OptimizationPage : Page
         tweaks.AffinityEnabled = AffinityToggle.IsChecked == true;
         tweaks.AutoPriorityProcess = ProcessNameOf(AutoPriorityProcessCombo);
         tweaks.AutoPriorityEnabled = AutoPriorityToggle.IsChecked == true;
+        tweaks.AutoRamThresholdEnabled = AutoRamThresholdToggle.IsChecked == true;
+        tweaks.AutoRamThresholdPercent = (AutoRamThresholdCombo.SelectedItem as ThresholdItem)?.Percent ?? 80;
+        tweaks.AutoRamOnGameLaunchEnabled = AutoRamGameLaunchToggle.IsChecked == true;
+        tweaks.AutoRamGameWhitelist = AutoRamWhitelistBox.Text?.Trim() ?? string.Empty;
         ProcessTweaksStore.Save(tweaks);
     }
 
@@ -762,12 +786,19 @@ public partial class OptimizationPage : Page
         if (!this.IsLoaded || _gameInit)
             return;
 
+        bool wasTrayActive = TrayService.HasActiveBackgroundFeatures();
         SaveProcessTweaks();
-        ProcessPriorityWatcher.Refresh();
+        ProcessPriorityWatcher.Refresh(notifyTray: true);
+        RefreshTrayStatusBanner();
 
-        ShowNotification(AffinityToggle.IsChecked == true
+        var msg = AffinityToggle.IsChecked == true
             ? LocalizationService.TF("«Только физические ядра» включено для {0}.", ProcessNameOf(AffinityProcessCombo))
-            : LocalizationService.T("Ограничение по ядрам выключено."));
+            : LocalizationService.T("Ограничение по ядрам выключено.");
+
+        if (!wasTrayActive && TrayService.HasActiveBackgroundFeatures())
+            msg += "\n\n" + LocalizationService.T("Активирован фоновый режим в системном трее: при закрытии окна Implexity Tweaker продолжит следить за процессами.");
+
+        ShowNotification(msg);
     }
 
     private void AutoPriorityToggle_Toggled(object sender, RoutedEventArgs e)
@@ -775,12 +806,505 @@ public partial class OptimizationPage : Page
         if (!this.IsLoaded || _gameInit)
             return;
 
+        bool wasTrayActive = TrayService.HasActiveBackgroundFeatures();
+        SaveProcessTweaks();
+        ProcessPriorityWatcher.Refresh(notifyTray: true);
+        RefreshTrayStatusBanner();
+
+        var msg = AutoPriorityToggle.IsChecked == true
+            ? LocalizationService.TF("Авто-приоритет включён для {0}.", ProcessNameOf(AutoPriorityProcessCombo))
+            : LocalizationService.T("Авто-приоритет выключен.");
+
+        if (!wasTrayActive && TrayService.HasActiveBackgroundFeatures())
+            msg += "\n\n" + LocalizationService.T("Активирован фоновый режим в системном трее: при закрытии окна Implexity Tweaker продолжит следить за процессами.");
+
+        ShowNotification(msg);
+    }
+
+    // ===================== Автоочистка ОЗУ и Системный трей =====================
+
+    private sealed record ThresholdItem(int Percent)
+    {
+        public override string ToString() => LocalizationService.TF("{0}% ОЗУ", Percent);
+    }
+
+    private void RefreshTrayStatusBanner()
+    {
+        var active = TrayService.HasActiveBackgroundFeatures();
+        if (active)
+        {
+            var names = string.Join(", ", TrayService.GetActiveFeatureNames());
+            TrayStatusTitle.Text = LocalizationService.T("Фоновый режим в трее активен");
+            TrayStatusDesc.Text = LocalizationService.TF("Включено: {0}. При закрытии окна твикер свернётся в системный трей.", names);
+            TrayAutostartToggle.IsEnabled = true;
+        }
+        else
+        {
+            TrayStatusTitle.Text = LocalizationService.T("Фоновый режим в трее выключен");
+            TrayStatusDesc.Text = LocalizationService.T("Ни одна фоновая функция не включена — при закрытии окна программа завершается полностью.");
+            TrayAutostartToggle.IsEnabled = false;
+            _gameInit = true;
+            try { TrayAutostartToggle.IsChecked = false; } finally { _gameInit = false; }
+        }
+    }
+
+    private void TrayAutostartToggle_Toggled(object sender, RoutedEventArgs e)
+    {
+        if (!IsLoaded || _gameInit)
+            return;
+
+        if (!TrayService.HasActiveBackgroundFeatures() && TrayAutostartToggle.IsChecked == true)
+        {
+            _gameInit = true;
+            try { TrayAutostartToggle.IsChecked = false; } finally { _gameInit = false; }
+            ShowNotification(LocalizationService.T("Сначала включите хотя бы одну фоновую функцию (автоочистку ОЗУ, авто-приоритет или физические ядра)."));
+            return;
+        }
+
+        TrayService.SetAutostartEnabled(TrayAutostartToggle.IsChecked == true);
+        ShowNotification(TrayAutostartToggle.IsChecked == true
+            ? LocalizationService.T("Implexity Tweaker будет автоматически запускаться в трее вместе с Windows.")
+            : LocalizationService.T("Автозапуск с Windows отключён."));
+    }
+
+    private void AutoRamThresholdCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (!IsLoaded || _gameInit)
+            return;
+
         SaveProcessTweaks();
         ProcessPriorityWatcher.Refresh();
+        RefreshTrayStatusBanner();
+    }
 
-        ShowNotification(AutoPriorityToggle.IsChecked == true
-            ? LocalizationService.TF("Авто-приоритет включён для {0}.", ProcessNameOf(AutoPriorityProcessCombo))
-            : LocalizationService.T("Авто-приоритет выключен."));
+    private void AutoRamThresholdToggle_Toggled(object sender, RoutedEventArgs e)
+    {
+        if (!IsLoaded || _gameInit)
+            return;
+
+        bool wasTrayActive = TrayService.HasActiveBackgroundFeatures();
+        SaveProcessTweaks();
+        ProcessPriorityWatcher.Refresh(notifyTray: true);
+        RefreshTrayStatusBanner();
+
+        var th = (AutoRamThresholdCombo.SelectedItem as ThresholdItem)?.Percent ?? 80;
+        var msg = AutoRamThresholdToggle.IsChecked == true
+            ? LocalizationService.TF("Автоочистка ОЗУ при превышении {0}% включена.", th)
+            : LocalizationService.T("Автоочистка ОЗУ по порогу выключена.");
+
+        if (!wasTrayActive && TrayService.HasActiveBackgroundFeatures())
+            msg += "\n\n" + LocalizationService.T("Активирован фоновый режим в системном трее: при закрытии окна Implexity Tweaker продолжит работать в фоне.");
+
+        ShowNotification(msg);
+    }
+
+    private void AutoRamGameLaunchToggle_Toggled(object sender, RoutedEventArgs e)
+    {
+        if (!IsLoaded || _gameInit)
+            return;
+
+        bool wasTrayActive = TrayService.HasActiveBackgroundFeatures();
+        SaveProcessTweaks();
+        ProcessPriorityWatcher.Refresh(notifyTray: true);
+        RefreshTrayStatusBanner();
+
+        var msg = AutoRamGameLaunchToggle.IsChecked == true
+            ? LocalizationService.T("Автоочистка ОЗУ при запуске игр из белого списка включена.")
+            : LocalizationService.T("Автоочистка ОЗУ при запуске игр выключена.");
+
+        if (!wasTrayActive && TrayService.HasActiveBackgroundFeatures())
+            msg += "\n\n" + LocalizationService.T("Активирован фоновый режим в системном трее: при закрытии окна Implexity Tweaker продолжит работать в фоне.");
+
+        ShowNotification(msg);
+    }
+
+    private void SaveAutoRamWhitelist_Click(object sender, RoutedEventArgs e)
+    {
+        SaveProcessTweaks();
+        ProcessPriorityWatcher.Refresh();
+        ShowNotification(LocalizationService.T("Белый список игр для автоочистки ОЗУ сохранён."));
+    }
+
+    // ===================== Мышь 1:1 Raw Input и Очередь ввода =====================
+
+    private sealed record QueueSizeItem(int Size, string Label)
+    {
+        public override string ToString() => Label;
+    }
+
+    private sealed record Win32PriorityItem(int Value, string Label)
+    {
+        public override string ToString() => Label;
+    }
+
+    private void InitializeMouseAndInputTweaks()
+    {
+        _isProgrammaticChange = true;
+        try
+        {
+            RawMouseInputToggle.IsChecked = _settings.RawMouseInput ?? MouseTweaksService.GetRawInputEnabled();
+            HighPrecisionTimerToggle.IsChecked = _settings.HighPrecisionTimer ?? MouseTweaksService.GetHighPrecisionTimerEnabled();
+
+            InputQueueSizeCombo.Items.Clear();
+            var items = new[]
+            {
+                new QueueSizeItem(16, "16 (" + LocalizationService.T("Минимальная задержка") + ")"),
+                new QueueSizeItem(20, "20 (" + LocalizationService.T("Низкая задержка") + ")"),
+                new QueueSizeItem(32, "32 (" + LocalizationService.T("Сбалансированно") + ")"),
+                new QueueSizeItem(50, "50 (" + LocalizationService.T("Умеренно") + ")"),
+                new QueueSizeItem(100, "100 (" + LocalizationService.T("Стандарт Windows") + ")")
+            };
+            foreach (var it in items)
+                InputQueueSizeCombo.Items.Add(it);
+
+            var currentQueue = _settings.InputQueueSize ?? MouseTweaksService.GetInputQueueSize();
+            InputQueueSizeCombo.SelectedItem = items.FirstOrDefault(x => x.Size == currentQueue) ?? items[^1];
+
+            Win32PriorityCombo.Items.Clear();
+            var prioItems = new[]
+            {
+                new Win32PriorityItem(2, "0x02 · " + LocalizationService.T("Стандарт Windows")),
+                new Win32PriorityItem(38, "0x26 · " + LocalizationService.T("Минимальный инпут-лаг")),
+                new Win32PriorityItem(40, "0x28 · " + LocalizationService.T("Стабильный FPS"))
+            };
+            foreach (var p in prioItems)
+                Win32PriorityCombo.Items.Add(p);
+
+            int curPrio = _settings.Win32PrioritySeparation ?? MouseTweaksService.GetWin32PrioritySeparation();
+            Win32PriorityCombo.SelectedItem = prioItems.FirstOrDefault(x => x.Value == curPrio) ?? prioItems[0];
+
+            UpdateTimerResolutionStatusText();
+        }
+        finally
+        {
+            _isProgrammaticChange = false;
+        }
+
+        _ = LoadAsyncInputTweaksStateAsync();
+    }
+
+    private async Task LoadAsyncInputTweaksStateAsync()
+    {
+        try
+        {
+            bool dynTickDisabled = await MouseTweaksService.GetDynamicTickDisabledAsync();
+
+            _isProgrammaticChange = true;
+            try
+            {
+                DisableDynamicTickToggle.IsChecked = _settings.DisableDynamicTick ?? dynTickDisabled;
+            }
+            finally
+            {
+                _isProgrammaticChange = false;
+            }
+        }
+        catch { }
+    }
+
+    private void UpdateTimerResolutionStatusText()
+    {
+        double ms = MouseTweaksService.GetCurrentTimerResolutionMs();
+        TimerResolutionStatusText.Text = LocalizationService.TF("Текущее разрешение таймера: {0:0.00} мс", ms);
+    }
+
+    private async void RawMouseInputToggle_Toggled(object sender, RoutedEventArgs e)
+    {
+        if (!IsLoaded || _isProgrammaticChange)
+            return;
+
+        try
+        {
+            bool enable = RawMouseInputToggle.IsChecked == true;
+            await MouseTweaksService.SetRawInputAsync(enable);
+            _settings.RawMouseInput = enable;
+            SaveToSettings();
+            ShowNotification(enable
+                ? LocalizationService.T("Точный ввод мыши 1:1 включён, акселерация указателя отключена.")
+                : LocalizationService.T("Параметры кривой и ускорения мыши возвращены к стандартным Windows."));
+        }
+        catch (Exception ex)
+        {
+            RevertToggleOnFailure(RawMouseInputToggle, ex);
+        }
+    }
+
+    private async void ApplyInputQueueSize_Click(object sender, RoutedEventArgs e)
+    {
+        if (InputQueueSizeCombo.SelectedItem is not QueueSizeItem item)
+            return;
+
+        try
+        {
+            await MouseTweaksService.SetInputQueueSizeAsync(item.Size);
+            _settings.InputQueueSize = item.Size;
+            SaveToSettings();
+            ShowNotification(LocalizationService.TF(
+                "Размер очереди мыши и клавиатуры установлен на {0}. Перезагрузите ПК для применения.", item.Size));
+        }
+        catch (Exception ex)
+        {
+            ShowNotification(LocalizationService.T("Ошибка: ") + ex.Message);
+        }
+    }
+
+    private async void HighPrecisionTimerToggle_Toggled(object sender, RoutedEventArgs e)
+    {
+        if (!IsLoaded || _isProgrammaticChange)
+            return;
+
+        try
+        {
+            bool enable = HighPrecisionTimerToggle.IsChecked == true;
+            await MouseTweaksService.SetHighPrecisionTimerAsync(enable);
+            _settings.HighPrecisionTimer = enable;
+            SaveToSettings();
+            UpdateTimerResolutionStatusText();
+            ShowNotification(enable
+                ? LocalizationService.T("Включён точный системный таймер 0.5 мс и GlobalTimerResolutionRequests.")
+                : LocalizationService.T("Системный таймер возвращён в стандартный режим."));
+        }
+        catch (Exception ex)
+        {
+            RevertToggleOnFailure(HighPrecisionTimerToggle, ex);
+        }
+    }
+
+    private async void DisableDynamicTickToggle_Toggled(object sender, RoutedEventArgs e)
+    {
+        if (!IsLoaded || _isProgrammaticChange)
+            return;
+
+        try
+        {
+            bool disable = DisableDynamicTickToggle.IsChecked == true;
+            await MouseTweaksService.SetDynamicTickDisabledAsync(disable);
+            _settings.DisableDynamicTick = disable;
+            SaveToSettings();
+            ShowNotification(disable
+                ? LocalizationService.T("Dynamic Tick отключён (HPET очищен). Перезагрузите ПК для применения.")
+                : LocalizationService.T("Dynamic Tick возвращён в стандартное состояние. Перезагрузите ПК."));
+        }
+        catch (Exception ex)
+        {
+            RevertToggleOnFailure(DisableDynamicTickToggle, ex);
+        }
+    }
+
+    private async void ApplyWin32Priority_Click(object sender, RoutedEventArgs e)
+    {
+        if (Win32PriorityCombo.SelectedItem is not Win32PriorityItem item)
+            return;
+
+        try
+        {
+            await MouseTweaksService.SetWin32PrioritySeparationAsync(item.Value);
+            _settings.Win32PrioritySeparation = item.Value;
+            SaveToSettings();
+            ShowNotification(LocalizationService.TF("Приоритет активного окна изменён: {0}.", item.Label));
+        }
+        catch (Exception ex)
+        {
+            ShowNotification(LocalizationService.T("Ошибка: ") + ex.Message);
+        }
+    }
+
+    // ===================== MSI Mode и Interrupt Priority =====================
+
+    private sealed record PriorityOption(MsiModeService.InterruptPriority Priority)
+    {
+        public override string ToString() => MsiModeService.PriorityLabel(Priority);
+    }
+
+    private async void RefreshMsiDevices_Click(object sender, RoutedEventArgs e)
+        => await LoadMsiDevicesAsync();
+
+    private async Task LoadMsiDevicesAsync()
+    {
+        MsiDevicesHost.Children.Clear();
+        MsiDevicesHost.Children.Add(new TextBlock
+        {
+            Text = LocalizationService.T("Поиск видеокарт, сетевых и USB-контроллеров…"),
+            Style = (Style)FindResource("ItemDescriptionText")
+        });
+
+        try
+        {
+            var devices = await MsiModeService.GetDevicesAsync();
+            var affinityOptions = MsiModeService.GetAffinityPresets();
+            MsiDevicesHost.Children.Clear();
+
+            if (devices.Count == 0)
+            {
+                MsiDevicesHost.Children.Add(new TextBlock
+                {
+                    Text = LocalizationService.T("Подходящих PCI-устройств не обнаружено."),
+                    Style = (Style)FindResource("ItemDescriptionText")
+                });
+                return;
+            }
+
+            var priorityOptions = new[]
+            {
+                new PriorityOption(MsiModeService.InterruptPriority.Default),
+                new PriorityOption(MsiModeService.InterruptPriority.Low),
+                new PriorityOption(MsiModeService.InterruptPriority.Normal),
+                new PriorityOption(MsiModeService.InterruptPriority.High)
+            };
+
+            foreach (var dev in devices)
+            {
+                var rowBorder = new Border
+                {
+                    Style = (Style)Application.Current.Resources["FluentBlockBorder"],
+                    Padding = new Thickness(14, 12, 14, 12),
+                    Margin = new Thickness(0, 0, 0, 10)
+                };
+
+                var grid = new Grid();
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+                var leftStack = new StackPanel { VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 12, 0) };
+                var titleRow = new WrapPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
+
+                var catBadge = new Border
+                {
+                    Background = (System.Windows.Media.Brush)Application.Current.Resources["App.AccentSoft"],
+                    CornerRadius = new CornerRadius(5),
+                    Padding = new Thickness(6, 1, 6, 1),
+                    Margin = new Thickness(0, 0, 8, 0),
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Child = new TextBlock
+                    {
+                        Text = dev.Category switch
+                        {
+                            "GPU" => LocalizationService.T("Видеокарта"),
+                            "USB" => LocalizationService.T("USB-контроллер"),
+                            _ => LocalizationService.T("Сеть")
+                        },
+                        FontSize = 11,
+                        FontWeight = FontWeights.Bold
+                    }
+                };
+                titleRow.Children.Add(catBadge);
+
+                titleRow.Children.Add(new TextBlock
+                {
+                    Text = dev.Name,
+                    Style = (Style)FindResource("ItemTitleText"),
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(0, 0, 8, 0)
+                });
+
+                leftStack.Children.Add(titleRow);
+
+                Grid.SetColumn(leftStack, 0);
+                grid.Children.Add(leftStack);
+
+                var controlsStack = new StackPanel
+                {
+                    Orientation = Orientation.Horizontal,
+                    VerticalAlignment = VerticalAlignment.Center
+                };
+
+                var msiLabel = new TextBlock
+                {
+                    Text = "MSI:",
+                    Style = (Style)FindResource("ItemDescriptionText"),
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(0, 0, 6, 0)
+                };
+                var msiToggle = new Wpf.Ui.Controls.ToggleSwitch
+                {
+                    IsChecked = dev.MsiSupported,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(0, 0, 12, 0),
+                    ToolTip = LocalizationService.T("Переключает режим прерываний устройства (MSI)")
+                };
+
+                var prioCombo = new ComboBox
+                {
+                    Width = 128,
+                    FontSize = 12,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(0, 0, 8, 0),
+                    ToolTip = LocalizationService.T("Приоритет обработки прерываний устройства")
+                };
+                foreach (var opt in priorityOptions)
+                    prioCombo.Items.Add(opt);
+                prioCombo.SelectedItem = priorityOptions.FirstOrDefault(o => o.Priority == dev.Priority) ?? priorityOptions[0];
+
+                var affCombo = new ComboBox
+                {
+                    Width = 148,
+                    FontSize = 12,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(0, 0, 8, 0),
+                    ToolTip = LocalizationService.T("Выделенное ядро CPU для прерываний устройства")
+                };
+                foreach (var aff in affinityOptions)
+                    affCombo.Items.Add(aff);
+                affCombo.SelectedItem = affinityOptions.FirstOrDefault(a => a.Mask == dev.AffinityMask) ?? affinityOptions[0];
+
+                var applyBtn = new Wpf.Ui.Controls.Button
+                {
+                    Content = LocalizationService.T("Применить"),
+                    Appearance = Wpf.Ui.Common.ControlAppearance.Primary,
+                    Padding = new Thickness(14, 6, 14, 6),
+                    FontSize = 12,
+                    VerticalAlignment = VerticalAlignment.Center
+                };
+
+                var pnpId = dev.PnpDeviceId;
+                var devName = dev.Name;
+                applyBtn.Click += async (_, _) =>
+                {
+                    var selectedPrio = (prioCombo.SelectedItem as PriorityOption)?.Priority ?? MsiModeService.InterruptPriority.Default;
+                    var selectedAff = (affCombo.SelectedItem as MsiModeService.AffinityOption)?.Mask ?? 0UL;
+                    var enableMsi = msiToggle.IsChecked == true;
+                    applyBtn.IsEnabled = false;
+                    try
+                    {
+                        await MsiModeService.ApplyDeviceSettingsAsync(pnpId, enableMsi, selectedPrio, selectedAff);
+                        ShowNotification(LocalizationService.TF(
+                            "Параметры прерываний для «{0}» сохранены (MSI: {1}, Приоритет: {2}). Перезагрузите ПК для применения.",
+                            devName,
+                            enableMsi ? LocalizationService.T("Вкл") : LocalizationService.T("Выкл"),
+                            MsiModeService.PriorityLabel(selectedPrio)));
+                    }
+                    catch (Exception ex)
+                    {
+                        ShowNotification(LocalizationService.T("Ошибка применения MSI Mode: ") + ex.Message);
+                    }
+                    finally
+                    {
+                        applyBtn.IsEnabled = true;
+                    }
+                };
+
+                controlsStack.Children.Add(msiLabel);
+                controlsStack.Children.Add(msiToggle);
+                controlsStack.Children.Add(prioCombo);
+                controlsStack.Children.Add(affCombo);
+                controlsStack.Children.Add(applyBtn);
+
+                Grid.SetColumn(controlsStack, 1);
+                grid.Children.Add(controlsStack);
+
+                rowBorder.Child = grid;
+                MsiDevicesHost.Children.Add(rowBorder);
+            }
+        }
+        catch (Exception ex)
+        {
+            MsiDevicesHost.Children.Clear();
+            MsiDevicesHost.Children.Add(new TextBlock
+            {
+                Text = ex.Message,
+                Style = (Style)FindResource("ItemDescriptionText")
+            });
+        }
     }
 
     private async Task LoadGameGlobalsAsync()

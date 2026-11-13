@@ -87,6 +87,34 @@ public static class RamCleanerService
         return usedPages * (long)pi.PageSize / 1024 / 1024;
     }
 
+    /// <summary>
+    /// Принудительно собирает мусор и сжимает рабочий набор самого процесса твикера
+    /// (используется при сворачивании в системный трей для минимального потребления ОЗУ).
+    /// </summary>
+    public static void TrimOwnProcessMemory()
+    {
+        try
+        {
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Aggressive, blocking: true, compacting: true);
+            GC.WaitForPendingFinalizers();
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Aggressive, blocking: true, compacting: true);
+            EmptyWorkingSet(Process.GetCurrentProcess().Handle);
+        }
+        catch
+        {
+        }
+    }
+
+    /// <summary>Текущий процент загрузки оперативной памяти (0–100).</summary>
+    public static int GetMemoryUsagePercent()
+    {
+        if (!GetPerformanceInfo(out var pi, Marshal.SizeOf<PerformanceInformation>()) || (long)pi.PhysicalTotal <= 0)
+            return 0;
+
+        long usedPages = (long)pi.PhysicalTotal - (long)pi.PhysicalAvailable;
+        return (int)Math.Clamp(usedPages * 100L / (long)pi.PhysicalTotal, 0L, 100L);
+    }
+
     private static void EnablePrivilege(string privilege)
     {
         try
@@ -148,19 +176,35 @@ public static class RamCleanerService
             Process[] processes;
             try { processes = Process.GetProcesses(); } catch { return 0L; }
 
-            var targets = processes.Where(p => p.SessionId == currentSession && p.Id != currentPid).ToArray();
-            int total = targets.Length;
+            var targetIds = new List<int>(processes.Length);
+            try
+            {
+                foreach (var p in processes)
+                {
+                    try
+                    {
+                        if (p.SessionId == currentSession && p.Id != currentPid)
+                            targetIds.Add(p.Id);
+                    }
+                    catch { }
+                }
+            }
+            finally
+            {
+                foreach (var p in processes)
+                {
+                    try { p.Dispose(); } catch { }
+                }
+            }
+
+            int total = targetIds.Count;
             progress?.Report((0, total));
 
             for (int i = 0; i < total; i++)
             {
                 try
                 {
-                    var process = targets[i];
-                    if (process.SessionId != currentSession || process.Id == currentPid)
-                        continue;
-
-                    IntPtr handle = OpenProcess(ProcessQueryInformation | ProcessSetQuota, false, (uint)process.Id);
+                    IntPtr handle = OpenProcess(ProcessQueryInformation | ProcessSetQuota, false, (uint)targetIds[i]);
                     if (handle == IntPtr.Zero)
                         continue;
 
@@ -175,10 +219,6 @@ public static class RamCleanerService
                 catch
                 {
                     // Доступ запрещён или процесс завершился — пропускаем.
-                }
-                finally
-                {
-                    try { processes[i]?.Dispose(); } catch { }
                 }
 
                 progress?.Report((i + 1, total));

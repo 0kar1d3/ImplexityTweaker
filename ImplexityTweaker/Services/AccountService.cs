@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -661,7 +661,7 @@ public static class AccountService
             {
                 ["title"] = Path.GetFileNameWithoutExtension(fileName),
                 ["description"] = null,
-                ["tweaker_version"] = "1.5.0",
+                ["tweaker_version"] = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "2.0.0",
                 ["file_url"] = fileUrl,
                 ["file_name"] = fileName,
                 ["format"] = AppSettings.ConfigFormatMarker,

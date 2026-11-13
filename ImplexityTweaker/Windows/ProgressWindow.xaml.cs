@@ -53,6 +53,10 @@ namespace ImplexityTweaker.Windows
             StepText.Text = "";
             Closed += (_, _) => _isClosed = true;
             SourceInitialized += (_, _) => SetDarkTitleBar();
+
+            // Плавное появление содержимого окна.
+            UiAnimation.PrepareWindowOpen(this);
+            Loaded += (_, _) => UiAnimation.AnimateWindowOpen(this);
         }
 
         /// <summary>

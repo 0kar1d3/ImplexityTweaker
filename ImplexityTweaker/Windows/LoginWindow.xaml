@@ -5,72 +5,88 @@
         xmlns:loc="clr-namespace:ImplexityTweaker.Localization"
         Title="{loc:Loc 'Вход в аккаунт'}"
         Icon="/icon_rounded.png"
-        Width="440"
+        Width="460"
         SizeToContent="Height"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
-        Background="{DynamicResource App.Surface}"
+        ShowInTaskbar="False"
         Foreground="{DynamicResource App.Text}"
-        FontFamily="Segoe UI Variable, Segoe UI">
+        FontFamily="Segoe UI Variable Text, Segoe UI Variable, Segoe UI"
+        PreviewKeyDown="Window_PreviewKeyDown">
 
-    <StackPanel Margin="28,26">
-        <!-- Шапка: логотип + заголовок -->
-        <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-            <Border x:Name="LogoFrame" Width="52" Height="52" CornerRadius="14"
-                    BorderBrush="#2F81F7" BorderThickness="1">
-                <Border.Clip>
-                    <RectangleGeometry x:Name="LogoClip" RadiusX="14" RadiusY="14" />
-                </Border.Clip>
-                <Image Source="/logo.png" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality" />
-            </Border>
-            <StackPanel Margin="14,0,0,0" VerticalAlignment="Center">
-                <TextBlock Text="{loc:Loc 'Вход в аккаунт Implexity'}" FontSize="20" FontWeight="Bold" />
-                <TextBlock Text="{loc:Loc 'Аккаунт сайта Implexity'}" FontSize="12" Foreground="{DynamicResource App.TextMuted}" Margin="0,2,0,0" />
+    <Border Margin="14"
+            Background="{DynamicResource App.Surface}"
+            BorderBrush="{DynamicResource App.Border}"
+            BorderThickness="1"
+            CornerRadius="12"
+            SnapsToDevicePixels="True"
+            MouseLeftButtonDown="Root_MouseLeftButtonDown">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="24" ShadowDepth="6" Direction="270" Opacity="0.45" Color="#000000" />
+        </Border.Effect>
+
+        <StackPanel Margin="26,24">
+            <!-- Шапка: логотип + заголовок -->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,18">
+                <Border x:Name="LogoFrame" Width="48" Height="48" CornerRadius="10"
+                        BorderBrush="{DynamicResource App.Accent}" BorderThickness="1">
+                    <Border.Clip>
+                        <RectangleGeometry x:Name="LogoClip" RadiusX="10" RadiusY="10" />
+                    </Border.Clip>
+                    <Image Source="/logo.png" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality" />
+                </Border>
+                <StackPanel Margin="14,0,0,0" VerticalAlignment="Center">
+                    <TextBlock Text="{loc:Loc 'Вход в аккаунт Implexity'}" FontSize="19" FontWeight="SemiBold" />
+                    <TextBlock Text="{loc:Loc 'Аккаунт сайта Implexity'}" FontSize="12" Foreground="{DynamicResource App.TextMuted}" Margin="0,2,0,0" />
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Вход через сайт -->
+            <TextBlock Text="{loc:Loc 'Откроется сайт Implexity. Войдите в аккаунт в браузере — твикер подхватит сессию автоматически.'}"
+                       Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,0,0,10" />
+            <ui:Button x:Name="SiteLoginBtn" Appearance="Primary" Click="SiteLogin_Click"
+                       HorizontalAlignment="Stretch" Padding="0,10" Margin="0,0,0,14">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <ui:SymbolIcon Symbol="Open24" FontSize="16" Foreground="White" VerticalAlignment="Center" />
+                    <TextBlock Text="{loc:Loc 'Войти через сайт'}" FontSize="13" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center" />
+                </StackPanel>
+            </ui:Button>
+
+            <!-- Разделитель -->
+            <Grid Margin="0,2,0,14">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Height="1" Background="{DynamicResource App.Border}" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Text="{loc:Loc 'или войдите по email и паролю'}" FontSize="11"
+                           Foreground="{DynamicResource App.TextMuted}" Margin="12,0" VerticalAlignment="Center" />
+                <Border Grid.Column="2" Height="1" Background="{DynamicResource App.Border}" VerticalAlignment="Center" />
+            </Grid>
+
+            <!-- Ручной вход -->
+            <TextBlock Text="{loc:Loc 'Email'}" FontSize="12" Foreground="{DynamicResource App.TextMuted}" Margin="0,0,0,4" />
+            <TextBox x:Name="EmailBox" FontSize="13" Padding="10,8" Margin="0,0,0,12" />
+
+            <TextBlock Text="{loc:Loc 'Пароль'}" FontSize="12" Foreground="{DynamicResource App.TextMuted}" Margin="0,0,0,4" />
+            <PasswordBox x:Name="PasswordBox" FontSize="13" Padding="10,8" Margin="0,0,0,16" />
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <ui:Button x:Name="LoginBtn" Content="{loc:Loc 'Войти'}" Appearance="Primary" Click="Login_Click"
+                           Padding="22,8" Margin="0,0,8,0" />
+                <ui:Button x:Name="CancelBtn" Content="{loc:Loc 'Отмена'}" Appearance="Secondary" Click="Cancel_Click" Padding="22,8" />
+            </StackPanel>
+
+            <!-- Статус входа через сайт -->
+            <StackPanel x:Name="StatusPanel" Orientation="Horizontal" Visibility="Collapsed" Margin="0,16,0,0">
+                <ui:ProgressRing IsIndeterminate="True" Width="16" Height="16" VerticalAlignment="Center" />
+                <TextBlock x:Name="StatusText" FontSize="12" Foreground="{DynamicResource App.TextMuted}"
+                           Margin="10,0,0,0" VerticalAlignment="Center" TextWrapping="Wrap" />
             </StackPanel>
         </StackPanel>
-
-        <!-- Вход через сайт -->
-        <TextBlock Text="{loc:Loc 'Откроется сайт Implexity. Войдите в аккаунт в браузере — твикер подхватит сессию автоматически.'}"
-                   Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,0,0,10" />
-        <ui:Button x:Name="SiteLoginBtn" Appearance="Primary" Click="SiteLogin_Click"
-                   HorizontalAlignment="Stretch" Padding="0,10" Margin="0,0,0,14">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <ui:SymbolIcon Symbol="Open24" FontSize="16" Foreground="White" VerticalAlignment="Center" />
-                <TextBlock Text="{loc:Loc 'Войти через сайт'}" FontSize="13" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center" />
-            </StackPanel>
-        </ui:Button>
-
-        <!-- Разделитель -->
-        <Grid Margin="0,2,0,14">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Border Grid.Column="0" Height="1" Background="{DynamicResource App.Border}" VerticalAlignment="Center" />
-            <TextBlock Grid.Column="1" Text="{loc:Loc 'или войдите по email и паролю'}" FontSize="11"
-                       Foreground="{DynamicResource App.TextMuted}" Margin="12,0" VerticalAlignment="Center" />
-            <Border Grid.Column="2" Height="1" Background="{DynamicResource App.Border}" VerticalAlignment="Center" />
-        </Grid>
-
-        <!-- Ручной вход -->
-        <TextBlock Text="{loc:Loc 'Email'}" FontSize="12" Foreground="{DynamicResource App.TextMuted}" Margin="0,0,0,4" />
-        <TextBox x:Name="EmailBox" FontSize="13" Padding="10,8" Margin="0,0,0,12" />
-
-        <TextBlock Text="{loc:Loc 'Пароль'}" FontSize="12" Foreground="{DynamicResource App.TextMuted}" Margin="0,0,0,4" />
-        <PasswordBox x:Name="PasswordBox" FontSize="13" Padding="10,8" Margin="0,0,0,16" />
-
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <ui:Button x:Name="LoginBtn" Content="{loc:Loc 'Войти'}" Appearance="Primary" Click="Login_Click"
-                       Padding="22,8" Margin="0,0,8,0" />
-            <ui:Button x:Name="CancelBtn" Content="{loc:Loc 'Отмена'}" Appearance="Secondary" Click="Cancel_Click" Padding="22,8" />
-        </StackPanel>
-
-        <!-- Статус входа через сайт -->
-        <StackPanel x:Name="StatusPanel" Orientation="Horizontal" Visibility="Collapsed" Margin="0,16,0,0">
-            <ui:ProgressRing IsIndeterminate="True" Width="16" Height="16" VerticalAlignment="Center" />
-            <TextBlock x:Name="StatusText" FontSize="12" Foreground="{DynamicResource App.TextMuted}"
-                       Margin="10,0,0,0" VerticalAlignment="Center" TextWrapping="Wrap" />
-        </StackPanel>
-    </StackPanel>
+    </Border>
 </Window>

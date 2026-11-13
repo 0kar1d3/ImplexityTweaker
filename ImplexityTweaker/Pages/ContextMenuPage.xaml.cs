@@ -37,7 +37,7 @@ public partial class ContextMenuPage : Page
         try
         {
             using var key = Registry.CurrentUser.OpenSubKey(DesktopKey, false);
-            var v = key?.GetValue("MenuShowDelay") as int? ?? 400;
+            var v = int.TryParse(key?.GetValue("MenuShowDelay")?.ToString(), out var parsed) ? parsed : 400;
             RemoveContextDelayToggle.IsChecked = s.RemoveContextDelay ?? (v == 0);
         }
         catch

@@ -30,24 +30,15 @@ public static class NetworkLatencyService
     }
 
     /// <summary>Устанавливает SystemResponsiveness = 0 (или 20 при отключении).</summary>
-    public static async Task SetSystemResponsivenessAsync(bool enable)
+    public static Task SetSystemResponsivenessAsync(bool enable)
     {
-        try
+        return Task.Run(() =>
         {
-            int value = enable ? 0 : 20;
-            string script = $@"
-New-Item -Path 'HKLM:\{MultimediaReg}' -Force | Out-Null
-Set-ItemProperty -Path 'HKLM:\{MultimediaReg}' `
-    -Name 'SystemResponsiveness' -Value {value} -Type DWord -Force
-";
-            var result = await CommandRunner.RunPowerShellAsync(script);
-            if (result.ExitCode != 0)
-                throw new Exception(result.Error);
-        }
-        catch (Exception ex)
-        {
-            throw new InvalidOperationException("Failed to set SystemResponsiveness", ex);
-        }
+            using var key = Registry.LocalMachine.OpenSubKey(MultimediaReg, writable: true)
+                ?? Registry.LocalMachine.CreateSubKey(MultimediaReg, writable: true)
+                ?? throw new InvalidOperationException($"Failed to open HKLM\\{MultimediaReg}");
+            key.SetValue("SystemResponsiveness", enable ? 0 : 20, RegistryValueKind.DWord);
+        });
     }
 
     // ===================== TcpAckFrequency = 1 =========================
@@ -61,7 +52,11 @@ Set-ItemProperty -Path 'HKLM:\{MultimediaReg}' `
             if (baseKey == null)
                 return false;
 
-            foreach (var name in baseKey.GetSubKeyNames())
+            var names = baseKey.GetSubKeyNames();
+            if (names.Length == 0)
+                return false;
+
+            foreach (var name in names)
             {
                 using var iface = baseKey.OpenSubKey(name);
                 if ((iface?.GetValue("TcpAckFrequency") as int? ?? 0) != 1)
@@ -105,7 +100,11 @@ foreach ($iface in $interfaces) {{
             if (baseKey == null)
                 return false;
 
-            foreach (var name in baseKey.GetSubKeyNames())
+            var names = baseKey.GetSubKeyNames();
+            if (names.Length == 0)
+                return false;
+
+            foreach (var name in names)
             {
                 using var iface = baseKey.OpenSubKey(name);
                 if ((iface?.GetValue("TcpNoDelay") as int? ?? 0) != 1)
@@ -164,25 +163,16 @@ foreach ($iface in $interfaces) {{
     /// Multimedia\SystemProfile\Tasks\Games → GPU Priority = 8, Priority = 6
     /// (при отключении — 0 и 2).
     /// </summary>
-    public static async Task SetGpuPriorityAsync(bool enable)
+    public static Task SetGpuPriorityAsync(bool enable)
     {
-        try
+        return Task.Run(() =>
         {
-            int gpu = enable ? 8 : 0;
-            int cpu = enable ? 6 : 2;
-            string script = $@"
-New-Item -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks' -Name 'Games' -Force | Out-Null
-Set-ItemProperty -Path 'HKLM:\{GamesReg}' -Name 'GPU Priority' -Value {gpu} -Type DWord -Force
-Set-ItemProperty -Path 'HKLM:\{GamesReg}' -Name 'Priority' -Value {cpu} -Type DWord -Force
-";
-            var result = await CommandRunner.RunPowerShellAsync(script);
-            if (result.ExitCode != 0)
-                throw new Exception(result.Error);
-        }
-        catch (Exception ex)
-        {
-            throw new InvalidOperationException("Failed to set GPU priority", ex);
-        }
+            using var key = Registry.LocalMachine.OpenSubKey(GamesReg, writable: true)
+                ?? Registry.LocalMachine.CreateSubKey(GamesReg, writable: true)
+                ?? throw new InvalidOperationException($"Failed to open HKLM\\{GamesReg}");
+            key.SetValue("GPU Priority", enable ? 8 : 0, RegistryValueKind.DWord);
+            key.SetValue("Priority", enable ? 6 : 2, RegistryValueKind.DWord);
+        });
     }
 }
 

@@ -7,13 +7,13 @@
       Foreground="{DynamicResource App.Text}">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Margin="20">
+        <StackPanel Margin="28,22,28,28" MaxWidth="980">
             <TextBlock Text="{loc:Loc 'Автозагрузка'}" Style="{StaticResource PageTitleText}" />
             <TextBlock Text="{loc:Loc 'Программы, запускающиеся вместе с Windows. Включайте и отключайте их одним переключателем, не редактируя реестр вручную.'}"
-                       Style="{StaticResource PageDescriptionText}" Margin="0,8,0,16" />
+                       Style="{StaticResource PageDescriptionText}" Margin="0,6,0,18" />
 
             <!-- Добавление записи -->
-            <ui:Card Padding="20" Margin="0,0,0,15">
+            <ui:Card>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -36,7 +36,7 @@
             </ui:Card>
 
             <!-- Список записей -->
-            <ui:Card Padding="20" Margin="0,0,0,15">
+            <ui:Card>
                 <StackPanel>
                     <TextBlock Text="{loc:Loc 'Программы при запуске Windows'}" Style="{StaticResource CardHeaderText}" Margin="0,0,0,4" />
                     <TextBlock Text="{loc:Loc 'Переключатель включает или отключает запуск программы при входе в Windows.'}"
@@ -92,7 +92,7 @@
             </ui:Card>
 
             <!-- Аудит автозагрузки -->
-            <ui:Card Padding="20" Margin="0,0,0,15">
+            <ui:Card>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />

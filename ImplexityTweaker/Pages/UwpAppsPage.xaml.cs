@@ -133,9 +133,15 @@ public partial class UwpAppsPage : Page
         if (confirm != MessageBoxResult.Yes)
             return;
 
-        var r = await CommandRunner.RunPowerShellAsync($"Get-AppxPackage *{id}* | Remove-AppxPackage");
+        var escaped = id.Replace("'", "''");
+        var ps = $"$q = '{escaped}'; " +
+                 "Get-AppxPackage | Where-Object { $_.PackageFullName -eq $q -or $_.Name -eq $q -or $_.Name -like \"*$q*\" } | Remove-AppxPackage";
+        var r = await CommandRunner.RunPowerShellAsync(ps);
         if (r.ExitCode == 0)
+        {
+            await LoadPackagesAsync();
             await Dialogs.ShowInfoAsync("Готово", "Приложение удалено для текущего пользователя.");
+        }
         else
             await Dialogs.ShowErrorAsync("Ошибка", r.Error + r.Output);
     }

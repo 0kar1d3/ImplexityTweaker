@@ -151,9 +151,9 @@ public static class TweakBackupService
                             ReadBool(root, "Bcd"));
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // повреждённый манифест — показываем снимок как есть
+                    AppLogger.Warn("Backup", $"Damaged manifest in {dir}: {ex.Message}");
                 }
 
                 result.Add(info);
@@ -418,9 +418,9 @@ Write-Output ('hib=' + $hib)
                     if (r.ExitCode == 0)
                         services++;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // не критично
+                    AppLogger.Warn("Backup", $"Failed to restore service '{parts[0].Trim()}': {ex.Message}");
                 }
             }
         }
@@ -446,9 +446,9 @@ Write-Output ('hib=' + $hib)
                     if (r.ExitCode == 0)
                         tasks++;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // не критично
+                    AppLogger.Warn("Backup", $"Failed to restore task '{taskName}': {ex.Message}");
                 }
             }
         }

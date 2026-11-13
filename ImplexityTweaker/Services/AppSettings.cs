@@ -15,10 +15,16 @@ public class AppSettings
     /// <summary>Расширение файла конфигурации.</summary>
     public const string ConfigExtension = ".implexity";
 
-    public string ThemeId { get; set; } = ThemeApplier.ThemeImplexity;
+    public string ThemeId { get; set; } = ThemeApplier.ThemeIos;
+
+    /// <summary>Стиль интерфейса: Windows (Fluent) или Apple (iPhone / macOS).</summary>
+    public string UiStyle { get; set; } = ThemeApplier.StyleApple;
 
     /// <summary>Код языка интерфейса (ru, en, uk, de, sk). null = определять из системы.</summary>
     public string? Language { get; set; }
+
+    /// <summary>Плавные анимации интерфейса (переходы страниц, появление карточек). null = включены.</summary>
+    public bool? EnableAnimations { get; set; }
 
     // ===== Оптимизация (OptimizationPage) =====
     public bool? DisableFso { get; set; }
@@ -35,6 +41,15 @@ public class AppSettings
     public bool? GpuPriority { get; set; }
     public bool? UltimatePerformance { get; set; }
     public int? ProcessorState { get; set; }
+    public bool? RawMouseInput { get; set; }
+    public int? InputQueueSize { get; set; }
+    public bool? HighPrecisionTimer { get; set; }
+    public bool? DisableUsbPowerSaving { get; set; }
+    public bool? CsrssHighPriority { get; set; }
+    public bool? DisableDynamicTick { get; set; }
+    public int? Win32PrioritySeparation { get; set; }
+
+    public static event EventHandler? SettingsSaved;
 
     // ===== Проводник (ExplorerPage) =====
     public bool? ShowHiddenFiles { get; set; }
@@ -110,6 +125,7 @@ public class AppSettings
                 var json = File.ReadAllText(FilePath);
                 var s = JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
                 s.ThemeId = ThemeApplier.NormalizeThemeId(s.ThemeId);
+                s.UiStyle = ThemeApplier.NormalizeUiStyle(s.UiStyle);
                 return s;
             }
         }
@@ -164,6 +180,7 @@ public class AppSettings
             var tmp = FilePath + ".tmp";
             File.WriteAllText(tmp, JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true }));
             File.Move(tmp, FilePath, true);
+            SettingsSaved?.Invoke(this, EventArgs.Empty);
         }
         catch
         {
@@ -214,6 +231,7 @@ public class AppSettings
 
             var settings = wrapper.Settings ?? new AppSettings();
             settings.ThemeId = ThemeApplier.NormalizeThemeId(settings.ThemeId);
+            settings.UiStyle = ThemeApplier.NormalizeUiStyle(settings.UiStyle);
 
             // Копируем все свойства импортированных настроек в текущий экземпляр.
             CopyFrom(settings);
@@ -231,6 +249,8 @@ public class AppSettings
     public void CopyFrom(AppSettings source)
     {
         ThemeId = source.ThemeId;
+        UiStyle = ThemeApplier.NormalizeUiStyle(source.UiStyle);
+        EnableAnimations = source.EnableAnimations;
 
         DisableFso = source.DisableFso;
         DisableMpo = source.DisableMpo;
@@ -246,6 +266,8 @@ public class AppSettings
         GpuPriority = source.GpuPriority;
         UltimatePerformance = source.UltimatePerformance;
         ProcessorState = source.ProcessorState;
+        RawMouseInput = source.RawMouseInput;
+        InputQueueSize = source.InputQueueSize;
 
         ShowHiddenFiles = source.ShowHiddenFiles;
         ShowSystemFiles = source.ShowSystemFiles;

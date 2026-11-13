@@ -5,17 +5,30 @@
         xmlns:loc="clr-namespace:ImplexityTweaker.Localization"
         Title="{loc:Loc 'Состояние накопителей (SMART)'}"
         Icon="/icon_rounded.png"
-        Width="680" Height="620"
-        MinWidth="540" MinHeight="400"
+        Width="720" Height="640"
+        MinWidth="540" MinHeight="420"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
-        Background="{DynamicResource App.Background}"
         Foreground="{DynamicResource App.Text}"
-        FontFamily="Segoe UI Variable, Segoe UI">
+        FontFamily="Segoe UI Variable Text, Segoe UI Variable, Segoe UI"
+        PreviewKeyDown="Window_PreviewKeyDown">
 
-    <Border Background="{DynamicResource App.Background}"
+    <Border Margin="14"
+            Background="{DynamicResource App.Surface}"
             BorderBrush="{DynamicResource App.Border}"
-            BorderThickness="1">
-        <Grid Margin="20,16,20,14">
+            BorderThickness="1"
+            CornerRadius="12"
+            SnapsToDevicePixels="True"
+            MouseLeftButtonDown="Root_MouseLeftButtonDown">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="24" ShadowDepth="6" Direction="270" Opacity="0.45" Color="#000000" />
+        </Border.Effect>
+
+        <Grid Margin="22,18,22,16">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -23,7 +36,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <!-- Шапка: иконка, заголовок, кнопка обновления -->
+            <!-- Шапка: иконка, заголовок, обновить, закрыть -->
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -31,26 +44,27 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Border Background="{DynamicResource App.SurfaceAlt}"
-                        BorderBrush="{DynamicResource App.Border}"
-                        BorderThickness="1"
-                        CornerRadius="10"
-                        Width="46" Height="46"
+                <Border Style="{StaticResource SettingIconBox}"
+                        Width="44" Height="44"
                         VerticalAlignment="Top">
                     <ui:SymbolIcon Symbol="Storage24" FontSize="22" Foreground="{DynamicResource App.IconAccent}"
                                    HorizontalAlignment="Center" VerticalAlignment="Center" />
                 </Border>
 
                 <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
-                    <TextBlock Text="{loc:Loc 'Состояние накопителей (SMART)'}" FontSize="18" FontWeight="Bold"
+                    <TextBlock Text="{loc:Loc 'Состояние накопителей (SMART)'}" FontSize="18" FontWeight="SemiBold"
                                TextWrapping="Wrap" />
                     <TextBlock x:Name="SubtitleText" Style="{StaticResource ItemDescriptionText}"
                                Margin="0,4,0,0" />
                 </StackPanel>
 
-                <ui:Button Grid.Column="2" x:Name="RefreshButton" Content="{loc:Loc 'Обновить'}"
-                           Appearance="Secondary" Click="Refresh_Click" Padding="16,8"
-                           VerticalAlignment="Top" />
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Top">
+                    <ui:Button x:Name="RefreshButton" Content="{loc:Loc 'Обновить'}"
+                               Appearance="Secondary" Click="Refresh_Click" Padding="14,7"
+                               Margin="0,0,8,0" />
+                    <ui:Button Content="{loc:Loc 'Закрыть'}"
+                               Appearance="Secondary" Click="Close_Click" Padding="14,7" />
+                </StackPanel>
             </Grid>
 
             <!-- Шкала оценки -->

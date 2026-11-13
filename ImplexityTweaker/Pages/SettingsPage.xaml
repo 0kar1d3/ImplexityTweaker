@@ -3,18 +3,19 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       xmlns:loc="clr-namespace:ImplexityTweaker.Localization"
+      xmlns:services="clr-namespace:ImplexityTweaker.Services"
       Title="Settings"
       Foreground="{DynamicResource App.Text}">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Margin="20" MaxWidth="560" HorizontalAlignment="Left">
+        <StackPanel Margin="28,22,28,28" MaxWidth="980">
             <TextBlock Text="{loc:Loc 'Настройки программы'}" Style="{StaticResource PageTitleText}" />
             <TextBlock Text="{loc:Loc 'Тема оформления, сохранение параметров в приложении.'}"
                        Style="{StaticResource PageDescriptionText}"
-                       Margin="0,8,0,16" />
+                       Margin="0,6,0,18" />
 
             <!-- ===== Обновления ===== -->
-            <ui:Card Padding="20" Margin="0,0,0,15">
+            <ui:Card>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -32,14 +33,18 @@
                     <StackPanel Grid.Column="1" Margin="14,0,0,0">
                         <TextBlock Text="{loc:Loc 'Обновления твикера'}" Style="{StaticResource ItemTitleText}" />
                         <TextBlock x:Name="VersionText" Style="{StaticResource ItemDescriptionText}" Margin="0,4,0,14" />
-                        <ui:Button Content="{loc:Loc 'Проверить обновления'}" Appearance="Primary" Click="CheckUpdates_Click"
-                                   HorizontalAlignment="Left" Padding="20,8" />
+                        <StackPanel Orientation="Horizontal">
+                            <ui:Button Content="{loc:Loc 'Проверить обновления'}" Appearance="Primary" Click="CheckUpdates_Click"
+                                       Padding="20,8" Margin="0,0,8,0" />
+                            <ui:Button Content="{loc:Loc 'Открыть папку с логами'}" Appearance="Secondary" Click="OpenLogsFolder_Click"
+                                       Padding="16,8" />
+                        </StackPanel>
                     </StackPanel>
                 </Grid>
             </ui:Card>
 
             <!-- ===== Аккаунт ===== -->
-            <ui:Card Padding="20" Margin="0,0,0,15">
+            <ui:Card>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -76,9 +81,13 @@
                             </Grid>
                             <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
-                                    <Border x:Name="AccPrefixBadge" CornerRadius="5" Padding="5,1.5" Margin="0,0,6,0"
+                                    <Border x:Name="AccPrefixBadge" CornerRadius="4" Padding="5,1.5" Margin="0,0,6,0"
                                             VerticalAlignment="Center" Visibility="Collapsed">
-                                        <TextBlock x:Name="AccPrefix" FontSize="10" FontWeight="Bold" Text="⚡ " />
+                                        <StackPanel Orientation="Horizontal">
+                                            <ui:SymbolIcon x:Name="AccPrefixIcon" Symbol="Flash24" FontSize="10"
+                                                           VerticalAlignment="Center" Margin="0,0,3,0" />
+                                            <TextBlock x:Name="AccPrefix" FontSize="10" FontWeight="Bold" VerticalAlignment="Center" />
+                                        </StackPanel>
                                     </Border>
                                     <TextBlock x:Name="AccName" FontWeight="SemiBold" FontSize="14"
                                                TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
@@ -106,7 +115,7 @@
                 </Grid>
             </ui:Card>
 
-            <ui:Card Padding="20" Margin="0,0,0,15">
+            <ui:Card>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -129,11 +138,35 @@
                                    Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,4,0,14" />
                         <ComboBox x:Name="ThemeCombo" MinWidth="320" SelectionChanged="ThemeCombo_SelectionChanged" />
                         <ui:Button Content="{loc:Loc 'Сохранить и применить тему'}" Appearance="Primary" Click="SaveTheme_Click" HorizontalAlignment="Left" Padding="20,8" Margin="0,14,0,0" />
+
+                        <!-- Отдельный стиль дизайна: Windows 11 / Apple (iPhone / macOS) -->
+                        <TextBlock Text="{loc:Loc 'Стиль дизайна'}" Style="{StaticResource ItemTitleText}" Margin="0,18,0,0" />
+                        <TextBlock Text="{loc:Loc 'Внешний вид окна, переключателей, скруглений и меню (Windows 11 или iPhone / macOS).'}"
+                                   Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,4,0,10" />
+                        <ComboBox x:Name="UiStyleCombo" MinWidth="320" SelectionChanged="UiStyleCombo_SelectionChanged" />
+
+                        <!-- Плавные анимации интерфейса -->
+                        <Grid Margin="0,18,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,12,0" VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Loc 'Анимации интерфейса'}" Style="{StaticResource ItemTitleText}" />
+                                <TextBlock Text="{loc:Loc 'Плавные переходы страниц, появление карточек и отклик на наведение.'}"
+                                           Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" />
+                            </StackPanel>
+                            <ui:ToggleSwitch x:Name="AnimationsToggle"
+                                             Grid.Column="1"
+                                             VerticalAlignment="Center"
+                                             Checked="AnimationsToggle_Changed"
+                                             Unchecked="AnimationsToggle_Changed" />
+                        </Grid>
                     </StackPanel>
                 </Grid>
             </ui:Card>
 
-            <ui:Card Padding="20" Margin="0,0,0,15">
+            <ui:Card>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -159,7 +192,7 @@
                 </Grid>
             </ui:Card>
 
-            <ui:Card Padding="20" Margin="0,0,0,15">
+            <ui:Card>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -195,6 +228,22 @@
                             <ui:Button Content="{loc:Loc 'Загрузить конфиг'}" Appearance="Secondary" Click="LoadConfig_Click"
                                        Padding="14,7" FontSize="12" />
                         </StackPanel>
+                        <!-- Готовые конфиги сообщества: ссылка на страницу конфигов на сайте -->
+                        <TextBlock Text="{loc:Loc 'Готовые конфиги сообщества: скачайте файл и примените его в твикере.'}"
+                                   Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,0,0,8" />
+                        <ui:Button x:Name="ConfigsPageBtn"
+                                   Tag="{x:Static services:AccountService.ConfigsPageUrl}"
+                                   Click="Social_Click"
+                                   Appearance="Secondary"
+                                   Padding="14,7"
+                                   HorizontalAlignment="Left"
+                                   Margin="0,0,0,10">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="CloudArrowDown24" FontSize="14" VerticalAlignment="Center" />
+                                <TextBlock x:Name="ConfigsPageBtnText" Text="{loc:Loc 'Открыть страницу конфигов'}"
+                                           FontSize="12" Margin="7,0,0,0" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </ui:Button>
                         <TextBlock Text="{loc:Loc 'Выберите конфиг в списке, чтобы перезаписать его текущими настройками.'}"
                                    Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,0,0,10" />
 
@@ -245,7 +294,7 @@
             </ui:Card>
 
             <!-- ===== Соцсети ===== -->
-            <ui:Card Padding="20" Margin="0,0,0,15">
+            <ui:Card>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -297,7 +346,7 @@
                 </Grid>
             </ui:Card>
 
-            <ui:Card Padding="20" Margin="0,0,0,15">
+            <ui:Card>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />

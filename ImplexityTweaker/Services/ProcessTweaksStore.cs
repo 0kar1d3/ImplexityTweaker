@@ -20,6 +20,18 @@ public class ProcessTweaks
     /// <summary>Процесс, которому наблюдатель поднимает приоритет при запуске.</summary>
     public string AutoPriorityProcess { get; set; } = "cs2.exe";
     public bool AutoPriorityEnabled { get; set; }
+
+    /// <summary>Автоочистка ОЗУ по порогу загрузки (например, > 80 %).</summary>
+    public bool AutoRamThresholdEnabled { get; set; }
+    public int AutoRamThresholdPercent { get; set; } = 80;
+
+    /// <summary>Автоочистка ОЗУ при запуске игры из белого списка.</summary>
+    public bool AutoRamOnGameLaunchEnabled { get; set; }
+    public string AutoRamGameWhitelist { get; set; } = "cs2.exe, dota2.exe, valorant.exe, r5apex.exe";
+
+    /// <summary>Есть ли хотя бы одна активная фоновая функция, требующая работы в системном трее.</summary>
+    public bool RequiresBackgroundTray =>
+        AffinityEnabled || AutoPriorityEnabled || AutoRamThresholdEnabled || AutoRamOnGameLaunchEnabled;
 }
 
 /// <summary>Хранилище твиков процессов: %LOCALAPPDATA%\Implexity\process_tweaks.json.</summary>

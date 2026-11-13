@@ -10,7 +10,7 @@
       Foreground="{DynamicResource App.Text}">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Margin="20">
+        <StackPanel Margin="28,22,28,28" MaxWidth="980">
             <!-- Header -->
             <Grid Margin="0,0,0,16">
                 <Grid.ColumnDefinitions>
@@ -34,7 +34,7 @@
                              HorizontalAlignment="Center" Visibility="Collapsed" />
 
             <!-- Apps list card -->
-            <ui:Card Padding="20" Margin="0,0,0,15">
+            <ui:Card>
                 <StackPanel>
                     <TextBlock Text="{loc:Loc 'Установленные приложения'}" Style="{StaticResource CardHeaderText}" Margin="0,0,0,4" />
                     <TextBlock Text="{loc:Loc 'Нажмите на кнопку рядом с приложением, чтобы удалить его.'}"
@@ -71,7 +71,7 @@
             </ui:Card>
 
             <!-- Manual entry card -->
-            <ui:Card Padding="20" Margin="0,0,0,15">
+            <ui:Card>
                 <StackPanel>
                     <TextBlock Text="{loc:Loc 'Ручной ввод ID пакета'}" Style="{StaticResource CardHeaderText}" Margin="0,0,0,15" />
                     <TextBlock Text="{loc:Loc 'Введите ID пакета вручную (пример: Microsoft.WindowsCamera)'}"

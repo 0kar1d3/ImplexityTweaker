@@ -27,16 +27,15 @@ public static class GamingService
     }
 
     /// <summary>HwSchMode: 2 — включено, 1 — выключено. Требуется перезагрузка.</summary>
-    public static async Task SetHagsAsync(bool enable)
+    public static Task SetHagsAsync(bool enable)
     {
-        var script = $@"
-$ErrorActionPreference = 'Stop'
-New-Item -Path 'HKLM:\{GraphicsDriversReg}' -Force | Out-Null
-Set-ItemProperty -Path 'HKLM:\{GraphicsDriversReg}' -Name 'HwSchMode' -Value {(enable ? 2 : 1)} -Type DWord -Force
-";
-        var r = await CommandRunner.RunPowerShellAsync(script);
-        if (r.ExitCode != 0)
-            throw new InvalidOperationException(string.IsNullOrWhiteSpace(r.Error) ? r.Output : r.Error);
+        return Task.Run(() =>
+        {
+            using var key = Registry.LocalMachine.OpenSubKey(GraphicsDriversReg, writable: true)
+                ?? Registry.LocalMachine.CreateSubKey(GraphicsDriversReg, writable: true)
+                ?? throw new InvalidOperationException($"Не удалось открыть ветку HKLM\\{GraphicsDriversReg}.");
+            key.SetValue("HwSchMode", enable ? 2 : 1, RegistryValueKind.DWord);
+        });
     }
 
     // ===================== Игровой режим (Game Mode) =====================
@@ -54,17 +53,17 @@ Set-ItemProperty -Path 'HKLM:\{GraphicsDriversReg}' -Name 'HwSchMode' -Value {(e
         }
     }
 
-    public static async Task SetGameModeAsync(bool enable)
+    public static Task SetGameModeAsync(bool enable)
     {
-        var script = $@"
-$ErrorActionPreference = 'Stop'
-New-Item -Path 'HKCU:\{GameBarReg}' -Force | Out-Null
-Set-ItemProperty -Path 'HKCU:\{GameBarReg}' -Name 'AutoGameModeEnabled' -Value {(enable ? 1 : 0)} -Type DWord -Force
-Set-ItemProperty -Path 'HKCU:\{GameBarReg}' -Name 'AllowAutoGameMode' -Value {(enable ? 1 : 0)} -Type DWord -Force
-";
-        var r = await CommandRunner.RunPowerShellAsync(script);
-        if (r.ExitCode != 0)
-            throw new InvalidOperationException(string.IsNullOrWhiteSpace(r.Error) ? r.Output : r.Error);
+        return Task.Run(() =>
+        {
+            using var key = Registry.CurrentUser.OpenSubKey(GameBarReg, writable: true)
+                ?? Registry.CurrentUser.CreateSubKey(GameBarReg, writable: true)
+                ?? throw new InvalidOperationException($"Не удалось открыть ветку HKCU\\{GameBarReg}.");
+            int val = enable ? 1 : 0;
+            key.SetValue("AutoGameModeEnabled", val, RegistryValueKind.DWord);
+            key.SetValue("AllowAutoGameMode", val, RegistryValueKind.DWord);
+        });
     }
 
     // ===================== Парковка ядер =====================

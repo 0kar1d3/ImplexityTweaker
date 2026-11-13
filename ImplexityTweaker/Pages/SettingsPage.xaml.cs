@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -16,7 +16,9 @@ public partial class SettingsPage : Page
 {
     private bool _loaded;
     private bool _initThemeCombo;
+    private bool _initUiStyleCombo;
     private bool _initLanguageCombo;
+    private bool _initAnimations;
     private string? _selectedConfigPath;
 
     public SettingsPage()
@@ -31,22 +33,30 @@ public partial class SettingsPage : Page
             return;
         _loaded = true;
 
-        _initThemeCombo = true;
-        ThemeCombo.Items.Clear();
-        foreach (var (id, title, _) in ThemeApplier.ThemeCatalog)
-            ThemeCombo.Items.Add(new ThemeItem(id, title));
-
         var settings = AppSettings.Load();
-        foreach (ThemeItem item in ThemeCombo.Items)
+        var currentStyle = ThemeApplier.NormalizeUiStyle(settings.UiStyle);
+        PopulateThemesForStyle(currentStyle, settings.ThemeId);
+
+        _initUiStyleCombo = true;
+        UiStyleCombo.Items.Clear();
+        foreach (var (id, title) in ThemeApplier.UiStyleCatalog)
+            UiStyleCombo.Items.Add(new ThemeItem(id, title));
+
+        foreach (ThemeItem item in UiStyleCombo.Items)
         {
-            if (item.Id == settings.ThemeId)
+            if (item.Id == currentStyle)
             {
-                ThemeCombo.SelectedItem = item;
+                UiStyleCombo.SelectedItem = item;
                 break;
             }
         }
-        ThemeCombo.SelectedItem ??= ThemeCombo.Items[0];
-        _initThemeCombo = false;
+        UiStyleCombo.SelectedItem ??= UiStyleCombo.Items[0];
+        _initUiStyleCombo = false;
+
+        // Тумблер анимаций интерфейса (null в настройках = включены).
+        _initAnimations = true;
+        AnimationsToggle.IsChecked = settings.EnableAnimations ?? true;
+        _initAnimations = false;
 
         _initLanguageCombo = true;
         LanguageCombo.Items.Clear();
@@ -75,7 +85,7 @@ public partial class SettingsPage : Page
         RefreshConfigs();
         RefreshAccountCard();
         AboutVersionText.Text = LocalizationService.TF("Версия {0} · WPF-UI Fluent · .NET 8",
-            System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "1.5.0");
+            System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "2.0.0");
         AccountService.AccountChanged += Account_Changed;
         Unloaded += SettingsPage_Unloaded;
     }
@@ -118,8 +128,10 @@ public partial class SettingsPage : Page
         AccPrefixBadge.Visibility = hasPrefix ? Visibility.Visible : Visibility.Collapsed;
         if (hasPrefix)
         {
-            AccPrefix.Text = "⚡ " + account.Prefix;
-            AccPrefix.Foreground = MakeBrush(AccountService.GetPrefixColorHex(account.PrefixColor));
+            var fgBrush = MakeBrush(AccountService.GetPrefixColorHex(account.PrefixColor));
+            AccPrefix.Text = account.Prefix;
+            AccPrefix.Foreground = fgBrush;
+            AccPrefixIcon.Foreground = fgBrush;
             AccPrefixBadge.Background = MakeBrush(AccountService.GetPrefixBadgeColorHex(account.PrefixColor), 0x1A);
             AccPrefixBadge.BorderBrush = MakeBrush(AccountService.GetPrefixBadgeColorHex(account.PrefixColor), 0x33);
             AccPrefixBadge.BorderThickness = new Thickness(1);
@@ -199,7 +211,7 @@ public partial class SettingsPage : Page
         }
     }
 
-    /// <summary>Открывает ссылку на соцсеть (телеграм/дискорд/ютуб).</summary>
+    /// <summary>Открывает внешнюю ссылку из Tag: соцсети, сайт, страница конфигов.</summary>
     private void Social_Click(object sender, RoutedEventArgs e)
     {
         if ((sender as FrameworkElement)?.Tag is not string url || string.IsNullOrWhiteSpace(url))
@@ -289,18 +301,21 @@ public partial class SettingsPage : Page
 
             settings.Save();
             ThemeApplier.Apply(settings.ThemeId);
+            ThemeApplier.ApplyUiStyle(settings.UiStyle);
 
-            // Обновляем выбранную тему в комбобоксе.
-            _initThemeCombo = true;
-            foreach (ThemeItem t in ThemeCombo.Items)
+            // Обновляем выбранную тему и стиль дизайна в комбобоксах.
+            PopulateThemesForStyle(settings.UiStyle, settings.ThemeId);
+
+            _initUiStyleCombo = true;
+            foreach (ThemeItem item in UiStyleCombo.Items)
             {
-                if (t.Id == settings.ThemeId)
+                if (item.Id == settings.UiStyle)
                 {
-                    ThemeCombo.SelectedItem = t;
+                    UiStyleCombo.SelectedItem = item;
                     break;
                 }
             }
-            _initThemeCombo = false;
+            _initUiStyleCombo = false;
 
             await Dialogs.ShowInfoAsync("Импорт", "Настройки успешно загружены из файла .implexity и применены.");
         }
@@ -480,6 +495,40 @@ public partial class SettingsPage : Page
         ThemeApplier.Apply(item.Id);
     }
 
+    private void PopulateThemesForStyle(string? style, string? selectedThemeId)
+    {
+        _initThemeCombo = true;
+        ThemeCombo.Items.Clear();
+        foreach (var (id, title, _) in ThemeApplier.GetThemesForStyle(style))
+            ThemeCombo.Items.Add(new ThemeItem(id, title));
+
+        foreach (ThemeItem t in ThemeCombo.Items)
+        {
+            if (t.Id == selectedThemeId)
+            {
+                ThemeCombo.SelectedItem = t;
+                break;
+            }
+        }
+        ThemeCombo.SelectedItem ??= ThemeCombo.Items[0];
+        _initThemeCombo = false;
+    }
+
+    private void UiStyleCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_initUiStyleCombo || UiStyleCombo.SelectedItem is not ThemeItem item)
+            return;
+        var s = AppSettings.Load();
+        s.UiStyle = item.Id;
+        if (!ThemeApplier.IsThemeInStyle(s.ThemeId, item.Id))
+            s.ThemeId = ThemeApplier.GetDefaultThemeForStyle(item.Id);
+        s.Save();
+
+        ThemeApplier.ApplyUiStyle(item.Id);
+        ThemeApplier.Apply(s.ThemeId);
+        PopulateThemesForStyle(item.Id, s.ThemeId);
+    }
+
     private void SaveTheme_Click(object sender, RoutedEventArgs e)
     {
         if (ThemeCombo.SelectedItem is not ThemeItem item)
@@ -497,13 +546,31 @@ public partial class SettingsPage : Page
             mw.NavigateByTag("firstsetup");
     }
 
+    /// <summary>Включает/выключает плавные анимации интерфейса и сохраняет выбор в настройках.</summary>
+    private void AnimationsToggle_Changed(object sender, RoutedEventArgs e)
+    {
+        if (_initAnimations)
+            return;
+
+        var enabled = AnimationsToggle.IsChecked == true;
+        UiAnimation.Enabled = enabled;
+
+        var settings = AppSettings.Load();
+        settings.EnableAnimations = enabled;
+        settings.Save();
+
+        // Мгновенная обратная связь: карточки мягко проявляются заново.
+        if (enabled)
+            UiAnimation.StaggerCards(this, durationMs: 240, staggerMs: 35, maxStagger: 6);
+    }
+
     // ===================== Обновления =====================
 
     private async void CheckUpdates_Click(object sender, RoutedEventArgs e)
     {
         try
         {
-            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "1.5.0";
+            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "2.0.0";
             VersionText.Text = LocalizationService.TF("Текущая версия: {0}. Проверяем обновления…", version);
 
             var result = await UpdateCheckerService.CheckAsync(version);
@@ -539,7 +606,21 @@ public partial class SettingsPage : Page
         }
         catch (Exception ex)
         {
+            AppLogger.Warn("Updates", "CheckUpdates_Click failed", ex);
             VersionText.Text = ex.Message;
+        }
+    }
+
+    private void OpenLogsFolder_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            Directory.CreateDirectory(AppLogger.LogFolder);
+            Process.Start(new ProcessStartInfo(AppLogger.LogFolder) { UseShellExecute = true });
+        }
+        catch (Exception ex)
+        {
+            AppLogger.Warn("Settings", "Failed to open logs folder", ex);
         }
     }
 

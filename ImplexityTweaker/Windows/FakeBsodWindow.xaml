@@ -1,0 +1,83 @@
+<Window x:Class="ImplexityTweaker.Windows.FakeBsodWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:loc="clr-namespace:ImplexityTweaker.Localization"
+        Title="Windows"
+        WindowStyle="None"
+        WindowState="Maximized"
+        ResizeMode="NoResize"
+        Topmost="True"
+        ShowInTaskbar="False"
+        Background="#0078D7"
+        Foreground="White"
+        Cursor="None"
+        FontFamily="Segoe UI"
+        PreviewKeyDown="Window_PreviewKeyDown"
+        MouseDoubleClick="Window_MouseDoubleClick">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.11*" />
+            <ColumnDefinition Width="0.78*" />
+            <ColumnDefinition Width="0.11*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.13*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" MaxWidth="980">
+            <TextBlock Text=":("
+                       FontSize="180"
+                       FontWeight="Light"
+                       Margin="-8,0,0,30" />
+
+            <TextBlock x:Name="MainMessageText"
+                       Text="{loc:Loc 'На вашем ПК возникла проблема, и его необходимо перезагрузить. Мы лишь собираем некоторые сведения об ошибке, а затем будет выполнена перезагрузка.'}"
+                       FontSize="32"
+                       FontWeight="Light"
+                       TextWrapping="Wrap"
+                       LineHeight="44"
+                       Margin="0,0,0,30" />
+
+            <TextBlock x:Name="ProgressText"
+                       Text="{loc:Loc '0% завершено'}"
+                       FontSize="32"
+                       FontWeight="Light"
+                       Margin="0,0,0,42" />
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Настоящий 25x25 QR-код с тихой зоной -->
+                <Border Width="136" Height="136" Background="White" Padding="8" VerticalAlignment="Top">
+                    <Image x:Name="QrImage"
+                           Stretch="Uniform"
+                           RenderOptions.BitmapScalingMode="NearestNeighbor"
+                           SnapsToDevicePixels="True" />
+                </Border>
+
+                <StackPanel Grid.Column="1" Margin="26,2,0,0" VerticalAlignment="Top">
+                    <TextBlock x:Name="SupportText"
+                               Text="{loc:Loc 'Дополнительные сведения об этой проблеме и возможных способах ее решения см. на странице https://www.windows.com/stopcode'}"
+                               FontSize="17.5"
+                               FontWeight="Light"
+                               TextWrapping="Wrap"
+                               LineHeight="25"
+                               Margin="0,0,0,18" />
+                    <TextBlock x:Name="CallerText"
+                               Text="{loc:Loc 'Если вы обратитесь в службу поддержки, передайте ей следующие сведения:'}"
+                               FontSize="16"
+                               FontWeight="Light"
+                               Margin="0,0,0,6" />
+                    <TextBlock x:Name="StopCodeText"
+                               Text="{loc:Loc 'Код остановки: CRITICAL_PROCESS_DIED'}"
+                               FontSize="16"
+                               FontWeight="Light" />
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -26,6 +26,41 @@ public partial class FirstSetupPage : Page
         QuickGameModeToggle.IsChecked = s.QuickGameMode ?? true;
         QuickCoreParkingToggle.IsChecked = s.QuickCoreParking ?? false;
         QuickSnapshotToggle.IsChecked = s.QuickSnapshot ?? true;
+
+        RefreshDashboardSummary();
+    }
+
+    private void RefreshDashboardSummary()
+    {
+        HomeMachineText.Text = Environment.MachineName;
+        HomeOsText.Text = WindowsVersionService.DescribeSystem();
+        HomeRamText.Text = LocalizationService.TF("Занято {0}%", RamCleanerService.GetMemoryUsagePercent());
+    }
+
+    private void QuickNavigate_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is string tag &&
+            Application.Current?.MainWindow is MainWindow mw)
+        {
+            mw.NavigateByTag(tag);
+        }
+    }
+
+    private async void QuickCleanRam_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement btn) btn.IsEnabled = false;
+        try
+        {
+            var freed = await RamCleanerService.CleanAsync();
+            RefreshDashboardSummary();
+            await Dialogs.ShowInfoAsync(
+                "Очистка ОЗУ завершена",
+                LocalizationService.TF("Освобождено памяти: {0} МБ (текущая загрузка: {1}%)", freed, RamCleanerService.GetMemoryUsagePercent()));
+        }
+        finally
+        {
+            if (sender is FrameworkElement b) b.IsEnabled = true;
+        }
     }
 
     private async void InstallDirectPlay_Click(object sender, RoutedEventArgs e)

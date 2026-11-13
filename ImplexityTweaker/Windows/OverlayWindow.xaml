@@ -1,0 +1,38 @@
+<Window x:Class="ImplexityTweaker.Windows.OverlayWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ImplexityOverlay"
+        SizeToContent="WidthAndHeight"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        ShowActivated="False"
+        Focusable="False"
+        IsHitTestVisible="False"
+        Topmost="True"
+        FontFamily="Segoe UI Variable Text, Segoe UI Variable, Segoe UI">
+
+    <Border x:Name="RootBorder"
+            CornerRadius="8"
+            BorderThickness="1"
+            Padding="12,8"
+            SnapsToDevicePixels="True">
+        <Border.LayoutTransform>
+            <ScaleTransform x:Name="HudScaleTransform" ScaleX="1" ScaleY="1" />
+        </Border.LayoutTransform>
+
+        <StackPanel x:Name="ContentPanel">
+            <!-- Шапка процесса (опционально) -->
+            <StackPanel x:Name="HeaderRow" Orientation="Horizontal" Margin="0,0,0,5" Visibility="Collapsed">
+                <Border x:Name="ProcessDot" Width="6" Height="6" CornerRadius="3" Margin="0,0,6,0" VerticalAlignment="Center"
+                        Background="{DynamicResource App.Accent}" />
+                <TextBlock x:Name="ProcessLabel" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" />
+            </StackPanel>
+
+            <!-- Контейнер метрик (StackPanel переключается Horizontal / Vertical) -->
+            <StackPanel x:Name="MetricsPanel" Orientation="Horizontal" />
+        </StackPanel>
+    </Border>
+</Window>

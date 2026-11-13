@@ -1,4 +1,4 @@
-﻿<Page x:Class="ImplexityTweaker.Pages.FirstSetupPage"
+<Page x:Class="ImplexityTweaker.Pages.FirstSetupPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
@@ -7,11 +7,96 @@
       Foreground="{DynamicResource App.Text}">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Margin="20">
+        <StackPanel Margin="28,22,28,28" MaxWidth="980">
             <TextBlock Text="{loc:Loc 'Быстрая настройка Windows'}" Style="{StaticResource PageTitleText}" />
-            <TextBlock Text="{loc:Loc 'Используйте переключатели, чтобы выбрать настройки для автоматического применения.'}"
+            <TextBlock Text="{loc:Loc 'Обзор системы, быстрые действия и базовые параметры Windows 10 / 11.'}"
                        Style="{StaticResource PageDescriptionText}"
-                       Margin="0,8,0,16" />
+                       Margin="0,6,0,18" />
+
+            <!-- ===== Обзор системы (PC Manager / Windows 11 Home) ===== -->
+            <Grid Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="12" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="12" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Устройство и ОС -->
+                <Border Grid.Column="0" Style="{StaticResource FluentBlockBorder}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <Border Style="{StaticResource SettingIconBox}" Width="34" Height="34">
+                                <ui:SymbolIcon Symbol="System24" FontSize="17" Foreground="{DynamicResource App.IconAccent}" />
+                            </Border>
+                            <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                                <TextBlock x:Name="HomeMachineText" FontSize="13.5" FontWeight="SemiBold" Text="—" />
+                                <TextBlock x:Name="HomeOsText" FontSize="11.5" Foreground="{DynamicResource App.TextMuted}" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </StackPanel>
+                        <ui:Button Grid.Row="2" Content="{loc:Loc 'Информация о ПК'}" Appearance="Secondary"
+                                   Tag="pcinfo" Click="QuickNavigate_Click"
+                                   Padding="12,6" FontSize="12" Margin="0,12,0,0" HorizontalAlignment="Left" />
+                    </Grid>
+                </Border>
+
+                <!-- Память ОЗУ -->
+                <Border Grid.Column="2" Style="{StaticResource FluentBlockBorder}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <Border Style="{StaticResource SettingIconBox}" Width="34" Height="34">
+                                <ui:SymbolIcon Symbol="Rocket24" FontSize="17" Foreground="{DynamicResource App.IconAccent}" />
+                            </Border>
+                            <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Loc 'Оперативная память'}" FontSize="13.5" FontWeight="SemiBold" />
+                                <TextBlock x:Name="HomeRamText" FontSize="11.5" Foreground="{DynamicResource App.TextMuted}" Text="—" />
+                            </StackPanel>
+                        </StackPanel>
+                        <ui:Button Grid.Row="2" Content="{loc:Loc 'Очистить ОЗУ сейчас'}" Appearance="Primary"
+                                   Click="QuickCleanRam_Click"
+                                   Padding="12,6" FontSize="12" Margin="0,12,0,0" HorizontalAlignment="Left" />
+                    </Grid>
+                </Border>
+
+                <!-- Пресеты и Бенчмарк -->
+                <Border Grid.Column="4" Style="{StaticResource FluentBlockBorder}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <Border Style="{StaticResource SettingIconBox}" Width="34" Height="34">
+                                <ui:SymbolIcon Symbol="Flash24" FontSize="17" Foreground="{DynamicResource App.IconAccent}" />
+                            </Border>
+                            <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Loc 'Готовые профили'}" FontSize="13.5" FontWeight="SemiBold" />
+                                <TextBlock Text="{loc:Loc 'Пресеты и замер скорости'}" FontSize="11.5" Foreground="{DynamicResource App.TextMuted}" />
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,12,0,0">
+                            <ui:Button Content="{loc:Loc 'Пресеты'}" Appearance="Secondary"
+                                       Tag="presets" Click="QuickNavigate_Click"
+                                       Padding="12,6" FontSize="12" Margin="0,0,6,0" />
+                            <ui:Button Content="{loc:Loc 'Бенчмарк'}" Appearance="Secondary"
+                                       Tag="benchmark" Click="QuickNavigate_Click"
+                                       Padding="12,6" FontSize="12" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
 
             <ui:Card Padding="20" Margin="0,0,0,15">
                 <StackPanel>

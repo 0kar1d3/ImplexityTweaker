@@ -102,7 +102,8 @@ public partial class AppInstallPage : Page
 
     private async Task InstallWingetAsync(string id, string displayName, bool silent = true)
     {
-        var cmd = $"winget install --id {id} -e --accept-package-agreements --accept-source-agreements"
+        var safeId = id.Trim().Trim('"');
+        var cmd = $"winget install --id \"{safeId}\" -e --accept-package-agreements --accept-source-agreements"
                   + (silent ? " --silent" : "");
 
         var (ok, error, _) = await ProgressWindow.RunIndeterminateAsync(
@@ -117,7 +118,11 @@ public partial class AppInstallPage : Page
                     token);
 
                 if (!IsWingetBenignSuccess(r.ExitCode, r.Output, r.Error))
-                    throw new Exception(BuildWingetError(r.ExitCode, r.Output, r.Error));
+                {
+                    var msg = BuildWingetError(r.ExitCode, r.Output, r.Error);
+                    AppLogger.Warn("AppInstall", $"winget install '{safeId}' failed (exit {r.ExitCode}): {msg}");
+                    throw new Exception(msg);
+                }
             });
 
         if (ok)
@@ -137,6 +142,12 @@ public partial class AppInstallPage : Page
         if (exitCode == 0)
             return true;
 
+        // Стандартные HRESULT-коды winget (не зависят от языка ОС и кодировки):
+        // 0x8A15002B (-1978335189): UPDATE_NOT_APPLICABLE (уже установлен / нет обновлений)
+        // 0x8A150061 (-1978335135): PACKAGE_ALREADY_INSTALLED
+        if (exitCode == unchecked((int)0x8A15002B) || exitCode == unchecked((int)0x8A150061))
+            return true;
+
         var text = ((output ?? "") + "\n" + (error ?? "")).ToLowerInvariant();
         return text.Contains("found an existing package already installed")
             || text.Contains("already been installed")
@@ -146,7 +157,11 @@ public partial class AppInstallPage : Page
             || text.Contains("no applicable upgrade found")
             || text.Contains("no installed package found matching")
             || text.Contains("successfully installed")
-            || text.Contains("installation succeeded");
+            || text.Contains("installation succeeded")
+            || text.Contains("уже установлен")
+            || text.Contains("доступных обновлений не найдено")
+            || text.Contains("более новые версии пакета отсутствуют")
+            || text.Contains("успешно установлено");
     }
 
     private static string BuildWingetError(int exitCode, string output, string error)

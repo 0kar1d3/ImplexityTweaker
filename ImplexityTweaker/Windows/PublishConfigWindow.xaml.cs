@@ -1,48 +1,49 @@
-using System.Runtime.InteropServices;
 using System.Windows;
-using System.Windows.Interop;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
+using System.Windows.Media;
+using ImplexityTweaker.Services;
 
 namespace ImplexityTweaker.Windows;
 
 /// <summary>Окно выбора видимости при публикации конфига на сайт.</summary>
 public partial class PublishConfigWindow : Window
 {
-    // Windows 10 1809+ использует атрибут 19, 1903+ — 20. Применяем оба для совместимости.
-    private const int DWMWA_USE_IMMERSIVE_DARK_MODE_OLD = 19;
-    private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
-
     /// <summary>true = приватно, false = публично, null = отменено.</summary>
     public bool? ResultIsPrivate { get; private set; }
-
-    [DllImport("dwmapi.dll", PreserveSig = true)]
-    private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 
     public PublishConfigWindow(string configFileName)
     {
         InitializeComponent();
         ConfigNameText.Text = configFileName;
 
-        // Тёмная панель заголовка (как в главном окне).
-        SourceInitialized += (_, _) => SetDarkTitleBar();
+        UiAnimation.PrepareWindowOpen(this);
+        Loaded += (_, _) => UiAnimation.AnimateWindowOpen(this);
     }
 
-    /// <summary>Включает тёмный режим системного заголовка окна (DWM).</summary>
-    private void SetDarkTitleBar()
+    private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
     {
-        try
+        if (e.Key == Key.Escape)
         {
-            var hwnd = new WindowInteropHelper(this).Handle;
-            if (hwnd == IntPtr.Zero)
-                return;
+            ResultIsPrivate = null;
+            DialogResult = false;
+        }
+    }
 
-            var value = 1;
-            foreach (var attr in new[] { DWMWA_USE_IMMERSIVE_DARK_MODE_OLD, DWMWA_USE_IMMERSIVE_DARK_MODE })
-                DwmSetWindowAttribute(hwnd, attr, ref value, sizeof(int));
-        }
-        catch
+    private void Root_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ButtonState != MouseButtonState.Pressed)
+            return;
+
+        DependencyObject? node = e.OriginalSource as DependencyObject;
+        while (node != null)
         {
-            // DWM недоступен — остаётся системный заголовок.
+            if (node is ButtonBase or Wpf.Ui.Controls.Button)
+                return;
+            node = node is Visual ? VisualTreeHelper.GetParent(node) : null;
         }
+
+        try { DragMove(); } catch { }
     }
 
     private void Public_Click(object sender, RoutedEventArgs e)

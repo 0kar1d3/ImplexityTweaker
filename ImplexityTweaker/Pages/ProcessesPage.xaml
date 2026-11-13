@@ -1,4 +1,4 @@
-<Page x:Class="ImplexityTweaker.Pages.ProcessesPage"
+﻿<Page x:Class="ImplexityTweaker.Pages.ProcessesPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
@@ -83,7 +83,7 @@
         </DataTemplate>
     </Page.Resources>
 
-    <Grid Margin="20">
+    <Grid Margin="28,22,28,28" MaxWidth="1040">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />

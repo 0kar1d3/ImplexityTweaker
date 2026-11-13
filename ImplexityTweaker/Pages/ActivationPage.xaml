@@ -7,13 +7,13 @@
       Foreground="{DynamicResource App.Text}">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Margin="20">
+        <StackPanel Margin="28,22,28,28" MaxWidth="980">
             <TextBlock Text="{loc:Loc 'Активация Windows'}" Style="{StaticResource PageTitleText}" />
             <TextBlock Text="{loc:Loc 'Активация любой версии Windows и проверка текущего состояния лицензии.'}"
                        Style="{StaticResource PageDescriptionText}"
-                       Margin="0,8,0,16" />
+                       Margin="0,6,0,18" />
 
-            <ui:Card Padding="20" Margin="0,0,0,15">
+            <ui:Card>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />

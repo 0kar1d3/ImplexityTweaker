@@ -7,13 +7,13 @@
       Foreground="{DynamicResource App.Text}">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Margin="20">
-            <TextBlock Text="{loc:Loc 'Телеметрия и конфиденциальность'}" Style="{StaticResource PageTitleText}" />
+        <StackPanel Margin="16,14">
+            <TextBlock Text="{loc:Loc 'Телеметрия и конфиденциальность'}" Style="{StaticResource CardHeaderText}" />
             <TextBlock Text="{loc:Loc 'Отметьте параметры, которые нужно ограничить. Часть действий требует прав администратора (службы, политики в HKLM, планировщик).'}"
                        Style="{StaticResource PageDescriptionText}"
-                       Margin="0,8,0,16" />
+                       Margin="0,6,0,18" />
 
-            <ui:Card Padding="20" Margin="0,0,0,15">
+            <ui:Card>
                 <StackPanel>
                     <TextBlock Text="{loc:Loc 'Диагностика и телеметрия Windows'}" Style="{StaticResource CardHeaderText}" Margin="0,0,0,8" />
                     <TextBlock Text="{loc:Loc 'Групповые политики и службы сбора диагностических данных.'}"
@@ -25,7 +25,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                        <Border Style="{StaticResource SettingIconBox}">
                             <ui:SymbolIcon Symbol="ShieldKeyhole24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
@@ -43,7 +43,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                        <Border Style="{StaticResource SettingIconBox}">
                             <ui:SymbolIcon Symbol="EyeOff24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
@@ -61,7 +61,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                        <Border Style="{StaticResource SettingIconBox}">
                             <ui:SymbolIcon Symbol="CloudOff24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
@@ -79,7 +79,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                        <Border Style="{StaticResource SettingIconBox}">
                             <ui:SymbolIcon Symbol="TaskListLtr24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
@@ -97,7 +97,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                        <Border Style="{StaticResource SettingIconBox}">
                             <ui:SymbolIcon Symbol="HardDrive20" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
@@ -109,7 +109,7 @@
                         <ui:ToggleSwitch x:Name="ToggleDeviceCensus" Grid.Column="2" VerticalAlignment="Center" />
                     </Grid>
                 </StackPanel>
-            </ui:Card>            <ui:Card Padding="20" Margin="0,0,0,15">
+            </ui:Card>            <ui:Card>
                 <StackPanel>
                     <TextBlock Text="{loc:Loc 'Реклама и персонализация'}" Style="{StaticResource CardHeaderText}" Margin="0,0,0,8" />
                     <TextBlock Text="{loc:Loc 'Параметры рекламного идентификатора и «персонализированных предложений» Microsoft.'}"
@@ -121,7 +121,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                        <Border Style="{StaticResource SettingIconBox}">
                             <ui:SymbolIcon Symbol="Lightbulb24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
@@ -139,7 +139,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                        <Border Style="{StaticResource SettingIconBox}">
                             <ui:SymbolIcon Symbol="PersonLightbulb24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
@@ -157,7 +157,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                        <Border Style="{StaticResource SettingIconBox}">
                             <ui:SymbolIcon Symbol="Rocket24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
@@ -171,7 +171,7 @@
                 </StackPanel>
             </ui:Card>
 
-            <ui:Card Padding="20" Margin="0,0,0,15">
+            <ui:Card>
                 <StackPanel>
                     <TextBlock Text="{loc:Loc 'Отзывы и отчёты об ошибках'}" Style="{StaticResource CardHeaderText}" Margin="0,0,0,8" />
                     <TextBlock Text="{loc:Loc 'Уменьшает назойливость запросов обратной связи и фоновую отправку отчётов (где применимо).'}"
@@ -183,7 +183,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                        <Border Style="{StaticResource SettingIconBox}">
                             <ui:SymbolIcon Symbol="ChatSettings20" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
@@ -201,7 +201,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                        <Border Style="{StaticResource SettingIconBox}">
                             <ui:SymbolIcon Symbol="ShieldError20" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>

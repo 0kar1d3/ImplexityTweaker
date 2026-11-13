@@ -5,155 +5,420 @@
              xmlns:loc="clr-namespace:ImplexityTweaker.Localization"
              Title="Implexity Tweaker"
              Icon="/icon_rounded.png"
-             Height="720"
-             Width="1120"
-             MinHeight="560"
-             MinWidth="900"
+             Height="760"
+             Width="1200"
+             MinHeight="580"
+             MinWidth="940"
              WindowStartupLocation="CenterScreen"
              ExtendsContentIntoTitleBar="True"
-             WindowBackdropType="Mica"
-             Background="{DynamicResource App.Background}">
+             WindowBackdropType="None"
+             Background="{DynamicResource App.Background}"
+             Foreground="{DynamicResource App.Text}"
+             FontFamily="Segoe UI Variable Text, Segoe UI Variable, Segoe UI"
+             PreviewKeyDown="Window_PreviewKeyDown">
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    <Window.Resources>
+        <!-- Кнопка поиска в сайдбаре (Windows 11 Search Pill / Apple Liquid Glass Pill) -->
+        <Style x:Key="SidebarSearchButton" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="{DynamicResource App.GlassPillBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource App.GlassRimBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Foreground" Value="{DynamicResource App.TextMuted}" />
+            <Setter Property="Padding" Value="12,8" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="Bd"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{DynamicResource App.ControlRadius}"
+                                Padding="{TemplateBinding Padding}"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource App.SurfaceAlt}" />
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource App.Accent}" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Bd" Property="Opacity" Value="0.88" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-        <ui:TitleBar Grid.Row="0"
-                     Title="Implexity Tweaker"
-                     Icon="/icon_rounded.png"
-                     Foreground="{DynamicResource App.Text}" />
+        <!-- Универсальная кнопка навигации (Windows 11 NavigationViewItem) -->
+        <Style x:Key="NavItemButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Foreground" Value="{DynamicResource App.Text}" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Padding" Value="8,7" />
+            <Setter Property="Margin" Value="0,1" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="Bd"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="{DynamicResource App.ControlRadius}"
+                                Padding="{TemplateBinding Padding}"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource App.Hover}" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Bd" Property="Opacity" Value="0.85" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
 
-        <Grid Grid.Row="1" Margin="20,8,20,0">
+    <Grid x:Name="RootShellGrid" Background="{DynamicResource App.AppleCanvasBrush}">
+        <!-- Основная сетка во всю высоту окна: Сайдбар + Рабочая область -->
+        <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="280" />
-                <ColumnDefinition Width="16" />
+                <ColumnDefinition x:Name="SidebarColumn" Width="280" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Border Grid.Column="0" Style="{StaticResource App.SidebarBorder}" Padding="14,16">
-                <DockPanel LastChildFill="True">
-                    <StackPanel DockPanel.Dock="Top" Margin="4,0,4,12">
-                        <TextBlock Text="Implexity Tweaker"
-                                   FontSize="26"
-                                   FontWeight="Bold"
-                                   Foreground="{DynamicResource App.Text}"
-                                   TextWrapping="Wrap" />
-                        <TextBlock Text="Гибкая настройка для Windows 10 / 11"
-                                   x:Name="SidebarSubtitle"
-                                   Margin="0,4,0,0"
-                                   FontSize="12"
-                                   Foreground="{DynamicResource App.TextMuted}" />
+            <!-- ===== Боковая панель навигации (Windows 11 NavigationView / macOS Tahoe Floating Glass) ===== -->
+            <Border x:Name="SidebarBorder" Grid.Column="0" Style="{StaticResource App.SidebarBorder}">
+                <DockPanel LastChildFill="True" Margin="12,14,12,12">
+
+                    <!-- Шапка бренда + Поиск Ctrl+K -->
+                    <StackPanel x:Name="TopSidebarStack" DockPanel.Dock="Top" Margin="0,0,0,10">
+                        <!-- macOS светофор (видим только в теме iOS / macOS) -->
+                        <StackPanel x:Name="MacTrafficLights"
+                                    Orientation="Horizontal"
+                                    Margin="4,0,4,10"
+                                    Visibility="Collapsed">
+                            <Button Width="12" Height="12" Padding="0" Margin="0,0,8,0"
+                                    BorderThickness="0" Cursor="Hand" Click="MacClose_Click"
+                                    ToolTip="{loc:Loc 'Закрыть'}">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Ellipse Fill="#FF5F57" />
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                            <Button Width="12" Height="12" Padding="0" Margin="0,0,8,0"
+                                    BorderThickness="0" Cursor="Hand" Click="MacMinimize_Click"
+                                    ToolTip="{loc:Loc 'Свернуть'}">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Ellipse Fill="#FEBC2E" />
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                            <Button Width="12" Height="12" Padding="0"
+                                    BorderThickness="0" Cursor="Hand" Click="MacMaximize_Click"
+                                    ToolTip="{loc:Loc 'Развернуть'}">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Ellipse Fill="#28C840" />
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </StackPanel>
+
+                        <StackPanel x:Name="BrandHeaderStack" Orientation="Horizontal" Margin="4,2,4,10">
+                            <Image Source="/icon_rounded.png" Width="28" Height="28"
+                                   RenderOptions.BitmapScalingMode="HighQuality"
+                                   VerticalAlignment="Center" />
+                            <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                                <TextBlock Text="Implexity Tweaker"
+                                           FontSize="15"
+                                           FontWeight="SemiBold"
+                                           Foreground="{DynamicResource App.Text}" />
+                                <TextBlock x:Name="SidebarSubtitle"
+                                           Text="Настройка Windows 10 / 11"
+                                           FontSize="11"
+                                           Foreground="{DynamicResource App.TextMuted}" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <Button x:Name="SearchBtn"
+                                Style="{StaticResource SidebarSearchButton}"
+                                Click="OpenSearch_Click">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ui:SymbolIcon Symbol="Search24" FontSize="14"
+                                               Foreground="{DynamicResource App.TextMuted}"
+                                               VerticalAlignment="Center" />
+                                <TextBlock x:Name="SearchBtnText"
+                                           Grid.Column="1"
+                                           Text="Поиск"
+                                           FontSize="12.5"
+                                           Foreground="{DynamicResource App.TextMuted}"
+                                           Margin="8,0,0,0"
+                                           VerticalAlignment="Center" />
+                                <Border x:Name="SearchShortcutBadge"
+                                        Grid.Column="2"
+                                        Background="{DynamicResource App.SurfaceAlt}"
+                                        BorderBrush="{DynamicResource App.Border}"
+                                        BorderThickness="1"
+                                        CornerRadius="4"
+                                        Padding="5,1"
+                                        VerticalAlignment="Center">
+                                    <TextBlock Text="Ctrl+K"
+                                               FontSize="10"
+                                               Foreground="{DynamicResource App.TextMuted}" />
+                                </Border>
+                            </Grid>
+                        </Button>
                     </StackPanel>
 
-                    <Border DockPanel.Dock="Bottom" Margin="4,10,4,0" Padding="8" Background="{DynamicResource App.SurfaceAlt}"
-                            BorderBrush="{DynamicResource App.Border}" BorderThickness="1" CornerRadius="10">
-                        <StackPanel>
+                    <!-- Нижняя панель: Аккаунт + Настройки + Перезапуск Explorer -->
+                    <StackPanel x:Name="BottomSidebarStack" DockPanel.Dock="Bottom" Margin="0,10,0,0">
+                        <Separator Margin="2,0,2,10" Background="{DynamicResource App.BorderSubtle}" />
 
-                            <!-- Авторизованный аккаунт: клик открывает профиль на сайте -->
-                            <Border x:Name="AccountWidget" Cursor="Hand" MouseLeftButtonUp="AccountWidget_Click"
-                                    ToolTip="{loc:Loc 'Открыть профиль на сайте'}" Visibility="Collapsed">
-                                <Border.Style>
-                                    <Style TargetType="Border">
-                                        <Setter Property="CornerRadius" Value="10" />
-                                        <Setter Property="Padding" Value="8" />
-                                        <Style.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="{DynamicResource App.Hover}" />
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Border.Style>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
+                        <!-- Кнопка настроек (в стиле пунктов навигации) -->
+                        <Button x:Name="OpenSettingsBtn"
+                                Style="{StaticResource NavItemButtonStyle}"
+                                Click="OpenSettings_Click"
+                                Margin="0,0,0,2">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border x:Name="SettingsNavPill"
+                                        Width="3" Height="16" CornerRadius="1.5"
+                                        Background="{DynamicResource App.Accent}"
+                                        VerticalAlignment="Center"
+                                        Margin="0,0,8,0"
+                                        Opacity="0" />
+                                <Border x:Name="SettingsIconBadge"
+                                        Grid.Column="1"
+                                        CornerRadius="6"
+                                        VerticalAlignment="Center">
+                                    <ui:SymbolIcon x:Name="SettingsNavIcon"
+                                                   Symbol="Settings24" FontSize="16"
+                                                   Foreground="{DynamicResource App.TextMuted}"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                                <TextBlock x:Name="OpenSettingsText"
+                                           Grid.Column="2"
+                                           Text="Настройки / О программе"
+                                           FontSize="13"
+                                           Margin="10,0,0,0"
+                                           TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center" />
+                            </Grid>
+                        </Button>
 
-                                    <!-- Круглая аватарка -->
-                                    <Grid Width="42" Height="42" VerticalAlignment="Center">
-                                        <Border Background="{DynamicResource App.Surface}" BorderBrush="{DynamicResource App.Border}"
-                                                BorderThickness="1" CornerRadius="21">
-                                            <ui:SymbolIcon Symbol="Person24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
-                                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                        </Border>
-                                        <Ellipse>
-                                            <Ellipse.Fill>
-                                                <ImageBrush x:Name="AccountAvatarBrush" Stretch="UniformToFill"
-                                                            RenderOptions.BitmapScalingMode="HighQuality" />
-                                            </Ellipse.Fill>
-                                        </Ellipse>
-                                    </Grid>
+                        <!-- Быстрый перезапуск Проводника -->
+                        <Button x:Name="RestartExplorerBtn"
+                                Style="{StaticResource NavItemButtonStyle}"
+                                Click="RestartExplorer_Click"
+                                Margin="0,0,0,10">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border x:Name="RestartNavPill" Width="3" Height="16" Margin="0,0,8,0" Opacity="0" />
+                                <Border x:Name="RestartIconBadge"
+                                        Grid.Column="1"
+                                        CornerRadius="6"
+                                        VerticalAlignment="Center">
+                                    <ui:SymbolIcon x:Name="RestartNavIcon"
+                                                   Symbol="ArrowCounterclockwise16" FontSize="15"
+                                                   Foreground="{DynamicResource App.TextMuted}"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                                <TextBlock x:Name="RestartExplorerText"
+                                           Grid.Column="2"
+                                           Text="Перезапустить проводник"
+                                           FontSize="12.5"
+                                           Foreground="{DynamicResource App.TextMuted}"
+                                           Margin="10,0,0,0"
+                                           TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center" />
+                            </Grid>
+                        </Button>
 
-                                    <StackPanel Grid.Column="1" Margin="10,0,4,0" VerticalAlignment="Center">
-                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,3">
-                                            <!-- Бейдж префикса, как на сайте -->
-                                            <Border x:Name="AccountPrefixBadge" CornerRadius="5" Padding="5,1.5"
-                                                    Margin="0,0,6,0" VerticalAlignment="Center" Visibility="Collapsed">
-                                                <TextBlock x:Name="AccountPrefix" FontSize="10" FontWeight="Bold" Text="⚡ " />
+                        <!-- Виджет аккаунта -->
+                        <Border x:Name="AccountCardBorder"
+                                Background="{DynamicResource App.Surface}"
+                                BorderBrush="{DynamicResource App.Border}"
+                                BorderThickness="1"
+                                CornerRadius="{DynamicResource App.CardRadius}"
+                                Padding="6">
+                            <StackPanel>
+                                <Border x:Name="AccountWidget" Cursor="Hand" MouseLeftButtonUp="AccountWidget_Click"
+                                        ToolTip="{loc:Loc 'Открыть профиль на сайте'}" Visibility="Collapsed">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="CornerRadius" Value="{DynamicResource App.ControlRadius}" />
+                                            <Setter Property="Padding" Value="6" />
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="{DynamicResource App.Hover}" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Grid x:Name="AccountAvatarBox" Width="36" Height="36" VerticalAlignment="Center">
+                                            <Border x:Name="AccountAvatarFallback" Background="{DynamicResource App.SurfaceAlt}"
+                                                    BorderBrush="{DynamicResource App.Border}"
+                                                    BorderThickness="1" CornerRadius="18">
+                                                <ui:SymbolIcon Symbol="Person24" FontSize="17"
+                                                               Foreground="{DynamicResource App.IconAccent}"
+                                                               HorizontalAlignment="Center" VerticalAlignment="Center" />
                                             </Border>
-                                            <TextBlock x:Name="AccountName" FontWeight="SemiBold" FontSize="13"
-                                                       TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                                            <Ellipse>
+                                                <Ellipse.Fill>
+                                                    <ImageBrush x:Name="AccountAvatarBrush" Stretch="UniformToFill"
+                                                                RenderOptions.BitmapScalingMode="HighQuality" />
+                                                </Ellipse.Fill>
+                                            </Ellipse>
+                                        </Grid>
+
+                                        <StackPanel Grid.Column="1" Margin="10,0,4,0" VerticalAlignment="Center">
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,1">
+                                                <Border x:Name="AccountPrefixBadge" CornerRadius="4" Padding="5,1"
+                                                        Margin="0,0,6,0" VerticalAlignment="Center" Visibility="Collapsed">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <ui:SymbolIcon x:Name="AccountPrefixIcon" Symbol="Flash24" FontSize="10"
+                                                                       VerticalAlignment="Center" Margin="0,0,3,0" />
+                                                        <TextBlock x:Name="AccountPrefix" FontSize="10" FontWeight="Bold"
+                                                                   VerticalAlignment="Center" />
+                                                    </StackPanel>
+                                                </Border>
+                                                <TextBlock x:Name="AccountName" FontWeight="SemiBold" FontSize="12.5"
+                                                           TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                            <TextBlock x:Name="AccountNumber" FontSize="11.5" Foreground="{DynamicResource App.TextMuted}" />
                                         </StackPanel>
-                                        <TextBlock x:Name="AccountNumber" FontSize="11" Foreground="{DynamicResource App.TextMuted}" />
+
+                                        <ui:SymbolIcon x:Name="AccountOpenIcon" Grid.Column="2" Symbol="Open24" FontSize="13"
+                                                       Foreground="{DynamicResource App.TextMuted}" VerticalAlignment="Center" />
+                                    </Grid>
+                                </Border>
+
+                                <Button x:Name="LoginButton" Click="LoginButton_Click"
+                                        Style="{StaticResource FluentSystemButton}"
+                                        HorizontalContentAlignment="Center"
+                                        BorderThickness="0"
+                                        Visibility="Collapsed">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <ui:SymbolIcon Symbol="Person24" FontSize="15" Foreground="{DynamicResource App.IconAccent}"
+                                                       VerticalAlignment="Center" />
+                                        <TextBlock x:Name="LoginButtonText" Text="{loc:Loc 'Войти'}" FontSize="13"
+                                                   FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center" />
                                     </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
 
-                                    <ui:SymbolIcon Grid.Column="2" Symbol="ArrowRight24" FontSize="14"
-                                                   Foreground="{DynamicResource App.TextMuted}" VerticalAlignment="Center" />
-                                </Grid>
-                            </Border>
-
-                            <!-- Не авторизован: кнопка «Войти» -->
-                            <Button x:Name="LoginButton" Click="LoginButton_Click"
-                                    Style="{StaticResource FluentSystemButton}" Visibility="Collapsed">
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <ui:SymbolIcon Symbol="Person24" FontSize="16" Foreground="{DynamicResource App.IconAccent}"
-                                                   VerticalAlignment="Center" />
-                                    <TextBlock x:Name="LoginButtonText" Text="{loc:Loc 'Войти'}" FontSize="13" Margin="8,0,0,0" VerticalAlignment="Center" />
-                                </StackPanel>
-                            </Button>
-
-                        </StackPanel>
-                    </Border>
-
-                    <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <StackPanel x:Name="NavButtonHost" Margin="0,0,4,0" />
+                    <!-- Прокручиваемое дерево разделов -->
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <StackPanel x:Name="NavButtonHost" Margin="0,0,2,0" />
                     </ScrollViewer>
                 </DockPanel>
             </Border>
 
-            <Border Grid.Column="2" Style="{StaticResource App.ContentBorder}" Padding="0">
+            <!-- ===== Правая рабочая область ===== -->
+            <Grid Grid.Column="1" Background="Transparent">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- Верхняя строка статуса / навигационная крошка (справа оставлено место под кнопки окна) -->
+                <Border x:Name="HeaderDragBar"
+                        Grid.Row="0"
+                        Height="44"
+                        Background="{DynamicResource App.Background}"
+                        BorderBrush="{DynamicResource App.BorderSubtle}"
+                        BorderThickness="0,0,0,1"
+                        Padding="28,0,152,0"
+                        MouseLeftButtonDown="HeaderDragBar_MouseLeftButtonDown">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <StackPanel x:Name="BreadcrumbCategoryPanel" Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock x:Name="BreadcrumbCategoryText"
+                                           FontSize="12"
+                                           Foreground="{DynamicResource App.TextMuted}"
+                                           VerticalAlignment="Center" />
+                                <ui:SymbolIcon Symbol="ArrowRight24" FontSize="11"
+                                               Foreground="{DynamicResource App.TextMuted}"
+                                               Margin="8,0"
+                                               VerticalAlignment="Center" />
+                            </StackPanel>
+                            <TextBlock x:Name="BreadcrumbSectionText"
+                                       FontSize="12"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource App.Text}"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+
+                        <Border x:Name="OsBadgeBorder"
+                                Grid.Column="1"
+                                Background="{DynamicResource App.GlassPillBrush}"
+                                BorderBrush="{DynamicResource App.GlassRimBrush}"
+                                BorderThickness="1"
+                                CornerRadius="{DynamicResource App.ControlRadius}"
+                                Padding="11,4"
+                                VerticalAlignment="Center">
+                            <TextBlock x:Name="OsBadgeText"
+                                       FontSize="11"
+                                       Foreground="{DynamicResource App.TextMuted}" />
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- Контейнер страниц -->
                 <Frame x:Name="RootFrame"
+                       Grid.Row="1"
                        NavigationUIVisibility="Hidden"
-                       Background="Transparent" />
-            </Border>
+                       Background="Transparent"
+                       ClipToBounds="True" />
+            </Grid>
         </Grid>
 
-        <Border Grid.Row="2"
-                Margin="20,12,20,16"
-                Padding="14,10"
-                Background="{DynamicResource App.SurfaceAlt}"
-                BorderBrush="{DynamicResource App.Border}"
-                BorderThickness="1"
-                CornerRadius="10">
-            <Grid>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                    <ui:Button x:Name="RestartExplorerBtn" Appearance="Transparent"
-                               Content="⟲  Перезапустить проводник"
-                               Foreground="{DynamicResource App.Text}"
-                               Click="RestartExplorer_Click" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                    <ui:Button x:Name="OpenSettingsBtn" Appearance="Transparent"
-                               Content="⚙  Настройки / О программе"
-                               Foreground="{DynamicResource App.Text}"
-                               Margin="8,0,0,0"
-                               Click="OpenSettings_Click" />
-                </StackPanel>
-            </Grid>
-        </Border>
+        <!-- Прозрачный оверлей системных кнопок окна (без отдельной белой полосы и дублирующего заголовка) -->
+        <ui:TitleBar x:Name="AppTitleBar"
+                     VerticalAlignment="Top"
+                     Height="44"
+                     Panel.ZIndex="20"
+                     Background="Transparent"
+                     ButtonsBackground="Transparent"
+                     ButtonsForeground="{DynamicResource App.Text}"
+                     Foreground="{DynamicResource App.Text}" />
     </Grid>
 </ui:UiWindow>

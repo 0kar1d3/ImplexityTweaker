@@ -1,7 +1,7 @@
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Interop;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Media;
 using ImplexityTweaker.Services;
 
@@ -13,12 +13,6 @@ namespace ImplexityTweaker.Windows;
 /// </summary>
 public partial class DisksWindow : Window
 {
-    private const int DwmwaImmersiveDarkMode = 20;
-    private const int DwmwaImmersiveDarkModeOld = 19;
-
-    [DllImport("dwmapi.dll", PreserveSig = true)]
-    private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
-
     private bool _busy;
 
     public DisksWindow()
@@ -30,8 +24,36 @@ public partial class DisksWindow : Window
         LegendText.Text = LocalizationService.T(
             "Шкала: Отлично 90–100 % · Нормально 70–89 % · Плохо 40–69 % · Ужасно 0–39 %");
 
-        SourceInitialized += (_, _) => ApplyDarkTitleBar();
-        Loaded += async (_, _) => await ReloadAsync();
+        UiAnimation.PrepareWindowOpen(this);
+        Loaded += async (_, _) =>
+        {
+            UiAnimation.AnimateWindowOpen(this);
+            await ReloadAsync();
+        };
+    }
+
+    private void Close_Click(object sender, RoutedEventArgs e) => Close();
+
+    private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape)
+            Close();
+    }
+
+    private void Root_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ButtonState != MouseButtonState.Pressed)
+            return;
+
+        DependencyObject? node = e.OriginalSource as DependencyObject;
+        while (node != null)
+        {
+            if (node is ButtonBase or ScrollViewer or Wpf.Ui.Controls.Button)
+                return;
+            node = node is Visual ? VisualTreeHelper.GetParent(node) : null;
+        }
+
+        try { DragMove(); } catch { }
     }
 
     private async void Refresh_Click(object sender, RoutedEventArgs e) => await ReloadAsync();
@@ -87,22 +109,6 @@ public partial class DisksWindow : Window
     {
         InfoText.Text = text;
         InfoText.Visibility = Visibility.Visible;
-    }
-
-    /// <summary>Тёмный заголовок окна в тёмных темах (косметика).</summary>
-    private void ApplyDarkTitleBar()
-    {
-        try
-        {
-            var handle = new WindowInteropHelper(this).Handle;
-            var value = 1;
-            if (DwmSetWindowAttribute(handle, DwmwaImmersiveDarkMode, ref value, sizeof(int)) != 0)
-                DwmSetWindowAttribute(handle, DwmwaImmersiveDarkModeOld, ref value, sizeof(int));
-        }
-        catch
-        {
-            // без тёмного заголовка окно просто останется системным
-        }
     }
 
     // ===================== Оценка и оформление =====================

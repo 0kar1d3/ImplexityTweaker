@@ -128,13 +128,19 @@ try {{
         try
         {
             string exeName = Path.GetFileNameWithoutExtension(processName);
+            if (string.IsNullOrWhiteSpace(exeName))
+                throw new ArgumentException("Process name cannot be empty.", nameof(processName));
+
+            string exeWithExt = exeName + ".exe";
+            string psExeName = exeName.Replace("'", "''");
+            string psExeWithExt = exeWithExt.Replace("'", "''");
             string script = $@"
 try {{
-    New-Item -Path 'HKLM:\{ProcessPriorityRegPath}\{exeName}' -Force | Out-Null
-    Set-ItemProperty -Path 'HKLM:\{ProcessPriorityRegPath}\{exeName}' `
-        -Name 'Priority' -Value {(high ? 3 : 2)} -Type DWord -Force
+    New-Item -Path 'HKLM:\{ProcessPriorityRegPath}\{psExeWithExt}\PerfOptions' -Force | Out-Null
+    Set-ItemProperty -Path 'HKLM:\{ProcessPriorityRegPath}\{psExeWithExt}\PerfOptions' `
+        -Name 'CpuPriorityClass' -Value {(high ? 3 : 2)} -Type DWord -Force
 }} catch {{ }}
-$processes = Get-Process -Name '{exeName}' -ErrorAction SilentlyContinue
+$processes = Get-Process -Name '{psExeName}' -ErrorAction SilentlyContinue
 if ($null -ne $processes) {{
     foreach ($process in $processes) {{
         try {{
@@ -160,8 +166,21 @@ if ($null -ne $processes) {{
     {
         try
         {
-            using var key = Registry.LocalMachine.OpenSubKey(TcpReg);
-            return (key?.GetValue("TcpNoDelay") as int? ?? 0) == 1;
+            using var baseKey = Registry.LocalMachine.OpenSubKey(TcpReg + @"\Interfaces");
+            if (baseKey == null)
+                return false;
+
+            var names = baseKey.GetSubKeyNames();
+            if (names.Length == 0)
+                return false;
+
+            foreach (var name in names)
+            {
+                using var iface = baseKey.OpenSubKey(name);
+                if ((iface?.GetValue("TcpNoDelay") as int? ?? 0) != 1)
+                    return false;
+            }
+            return true;
         }
         catch
         {

@@ -1,4 +1,4 @@
-﻿using System.Management;
+using System.Management;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,6 +24,31 @@ public partial class PcInfoPage : Page
     }
 
     private void Refresh_Click(object sender, System.Windows.RoutedEventArgs e) => _ = RefreshAsync();
+
+    private async void ShareSpecs_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var path = ShareCardService.CopyPcInfoCardToClipboard(
+                SummaryMachine.Text ?? Environment.MachineName,
+                OsCard.Text ?? "",
+                CpuCard.Text ?? "",
+                GpuCard.Text ?? "",
+                await System.Threading.Tasks.Task.Run(ShareRamText),
+                SystemCard.Text ?? "",
+                await System.Threading.Tasks.Task.Run(ShareDisksText),
+                BiosCard.Text ?? "",
+                NetworkCard.Text ?? "");
+
+            await Dialogs.ShowInfoAsync(
+                LocalizationService.T("Карточка скопирована"),
+                LocalizationService.TF("Карточка характеристик ПК скопирована в буфер обмена как изображение (PNG) — можно сразу вставить (Ctrl+V) в Discord или Telegram!\n\nФайл также сохранён:\n{0}", path));
+        }
+        catch (Exception ex)
+        {
+            await Dialogs.ShowErrorAsync(LocalizationService.T("Ошибка"), ex.Message);
+        }
+    }
 
     private async System.Threading.Tasks.Task RefreshAsync()
     {
@@ -438,6 +463,101 @@ public partial class PcInfoPage : Page
         }
         catch { /* ignore */ }
         return LocalizationService.T("Диски: n/a");
+    }
+
+    /// <summary>Компактный список ОЗУ для PNG-карточки: итог + по одной строке на планку.</summary>
+    private static string ShareRamText()
+    {
+        var sb = new StringBuilder();
+        try
+        {
+            using var os = new ManagementObjectSearcher("SELECT TotalVisibleMemorySize FROM Win32_OperatingSystem");
+            foreach (ManagementObject o in os.Get())
+            {
+                if (ulong.TryParse(o["TotalVisibleMemorySize"]?.ToString(), out var kb))
+                    sb.AppendLine(LocalizationService.TF("Всего: {0}", FormatBytes(kb * 1024)));
+                break;
+            }
+        }
+        catch { /* ignore */ }
+
+        try
+        {
+            using var q = new ManagementObjectSearcher("SELECT Capacity, ConfiguredClockSpeed, Speed, Manufacturer, PartNumber FROM Win32_PhysicalMemory");
+            foreach (ManagementObject o in q.Get())
+            {
+                var parts = new List<string>();
+                if (ulong.TryParse(o["Capacity"]?.ToString(), out var cap))
+                    parts.Add(FormatBytes(cap));
+                var freq = o["ConfiguredClockSpeed"]?.ToString();
+                if (string.IsNullOrWhiteSpace(freq) || freq == "0") freq = o["Speed"]?.ToString();
+                if (!string.IsNullOrWhiteSpace(freq)) parts.Add($"{freq} МГц");
+                var vendor = o["Manufacturer"]?.ToString()?.Trim();
+                if (!string.IsNullOrWhiteSpace(vendor) && !vendor.Equals("unknown", StringComparison.OrdinalIgnoreCase)) parts.Add(vendor);
+                var part = o["PartNumber"]?.ToString()?.Trim();
+                if (!string.IsNullOrWhiteSpace(part) && !part.Equals("unknown", StringComparison.OrdinalIgnoreCase)) parts.Add(part);
+                if (parts.Count > 0) sb.AppendLine("• " + string.Join(" · ", parts));
+            }
+        }
+        catch { /* ignore */ }
+
+        return sb.ToString().TrimEnd();
+    }
+
+    /// <summary>Компактный список накопителей для PNG-карточки: модель, тип (SSD/HDD), объём + логические разделы.</summary>
+    private static string ShareDisksText()
+    {
+        var sb = new StringBuilder();
+
+        // Тип носителя (SSD / HDD / NVMe) из Storage-пространства имён — Win32_DiskDrive его не отдаёт.
+        var types = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        try
+        {
+            var scope = new ManagementScope(@"\\.\root\Microsoft\Windows\Storage");
+            using var pd = new ManagementObjectSearcher(scope, new ObjectQuery("SELECT FriendlyName, MediaType, BusType FROM MSFT_PhysicalDisk"));
+            foreach (ManagementObject o in pd.Get())
+            {
+                var name = o["FriendlyName"]?.ToString()?.Trim() ?? "";
+                var media = o["MediaType"]?.ToString() ?? "";
+                var bus = o["BusType"]?.ToString() ?? "";
+                var kind = media == "4" ? "SSD" : media == "3" ? "HDD" : "";
+                if (bus == "17") kind = "NVMe SSD";
+                if (name.Length > 0 && kind.Length > 0) types[name] = kind;
+            }
+        }
+        catch { /* ignore */ }
+
+        try
+        {
+            using var q = new ManagementObjectSearcher("SELECT Model, Size FROM Win32_DiskDrive");
+            foreach (ManagementObject o in q.Get())
+            {
+                var model = o["Model"]?.ToString()?.Trim() ?? "";
+                var parts = new List<string> { model };
+                var kind = types.FirstOrDefault(t => model.Contains(t.Key, StringComparison.OrdinalIgnoreCase)
+                                                   || t.Key.Contains(model, StringComparison.OrdinalIgnoreCase)).Value;
+                if (!string.IsNullOrEmpty(kind)) parts.Add(kind);
+                if (ulong.TryParse(o["Size"]?.ToString(), out var bytes)) parts.Add(FormatBytes(bytes));
+                sb.AppendLine("• " + string.Join(" · ", parts.Where(p => !string.IsNullOrWhiteSpace(p))));
+            }
+        }
+        catch { /* ignore */ }
+
+        try
+        {
+            using var q = new ManagementObjectSearcher("SELECT DeviceID, Size, FreeSpace FROM Win32_LogicalDisk WHERE DriveType=3");
+            var first = true;
+            foreach (ManagementObject o in q.Get())
+            {
+                if (!ulong.TryParse(o["Size"]?.ToString(), out var size) || !ulong.TryParse(o["FreeSpace"]?.ToString(), out var free))
+                    continue;
+                if (first) { sb.AppendLine(); first = false; }
+                sb.AppendLine(LocalizationService.TF("{0}  {1}, свободно {2}", o["DeviceID"], FormatBytes(size), FormatBytes(free)));
+            }
+        }
+        catch { /* ignore */ }
+
+        return sb.ToString().TrimEnd();
     }
 
     private static string DrivesInfo()

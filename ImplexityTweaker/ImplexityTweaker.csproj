@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
@@ -10,13 +10,16 @@
 		<AssetTargetFallback>net8.0-windows</AssetTargetFallback>
 		<ApplicationIcon>app.ico</ApplicationIcon>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
-		<Version>1.5.0</Version>
+		<Version>2.0.0</Version>
+		<ServerGarbageCollection>false</ServerGarbageCollection>
+		<RetainVMGarbageCollection>false</RetainVMGarbageCollection>
 	</PropertyGroup>
 
 	<ItemGroup>
 	  <Resource Include="app.ico" />
 	  <Resource Include="logo.png" />
 	  <Resource Include="icon_rounded.png" />
+	  <EmbeddedResource Include="Localization\*.json" />
 	</ItemGroup>
 
 	<ItemGroup>

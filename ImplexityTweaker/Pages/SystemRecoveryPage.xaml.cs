@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -10,12 +10,20 @@ namespace ImplexityTweaker.Pages;
 
 public partial class SystemRecoveryPage : Page
 {
+    private bool _storageInit;
+
+    private sealed record PagefileModeItem(SystemStorageTweaksService.PagefileMode Mode, string Label)
+    {
+        public override string ToString() => Label;
+    }
+
     public SystemRecoveryPage()
     {
         InitializeComponent();
         TelemetryFrame.Navigate(new TelemetryPage());
         AnalyzePathBox.Text = "C:\\";
         RefreshBackupList();
+        InitializeStorageAndPowerControls();
         Loaded += async (_, _) => await LoadRestorePointsAsync();
     }
 
@@ -32,6 +40,48 @@ public partial class SystemRecoveryPage : Page
             RootScroll.LineDown();
 
         e.Handled = true;
+    }
+
+    private string? _lastBatteryHtmlPath;
+
+    private async void GenerateBatteryReport_Click(object sender, RoutedEventArgs e)
+    {
+        BatterySummaryText.Text = LocalizationService.T("Подготовка отчёта о состоянии батареи…");
+        try
+        {
+            var info = await BatteryReportService.GenerateAndParseAsync();
+            _lastBatteryHtmlPath = info.HtmlReportPath;
+            OpenBatteryHtmlBtn.Visibility = System.IO.File.Exists(info.HtmlReportPath) ? Visibility.Visible : Visibility.Collapsed;
+
+            if (!info.HasBattery)
+            {
+                BatterySummaryText.Text = LocalizationService.TF(
+                    "Статус: {0} · {1}. Полный отчёт энергопитания доступен по кнопке «Открыть подробный отчёт».",
+                    info.Name, info.StatusText);
+                return;
+            }
+
+            var cyclesStr = info.CycleCount.HasValue ? info.CycleCount.Value.ToString() : LocalizationService.T("н/д");
+            var chargeStr = info.ChargePercent.HasValue ? $"{info.ChargePercent.Value}%" : LocalizationService.T("н/д");
+
+            BatterySummaryText.Text = LocalizationService.TF(
+                "Модель: {0} ({1}, {2})\n" +
+                "Заводская ёмкость: {3:N0} мВт·ч · Текущая полная ёмкость: {4:N0} мВт·ч\n" +
+                "Здоровье батареи: {5:0.#}% · Износ аккумулятора: {6:0.#}% · Циклов: {7} · Заряд: {8} ({9})",
+                info.Name, info.Manufacturer, info.Chemistry,
+                info.DesignCapacityMwh, info.FullChargeCapacityMwh,
+                info.HealthPercent, info.WearPercent, cyclesStr, chargeStr, info.StatusText);
+        }
+        catch (Exception ex)
+        {
+            BatterySummaryText.Text = ex.Message;
+        }
+    }
+
+    private void OpenBatteryHtml_Click(object sender, RoutedEventArgs e)
+    {
+        if (!string.IsNullOrWhiteSpace(_lastBatteryHtmlPath))
+            BatteryReportService.OpenHtmlReport(_lastBatteryHtmlPath);
     }
 
     private void OpenSysRestore_Click(object sender, RoutedEventArgs e)
@@ -89,6 +139,177 @@ public partial class SystemRecoveryPage : Page
         // cancelled → ничего не показываем.
     }
 
+    private void InitializeStorageAndPowerControls()
+    {
+        _storageInit = true;
+        try
+        {
+            var hib = SystemStorageTweaksService.GetHibernationStatus();
+            HibernationToggle.IsChecked = hib.Enabled;
+            HibernationStatusText.Text = hib.Enabled
+                ? LocalizationService.TF("Гибернация включена (занимает на диске {0:0.##} ГБ). Отключение освободит место на SSD.", hib.SizeGb)
+                : LocalizationService.T("Гибернация отключена, место на системном диске свободно.");
+
+            var pf = SystemStorageTweaksService.GetPagefileStatus();
+            PagefileModeCombo.Items.Clear();
+            var modeItems = new[]
+            {
+                new PagefileModeItem(SystemStorageTweaksService.PagefileMode.SystemManaged, LocalizationService.T("По выбору системы (Рекомендуется)")),
+                new PagefileModeItem(SystemStorageTweaksService.PagefileMode.Custom, LocalizationService.T("Задать свой размер (МБ)")),
+                new PagefileModeItem(SystemStorageTweaksService.PagefileMode.Disabled, LocalizationService.T("Без файла подкачки"))
+            };
+            foreach (var it in modeItems)
+                PagefileModeCombo.Items.Add(it);
+
+            PagefileModeCombo.SelectedItem = modeItems.FirstOrDefault(m => m.Mode == pf.Mode) ?? modeItems[0];
+            PagefileMinBox.Text = pf.InitialMb.ToString();
+            PagefileMaxBox.Text = pf.MaximumMb.ToString();
+            PagefileCustomPanel.Visibility = pf.Mode == SystemStorageTweaksService.PagefileMode.Custom
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+
+            PagefileStatusText.Text = LocalizationService.TF(
+                "Текущий размер файла подкачки на диске: {0:0.##} ГБ.", pf.CurrentFileSizeGb);
+
+            _ = Task.Run(() =>
+            {
+                var mb = SystemStorageTweaksService.GetUpdateCacheSizeMb();
+                Dispatcher.BeginInvoke(() =>
+                {
+                    UpdateCacheSizeText.Text = LocalizationService.TF(
+                        "Размер кэша загруженных обновлений Windows: {0:0.#} МБ.", mb);
+                });
+            });
+        }
+        finally
+        {
+            _storageInit = false;
+        }
+    }
+
+    private async void CleanWinSxS_Click(object sender, RoutedEventArgs e)
+    {
+        var confirm = await Dialogs.ShowConfirmAsync(
+            LocalizationService.T("Очистка кэша обновлений Windows"),
+            LocalizationService.T("Удалить скачанные пакеты обновлений и очистить устаревшие копии компонентов системы?\n\nОперация полностью безопасна и может занять несколько минут."));
+        if (!confirm)
+            return;
+
+        double freedMb = 0;
+        var (ok, error, _) = await ProgressWindow.RunIndeterminateAsync(
+            Window.GetWindow(this),
+            LocalizationService.T("Очистка кэша обновлений"),
+            LocalizationService.T("Идёт очистка устаревших пакетов обновлений…"),
+            async (window, token) =>
+            {
+                freedMb = await SystemStorageTweaksService.CleanWinSxSAndUpdateCacheAsync(
+                    line => window.SetIndeterminate(true, line),
+                    token);
+            });
+
+        InitializeStorageAndPowerControls();
+
+        if (ok)
+        {
+            await Dialogs.ShowInfoAsync(
+                LocalizationService.T("Готово"),
+                LocalizationService.TF("Очистка кэша обновлений завершена.\nОсвобождено места на системном диске: {0:0.#} МБ.", freedMb));
+        }
+        else if (error != null)
+        {
+            await Dialogs.ShowErrorAsync(LocalizationService.T("Ошибка"), error);
+        }
+    }
+
+    private async void HibernationToggle_Toggled(object sender, RoutedEventArgs e)
+    {
+        if (!IsLoaded || _storageInit)
+            return;
+
+        bool enable = HibernationToggle.IsChecked == true;
+        try
+        {
+            double freedGb = await SystemStorageTweaksService.SetHibernationAsync(enable);
+            InitializeStorageAndPowerControls();
+            if (!enable)
+            {
+                await Dialogs.ShowInfoAsync(
+                    LocalizationService.T("Готово"),
+                    LocalizationService.TF("Гибернация отключена, освобождено: {0:0.##} ГБ.", freedGb));
+            }
+            else
+            {
+                await Dialogs.ShowInfoAsync(
+                    LocalizationService.T("Готово"),
+                    LocalizationService.T("Гибернация включена."));
+            }
+        }
+        catch (Exception ex)
+        {
+            _storageInit = true;
+            try { HibernationToggle.IsChecked = !enable; } finally { _storageInit = false; }
+            await Dialogs.ShowErrorAsync(LocalizationService.T("Ошибка"), ex.Message);
+        }
+    }
+
+    private void PagefileModeCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (PagefileCustomPanel == null)
+            return;
+
+        var mode = (PagefileModeCombo.SelectedItem as PagefileModeItem)?.Mode ?? SystemStorageTweaksService.PagefileMode.SystemManaged;
+        PagefileCustomPanel.Visibility = mode == SystemStorageTweaksService.PagefileMode.Custom
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+    }
+
+    private void PagefilePreset_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is not string preset)
+            return;
+
+        var parts = preset.Split(':');
+        if (parts.Length == 2)
+        {
+            PagefileMinBox.Text = parts[0];
+            PagefileMaxBox.Text = parts[1];
+        }
+    }
+
+    private async void ApplyPagefile_Click(object sender, RoutedEventArgs e)
+    {
+        if (PagefileModeCombo.SelectedItem is not PagefileModeItem item)
+            return;
+
+        int minMb = 4096;
+        int maxMb = 8192;
+        if (item.Mode == SystemStorageTweaksService.PagefileMode.Custom)
+        {
+            if (!int.TryParse(PagefileMinBox.Text?.Trim(), out minMb) ||
+                !int.TryParse(PagefileMaxBox.Text?.Trim(), out maxMb) ||
+                minMb < 256 || maxMb < minMb)
+            {
+                await Dialogs.ShowErrorAsync(
+                    LocalizationService.T("Ошибка"),
+                    LocalizationService.T("Укажите корректный размер файла подкачки в МБ (минимум 256 МБ, максимум не меньше исходного)."));
+                return;
+            }
+        }
+
+        try
+        {
+            await SystemStorageTweaksService.ApplyPagefileAsync(item.Mode, minMb, maxMb);
+            InitializeStorageAndPowerControls();
+            await Dialogs.ShowInfoAsync(
+                LocalizationService.T("Готово"),
+                LocalizationService.T("Параметры файла подкачки сохранены в реестре. Перезагрузите компьютер для вступления изменений в силу."));
+        }
+        catch (Exception ex)
+        {
+            await Dialogs.ShowErrorAsync(LocalizationService.T("Ошибка"), ex.Message);
+        }
+    }
+
     // ===================== Диагностика =====================
 
     private TextBlock DiagText(string text) => new()
@@ -144,7 +365,7 @@ public partial class SystemRecoveryPage : Page
             else
                 foreach (var problem in problems)
                     DriversHost.Children.Add(DiagText(
-                        LocalizationService.TF("⚠ {0} ({1}) — код ошибки {2}", problem.Name, problem.DeviceClass, problem.ErrorCode)));
+                        LocalizationService.TF("Ошибка драйвера: {0} ({1}) — код {2}", problem.Name, problem.DeviceClass, problem.ErrorCode)));
 
             foreach (var driver in display)
                 DriversHost.Children.Add(DiagText(

@@ -1,0 +1,163 @@
+﻿<Page x:Class="ImplexityTweaker.Pages.PresetsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:loc="clr-namespace:ImplexityTweaker.Localization"
+      Title="Presets"
+      Foreground="{DynamicResource App.Text}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="28,22,28,28" MaxWidth="980">
+            <TextBlock Text="{loc:Loc 'Пресеты'}" Style="{StaticResource PageTitleText}" />
+            <TextBlock Text="{loc:Loc 'Готовые наборы настроек: применяются одним нажатием, показывают прогресс и делают снимок для отката.'}"
+                       Style="{StaticResource PageDescriptionText}"
+                       Margin="0,6,0,18" />
+
+            <!-- ===== Фильтр и страховка ===== -->
+            <ui:Card>
+                <StackPanel>
+                    <TextBlock x:Name="SystemInfoText" Style="{StaticResource ItemDescriptionText}" />
+
+                    <TextBox x:Name="FilterBox"
+                             Margin="0,10,0,0"
+                             Padding="10,8"
+                             FontSize="13"
+                             TextChanged="FilterBox_TextChanged" />
+
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                        <ui:ToggleSwitch x:Name="AvailableOnlyToggle"
+                                         Checked="Filter_Toggled"
+                                         Unchecked="Filter_Toggled"
+                                         VerticalAlignment="Center" />
+                        <TextBlock Text="{loc:Loc 'Только доступные на этой системе'}"
+                                   FontSize="12"
+                                   Margin="8,0,0,0"
+                                   VerticalAlignment="Center"
+                                   Foreground="{DynamicResource App.TextMuted}" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                        <ui:ToggleSwitch x:Name="SnapshotToggle"
+                                         Checked="Filter_Toggled"
+                                         Unchecked="Filter_Toggled"
+                                         VerticalAlignment="Center" />
+                        <TextBlock Text="{loc:Loc 'Делать снимок настроек перед применением'}"
+                                   FontSize="12"
+                                   Margin="8,0,0,0"
+                                   VerticalAlignment="Center"
+                                   Foreground="{DynamicResource App.TextMuted}" />
+                    </StackPanel>
+
+                    <TextBlock x:Name="CountText" Style="{StaticResource ItemDescriptionText}" Margin="0,10,0,0" />
+                </StackPanel>
+            </ui:Card>
+
+            <!-- ===== Список пресетов ===== -->
+            <ItemsControl x:Name="PresetList">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <ui:Card>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Border Background="{DynamicResource App.SurfaceAlt}"
+                                        BorderBrush="{DynamicResource App.Border}"
+                                        BorderThickness="1"
+                                        CornerRadius="10"
+                                        Width="46" Height="46"
+                                        VerticalAlignment="Top">
+                                    <ui:SymbolIcon Symbol="{Binding IconSymbol}"
+                                                   FontSize="22"
+                                                   Foreground="{DynamicResource App.IconAccent}"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center" />
+                                </Border>
+
+                                <StackPanel Grid.Column="1" Margin="14,0,12,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Title}" Style="{StaticResource ItemTitleText}" VerticalAlignment="Center" />
+                                        <Border Background="{Binding RiskBackground}" CornerRadius="4" Padding="7,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding RiskText}" FontSize="11" Foreground="{Binding RiskForeground}" />
+                                        </Border>
+                                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="4" Padding="7,1" Margin="6,0,0,0" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Category}" FontSize="11" Foreground="{DynamicResource App.TextMuted}" />
+                                        </Border>
+                                    </StackPanel>
+
+                                    <TextBlock Text="{Binding Description}" Style="{StaticResource ItemDescriptionText}" Margin="0,6,0,0" />
+
+                                    <TextBlock Text="{Binding HighlightText}"
+                                               FontSize="11"
+                                               Margin="0,6,0,0"
+                                               Foreground="{DynamicResource App.Accent}"
+                                               TextWrapping="Wrap"
+                                               Visibility="{Binding HighlightVisibility}" />
+
+                                    <TextBlock Text="{Binding AvailabilityText}"
+                                               FontSize="11"
+                                               Margin="0,6,0,0"
+                                               Foreground="{DynamicResource App.TextMuted}"
+                                               TextWrapping="Wrap"
+                                               Visibility="{Binding UnavailableVisibility}" />
+
+                                    <ui:Button Content="{Binding StepsButtonText}"
+                                               Tag="{Binding}"
+                                               Click="ToggleSteps_Click"
+                                               Appearance="Secondary"
+                                               Padding="12,6"
+                                               Margin="0,10,0,0"
+                                               HorizontalAlignment="Left" />
+
+                                    <ItemsControl ItemsSource="{Binding Steps}" Visibility="{Binding StepsVisibility}" Margin="0,8,0,0">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                                                    <TextBlock Text="•" FontSize="12" Margin="0,0,7,0" Foreground="{DynamicResource App.TextMuted}" />
+                                                    <TextBlock Text="{Binding}" FontSize="12" TextWrapping="Wrap" Foreground="{DynamicResource App.TextMuted}" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+
+                                <ui:Button Grid.Column="2"
+                                           Content="{loc:Loc 'Применить'}"
+                                           Tag="{Binding}"
+                                           Click="ApplyPreset_Click"
+                                           Appearance="Primary"
+                                           Padding="16,8"
+                                           VerticalAlignment="Top"
+                                           IsEnabled="{Binding CanApply}" />
+                            </Grid>
+                        </ui:Card>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <TextBlock x:Name="EmptyText"
+                       Text="{loc:Loc 'Ничего не найдено. Измените фильтр или снимите ограничение «только доступные».'}"
+                       Style="{StaticResource ItemDescriptionText}"
+                       Margin="0,4,0,0"
+                       Visibility="Collapsed" />
+
+            <TextBlock x:Name="FooterHintText"
+                       Style="{StaticResource ItemDescriptionText}"
+                       Margin="0,14,0,0" />
+        </StackPanel>
+    </ScrollViewer>
+</Page>
+

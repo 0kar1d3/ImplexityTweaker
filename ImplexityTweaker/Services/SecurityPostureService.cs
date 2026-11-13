@@ -24,15 +24,14 @@ public static class SecurityPostureService
     }
 
     /// <summary>Включает/выключает «Целостность памяти». Требуется перезагрузка.</summary>
-    public static async Task SetMemoryIntegrityAsync(bool enable)
+    public static Task SetMemoryIntegrityAsync(bool enable)
     {
-        var script = $@"
-$ErrorActionPreference = 'Stop'
-New-Item -Path 'HKLM:\{HvciKey}' -Force | Out-Null
-Set-ItemProperty -Path 'HKLM:\{HvciKey}' -Name 'Enabled' -Value {(enable ? 1 : 0)} -Type DWord -Force
-";
-        var r = await CommandRunner.RunPowerShellAsync(script);
-        if (r.ExitCode != 0)
-            throw new InvalidOperationException(string.IsNullOrWhiteSpace(r.Error) ? r.Output : r.Error);
+        return Task.Run(() =>
+        {
+            using var key = Registry.LocalMachine.OpenSubKey(HvciKey, writable: true)
+                ?? Registry.LocalMachine.CreateSubKey(HvciKey, writable: true)
+                ?? throw new InvalidOperationException($"Не удалось открыть ветку HKLM\\{HvciKey}.");
+            key.SetValue("Enabled", enable ? 1 : 0, RegistryValueKind.DWord);
+        });
     }
 }

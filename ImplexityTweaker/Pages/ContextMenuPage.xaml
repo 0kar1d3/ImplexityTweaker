@@ -7,13 +7,13 @@
       Foreground="{DynamicResource App.Text}">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Margin="20">
+        <StackPanel Margin="28,22,28,28" MaxWidth="980">
             <TextBlock Text="{loc:Loc 'Контекстное меню'}" Style="{StaticResource PageTitleText}" />
             <TextBlock Text="{loc:Loc 'Настройка пунктов контекстного меню Windows. Некоторые изменения требуют перезапуска проводника.'}"
                        Style="{StaticResource PageDescriptionText}"
-                       Margin="0,8,0,16" />
+                       Margin="0,6,0,18" />
 
-            <ui:Card Padding="20" Margin="0,0,0,15">
+            <ui:Card>
                 <StackPanel>
                     <TextBlock Text="{loc:Loc 'Основные параметры'}" Style="{StaticResource CardHeaderText}" Margin="0,0,0,8" />
 
@@ -23,7 +23,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                        <Border Style="{StaticResource SettingIconBox}">
                             <ui:SymbolIcon Symbol="ClipboardBulletListLtr20" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
@@ -41,7 +41,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                        <Border Style="{StaticResource SettingIconBox}">
                             <ui:SymbolIcon Symbol="ClockArrowDownload24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
@@ -59,7 +59,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                        <Border Style="{StaticResource SettingIconBox}">
                             <ui:SymbolIcon Symbol="WindowDevTools20" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
@@ -73,7 +73,7 @@
                 </StackPanel>
             </ui:Card>
 
-            <ui:Card Padding="20" Margin="0,0,0,15">
+            <ui:Card>
                 <StackPanel>
                     <TextBlock Text="{loc:Loc 'Дополнительно'}" Style="{StaticResource CardHeaderText}" Margin="0,0,0,8" />
 
@@ -83,7 +83,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                        <Border Style="{StaticResource SettingIconBox}">
                             <ui:SymbolIcon Symbol="ChannelShare24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
@@ -101,7 +101,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                        <Border Style="{StaticResource SettingIconBox}">
                             <ui:SymbolIcon Symbol="ArrowCounterclockwise16" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
@@ -119,7 +119,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                        <Border Style="{StaticResource SettingIconBox}">
                             <ui:SymbolIcon Symbol="CloudArrowUp24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
@@ -137,7 +137,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                        <Border Style="{StaticResource SettingIconBox}">
                             <ui:SymbolIcon Symbol="CopyAdd20" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
@@ -155,7 +155,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                        <Border Style="{StaticResource SettingIconBox}">
                             <ui:SymbolIcon Symbol="TabDesktop24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
@@ -173,7 +173,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                        <Border Style="{StaticResource SettingIconBox}">
                             <ui:SymbolIcon Symbol="Desktop32" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>

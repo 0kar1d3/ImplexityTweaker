@@ -7,7 +7,7 @@
       Foreground="{DynamicResource App.Text}">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Margin="20">
+        <StackPanel Margin="28,22,28,28" MaxWidth="980">
 
             <!-- Шапка -->
             <Grid>
@@ -22,8 +22,12 @@
                                Style="{StaticResource PageDescriptionText}" />
                 </StackPanel>
 
-                <ui:Button Grid.Column="1" Content="{loc:Loc 'Обновить данные'}" Appearance="Primary" Click="Refresh_Click"
-                           HorizontalAlignment="Right" VerticalAlignment="Center" Padding="20,8" FontSize="13" />
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <ui:Button Content="{loc:Loc 'Поделиться (PNG)'}" Appearance="Secondary" Click="ShareSpecs_Click"
+                               Padding="16,8" FontSize="13" Margin="0,0,8,0" />
+                    <ui:Button Content="{loc:Loc 'Обновить данные'}" Appearance="Primary" Click="Refresh_Click"
+                               Padding="20,8" FontSize="13" />
+                </StackPanel>
             </Grid>
 
             <!-- Индикатор загрузки данных -->
@@ -145,7 +149,7 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                                <Border Style="{StaticResource SettingIconBox}">
                                     <ui:SymbolIcon Symbol="System24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
                                                    HorizontalAlignment="Center" VerticalAlignment="Center" />
                                 </Border>
@@ -168,7 +172,7 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <Border Background="{DynamicResource App.SurfaceAlt}" CornerRadius="8" Width="40" Height="40" VerticalAlignment="Center">
+                                <Border Style="{StaticResource SettingIconBox}">
                                     <ui:SymbolIcon Symbol="Layer24" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
                                                    HorizontalAlignment="Center" VerticalAlignment="Center" />
                                 </Border>
@@ -185,7 +189,6 @@
                                Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,12,0,0" />
                 </StackPanel>
             </Border>
-
         </StackPanel>
     </ScrollViewer>
 </Page>

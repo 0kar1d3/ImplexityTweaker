@@ -7,13 +7,13 @@
       Foreground="{DynamicResource App.Text}">
 
     <ScrollViewer x:Name="RootScroll" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Margin="20">
+        <StackPanel Margin="28,22,28,28" MaxWidth="980">
             <TextBlock Text="{loc:Loc 'Система и восстановление'}" Style="{StaticResource PageTitleText}" />
             <TextBlock Text="{loc:Loc 'Точки восстановления, сжатие системы и параметры телеметрии.'}"
                        Style="{StaticResource PageDescriptionText}"
-                       Margin="0,8,0,16" />
+                       Margin="0,6,0,18" />
 
-            <ui:Card Padding="20" Margin="0,0,0,15">
+            <ui:Card>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -40,12 +40,23 @@
                         </StackPanel>
                         <TextBlock Text="{loc:Loc 'Хранятся последние 10 снимков, самые старые удаляются автоматически.'}"
                                    Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,0,0,10" />
+                        <Border Background="{DynamicResource App.WarningSoft}"
+                                BorderBrush="{DynamicResource App.Warning}"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="12,8"
+                                Margin="0,0,0,12">
+                            <TextBlock Text="{loc:Loc 'Дисклеймер (BCD): при создании и откате снимка выполняется экспорт/импорт конфигурации загрузчика Windows (bcdedit). Если между снимком и откатом менялась разметка диска или загрузочные записи, импорт BCD может нарушить загрузку ОС.'}"
+                                       Foreground="{DynamicResource App.Text}"
+                                       FontSize="12"
+                                       TextWrapping="Wrap" />
+                        </Border>
                         <StackPanel x:Name="BackupHost" />
                     </StackPanel>
                 </Grid>
             </ui:Card>
 
-            <ui:Card Padding="20" Margin="0,0,0,15">
+            <ui:Card>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -63,12 +74,111 @@
                     </Border>
 
                     <StackPanel Grid.Column="1" Margin="14,0,0,0">
-                        <TextBlock Text="{loc:Loc 'Сжатие и обслуживание'}" Style="{StaticResource ItemTitleText}" />
-                        <TextBlock Text="{loc:Loc 'CompactOS уменьшает занимаемое место на системном разделе (может занять время).'}"
-                                   Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,4,0,14" />
-                        <ui:Button Content="{loc:Loc 'Включить сжатие системы (CompactOS)'}" Appearance="Primary" Click="Compact_Click" HorizontalAlignment="Left" Padding="20,8" />
+                        <TextBlock Text="{loc:Loc 'Сжатие и глубокая очистка системы'}" Style="{StaticResource ItemTitleText}" />
+                        <TextBlock Text="{loc:Loc 'Сжатие системы уменьшает занимаемое место на диске, а глубокая очистка удаляет устаревшие файлы и кэш обновлений Windows.'}"
+                                   Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,4,0,10" />
+                        <TextBlock x:Name="UpdateCacheSizeText" Style="{StaticResource ItemDescriptionText}" Margin="0,0,0,12" />
+                        <StackPanel Orientation="Horizontal">
+                            <ui:Button Content="{loc:Loc 'Включить сжатие системы (CompactOS)'}" Appearance="Primary" Click="Compact_Click" Padding="20,8" Margin="0,0,8,0" />
+                            <ui:Button Content="{loc:Loc 'Очистить кэш обновлений'}" Appearance="Secondary" Click="CleanWinSxS_Click" Padding="20,8" />
+                        </StackPanel>
                     </StackPanel>
                 </Grid>
+            </ui:Card>
+
+            <!-- ===== Гибернация (hiberfil.sys) и Файл подкачки (pagefile.sys) ===== -->
+            <ui:Card>
+                <StackPanel>
+                    <TextBlock Text="{loc:Loc 'Гибернация и файл подкачки'}" Style="{StaticResource CardHeaderText}" Margin="0,0,0,12" />
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Style="{StaticResource SettingIconBox}">
+                            <ui:SymbolIcon Symbol="HardDrive20" FontSize="20" Foreground="{DynamicResource App.IconAccent}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc 'Режим гибернации'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock x:Name="HibernationStatusText"
+                                       Text="{loc:Loc 'Отключение режима гибернации сразу освобождает от 6 до 32 ГБ на системном диске.'}"
+                                       Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ui:ToggleSwitch x:Name="HibernationToggle" Grid.Column="2" VerticalAlignment="Center"
+                                         Checked="HibernationToggle_Toggled" Unchecked="HibernationToggle_Toggled" />
+                    </Grid>
+
+                    <Separator Margin="0,0,0,14" Background="{DynamicResource App.Border}" />
+
+                    <StackPanel>
+                        <TextBlock Text="{loc:Loc 'Настройка файла подкачки'}" Style="{StaticResource ItemTitleText}" />
+                        <TextBlock x:Name="PagefileStatusText" Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,4,0,12" />
+
+                        <ComboBox x:Name="PagefileModeCombo" Width="320" HorizontalAlignment="Left" FontSize="13"
+                                  Margin="0,0,0,12" SelectionChanged="PagefileModeCombo_SelectionChanged" />
+
+                        <StackPanel x:Name="PagefileCustomPanel" Orientation="Vertical" Margin="0,0,0,12" Visibility="Collapsed">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                <TextBlock Text="{loc:Loc 'Исходный размер (МБ):'}" Style="{StaticResource ItemDescriptionText}"
+                                           VerticalAlignment="Center" Margin="0,0,8,0" />
+                                <ui:TextBox x:Name="PagefileMinBox" Width="110" FontSize="13" Margin="0,0,18,0" Text="4096" />
+                                <TextBlock Text="{loc:Loc 'Максимальный размер (МБ):'}" Style="{StaticResource ItemDescriptionText}"
+                                           VerticalAlignment="Center" Margin="0,0,8,0" />
+                                <ui:TextBox x:Name="PagefileMaxBox" Width="110" FontSize="13" Text="8192" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <ui:Button Content="{loc:Loc '4–8 ГБ'}" Appearance="Secondary" Padding="12,5" FontSize="12" Margin="0,0,6,0" Tag="4096:8192" Click="PagefilePreset_Click" />
+                                <ui:Button Content="{loc:Loc '8–16 ГБ'}" Appearance="Secondary" Padding="12,5" FontSize="12" Margin="0,0,6,0" Tag="8192:16384" Click="PagefilePreset_Click" />
+                                <ui:Button Content="{loc:Loc '16 ГБ (Фикс.)'}" Appearance="Secondary" Padding="12,5" FontSize="12" Tag="16384:16384" Click="PagefilePreset_Click" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <ui:Button Content="{loc:Loc 'Применить параметры подкачки'}" Appearance="Primary"
+                                   Click="ApplyPagefile_Click" HorizontalAlignment="Left" Padding="20,8" />
+
+                        <Border Background="{DynamicResource App.WarningSoft}"
+                                BorderBrush="{DynamicResource App.Warning}"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="12,8"
+                                Margin="0,12,0,0">
+                            <TextBlock Text="{loc:Loc 'Дисклеймер: полное отключение файла подкачки (pagefile.sys) может привести к вылетам игр и приложений при нехватке ОЗУ и отключает запись дампов памяти при BSOD. Отключение гибернации удаляет hiberfil.sys и делает невозможным режим «Гибернация» (и Fast Startup).'}"
+                                       Foreground="{DynamicResource App.Text}"
+                                       FontSize="12"
+                                       TextWrapping="Wrap" />
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+            </ui:Card>
+
+            <!-- powercfg /batteryreport -->
+            <ui:Card>
+                <StackPanel>
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="{loc:Loc 'Батарея и питание'}" Style="{StaticResource ItemTitleText}" />
+                            <TextBlock Text="{loc:Loc 'Для ноутбуков — анализ заводской и текущей ёмкости аккумулятора, процента износа и количества циклов зарядки.'}"
+                                       Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,4,0,0" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" Margin="12,0,0,0">
+                            <ui:Button Content="{loc:Loc 'Сформировать отчёт'}" Appearance="Primary"
+                                       Click="GenerateBatteryReport_Click" Padding="16,7" Margin="0,0,8,0" />
+                            <ui:Button x:Name="OpenBatteryHtmlBtn" Content="{loc:Loc 'Открыть подробный отчёт'}" Appearance="Secondary"
+                                       Click="OpenBatteryHtml_Click" Padding="14,7" Visibility="Collapsed" />
+                        </StackPanel>
+                    </Grid>
+
+                    <TextBlock x:Name="BatterySummaryText"
+                               Text="{loc:Loc 'Нажмите «Сформировать отчёт», чтобы проверить износ и ёмкость аккумулятора.'}"
+                               Style="{StaticResource ItemDescriptionText}" TextWrapping="Wrap" Margin="0,6,0,0" />
+                </StackPanel>
             </ui:Card>
 
             <TextBlock Text="{loc:Loc 'Телеметрия и конфиденциальность'}" Style="{StaticResource CardHeaderText}" Margin="0,0,0,10" />
@@ -76,7 +186,7 @@
                 <Frame x:Name="TelemetryFrame" NavigationUIVisibility="Hidden" PreviewMouseWheel="TelemetryFrame_PreviewMouseWheel" />
             </Border>
 
-            <ui:Card Padding="20" Margin="0,0,0,15">
+            <ui:Card>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -103,7 +213,7 @@
                 </Grid>
             </ui:Card>
 
-            <ui:Card Padding="20" Margin="0,0,0,15">
+            <ui:Card>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -129,7 +239,7 @@
                     </StackPanel>
                 </Grid>
             </ui:Card>
-            <ui:Card Padding="20" Margin="0,0,0,15">
+            <ui:Card>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -157,7 +267,7 @@
                 </Grid>
             </ui:Card>
 
-            <ui:Card Padding="20" Margin="0,0,0,15">
+            <ui:Card>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -188,7 +298,7 @@
                 </Grid>
             </ui:Card>
 
-            <ui:Card Padding="20" Margin="0,0,0,15">
+            <ui:Card>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
